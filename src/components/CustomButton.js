@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const CustomButton = ({onPress, order, text, type = 'primary', bgColor , fgColor, iconName = 'arrow-forward-ios'}) => {
+const CustomButton = ({onPress, order, text, type = 'primary', bgColor , fColor, iconName = 'arrow-forward-ios'}) => {
   return (
     <Pressable
       onPress={onPress}
@@ -16,7 +16,7 @@ const CustomButton = ({onPress, order, text, type = 'primary', bgColor , fgColor
         style={[
           styles.text,
           styles[`text_${type}`],
-          fgColor ? {color: fgColor} : {},
+          fColor ? {color: fColor} : {},
         ]}>
         {text}
       </Text>
@@ -25,7 +25,7 @@ const CustomButton = ({onPress, order, text, type = 'primary', bgColor , fgColor
         <MaterialIcons 
           name={iconName} 
           size={20} 
-          color={fgColor ? fgColor : 'gray'} 
+          color={fColor ? fColor : 'gray'} 
           style={{marginRight: 5, width: '10%'}}/>)
       }
     </Pressable>
@@ -43,6 +43,8 @@ const styles = StyleSheet.create({
 
   container_primary: {
     backgroundColor: '#3B71F3',
+    // alignContent: 'center',
+     justifyContent: 'center'
   },
 
   container_scondary: {
@@ -60,7 +62,6 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    width: '90%',
     fontWeight: 'bold',
     color: 'white',
   },
@@ -71,6 +72,10 @@ const styles = StyleSheet.create({
 
   text_tertiary: {
     color: 'gray',
+  },
+
+  text_custom: {
+    width: '90%',
   },
 
   position_top:{

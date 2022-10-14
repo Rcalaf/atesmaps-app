@@ -23,15 +23,47 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import { baseGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/gestureHandlerCommon';
 
+import { ListBucketsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { s3Client } from "../aws/s3";
 
+
+//import {path} from "path";
+import fs from "react-native-fs";
+const Base64Binary = require('base64-arraybuffer');
 
 const ObservationImagesList: () => Node = () => {
 
 // const {logout} = useContext(AuthContext);
+const {image,setImage} = useState(null);
 const sheetRef = useRef();
 const fall = new Animated.Value(1);
 
-//console.log(renderContent);
+
+const uploadFile = async (image) => {
+  
+  const file = image.path; // Path to and name of object. For example '../myFiles/index.js'.
+  const fileStream = await fs.readFile(file,'base64');
+  const arrayBuffer = Base64Binary.decode(fileStream);
+
+  let bucketParams = {
+    Bucket: "atesmaps",
+    Key: image.filename,
+    Body: arrayBuffer
+  };
+  try {
+    const data = await s3Client.send(new PutObjectCommand(bucketParams));
+    console.log(
+      "Successfully uploaded object: " +
+        bucketParams.Bucket +
+        "/" +
+        bucketParams.Key
+    );
+    return data;
+  } catch (err) {
+    console.log("Error", err);
+  }
+}
+
 const takePhotoFromCamera = () => {
   ImagePicker.openCamera({
     compressImageMaxWidth: 300,
@@ -39,11 +71,13 @@ const takePhotoFromCamera = () => {
     cropping: true,
     compressImageQuality: 0.7
   }).then(image => {
-    console.log(image);
-    setImage(image.path);
-    this.bs.current.snapTo(1);
+    console.log(image.filename);
+    setImage(image.filename);
+    uploadFile(image);
+    sheetRef.current.snapTo(1);
   });
 }
+
 
 const choosePhotoFromLibrary = () => {
   ImagePicker.openPicker({
@@ -52,9 +86,10 @@ const choosePhotoFromLibrary = () => {
     cropping: true,
     compressImageQuality: 0.7
   }).then(image => {
-    console.log(image);
-    setImage(image.path);
-    this.bs.current.snapTo(1);
+    console.log(image.filename);
+    setImage(image.filename);
+    uploadFile(image);
+    sheetRef.current.snapTo(1);
   });
 }
 

@@ -21,702 +21,712 @@ import { ObservationContext } from '../context/ObservationContext';
 const AvalancheObservationTypeDetail: () => Node = () => {
 const { editingObservation, setEditingObservation  } = useContext(ObservationContext);
 
-const [quickValues, setQuickValues] = useState(editingObservation.observationTypes?.quick ? editingObservation.observationTypes?.quick : {status: false, values: {}});
+const [formValues, setFormValues] = useState(editingObservation.observationTypes?.avalanche ? editingObservation.observationTypes?.avalanche : {status: true, values: {}});
 
 useEffect(()=>{
-   // console.log('------OTypeDetails---------');
-   // console.log(quickValues);
-   // console.log('------END-OTypeDetails-----')
     let observation = editingObservation.observationTypes;
-    observation['quick'] = quickValues; 
+    observation['avalanche'] = formValues; 
     setEditingObservation({...editingObservation,observationTypes: observation});
-},[quickValues]);
+    console.log(observation);
+},[formValues]);
 
 //Snow conditions:
-const [deepPowder, setDeepPowder] = useState(quickValues.values?.snowConditions?.deepPowder);
-const [crusty, setCrusty] = useState(quickValues.values?.snowConditions?.crusty);
-const [wet, setWet] = useState(quickValues.values?.snowConditions?.wet);
-const [heavy, setHeavy] = useState(quickValues.values?.snowConditions?.heavy);
-const [powder, setPowder] = useState(quickValues.values?.snowConditions?.powder);
-const [windAffected, setWindAffected] = useState(quickValues.values?.snowConditions?.windyAffected);
-const [hard, setHard] = useState(quickValues.values?.snowConditions?.hard);
-
-//Riding conditions:
-const [ridingQuality, setRidingQuality] = useState(quickValues.values?.ridingQuality);
-useEffect(()=>{
-    let conditions = quickValues;
-    conditions.values['ridingQuality'] = ridingQuality
-    //conditions.status = true;
-    setQuickValues(conditions);
-   // console.log('Riding quality triggered...');
-},[ridingQuality]);
+const [date, setDate] = useState(formValues.values?.date);
+const [when, setWhen] = useState(formValues.values?.when);
+const [amount, setAmount] = useState(formValues.values?.amount);
+const [windExposure, setWindExposure] = useState(formValues.values?.windExposure);
+const [trigger, setTrigger] = useState(formValues.values?.trigger);
 
 useEffect(()=>{
-    let conditions = quickValues;
-    conditions.values['snowConditions'] = {
-        deepPowder,
-        crusty,
-        wet,
-        heavy,
-        powder,
-        windAffected,
-        hard
+    let conditions = formValues;
+    conditions.values['when'] = when;
+    conditions.values['amount'] = amount;
+    conditions.values['windExposure'] = windExposure;
+    conditions.values['trigger'] = trigger;
+    // conditions.status = true;
+    setFormValues(conditions);
+    console.log(formValues);
+},[when,amount,windExposure,trigger])
+
+const [snowType, setSnowType] = useState(formValues.values?.snowType);
+const [depth, setDepth] = useState(formValues.values?.depth);
+const [width, setWidth] = useState(formValues.values?.width);
+const [length, setLength] = useState(formValues.values?.length);
+const [height, setHeight] = useState(formValues.values?.height);
+const [inclination, setInclination] = useState(formValues.values?.inclination);
+
+useEffect(()=>{
+    let conditions = formValues;
+    conditions.values['depth'] = depth;
+    conditions.values['width'] = width;
+    conditions.values['height'] = height;
+    conditions.values['length'] = length;
+    conditions.values['inclination'] = inclination;
+    conditions.values['snowType'] = snowType;
+    // conditions.status = true;
+    setFormValues(conditions);
+    console.log(formValues);
+},[depth,width,height,length,inclination,snowType])
+
+const [dangerLevel1, setDangerLevel1] = useState(formValues.values?.dangerLevel?.level_1);
+const [dangerLevel2, setDangerLevel2] = useState(formValues.values?.dangerLevel?.level_2);
+const [dangerLevel3, setDangerLevel3] = useState(formValues.values?.dangerLevel?.level_3);
+const [dangerLevel4, setDangerLevel4] = useState(formValues.values?.dangerLevel?.level_4);
+const [dangerLevel5, setDangerLevel5] = useState(formValues.values?.dangerLevel?.level_5);
+useEffect(()=>{
+    let conditions = formValues;
+    conditions.values['dangerLevel'] = {
+        level_1: dangerLevel1,
+        level_2: dangerLevel2,
+        level_3: dangerLevel3,
+        level_4: dangerLevel4,
+        level_5: dangerLevel5,
     }
-    conditions.status = true;
-    setQuickValues(conditions);
-    // console.log(quickValues);
-},[deepPowder,crusty,wet,heavy,powder,windAffected,hard])
+    // conditions.status = true;
+    setFormValues(conditions);
+    console.log(formValues);
+},[dangerLevel1,dangerLevel2,dangerLevel3,dangerLevel4,dangerLevel5])
 
-//ridden slopes:
-const [rodeMellow, setRodeMellow] = useState(quickValues.values?.rodeSlopeTypes?.mellow);
-const [rodeAlpine, setRodeAlpine] = useState(quickValues.values?.rodeSlopeTypes?.alpine);
-const [rodeConvex, setRodeConvex] = useState(quickValues.values?.rodeSlopeTypes?.convex);
-const [rodeDense, setRodeDense] = useState(quickValues.values?.rodeSlopeTypes?.dense);
-const [rodeSteep, setRodeSteep] = useState(quickValues.values?.rodeSlopeTypes?.steep);
-const [rodeOpen, setRodeOpen] = useState(quickValues.values?.rodeSlopeTypes?.openTrees);
-const [rodeCut, setRodeCut] = useState(quickValues.values?.rodeSlopeTypes?.cut);
-const [rodeSunny, setRodeSunny] = useState(quickValues.values?.rodeSlopeTypes?.sunnys);
-
+const [avalancheType1, setAvalancheType1] = useState(formValues.values?.avalancheType?.type_1);
+const [avalancheType2, setAvalancheType2] = useState(formValues.values?.avalancheType?.type_2);
+const [avalancheType3, setAvalancheType3] = useState(formValues.values?.avalancheType?.type_3);
+const [avalancheType4, setAvalancheType4] = useState(formValues.values?.avalancheType?.type_4);
+const [avalancheType5, setAvalancheType5] = useState(formValues.values?.avalancheType?.type_5);
+const [avalancheType6, setAvalancheType6] = useState(formValues.values?.avalancheType?.type_6);
+const [avalancheType7, setAvalancheType7] = useState(formValues.values?.avalancheType?.type_7);
+const [avalancheType8, setAvalancheType8] = useState(formValues.values?.avalancheType?.type_8);
+const [avalancheType9, setAvalancheType9] = useState(formValues.values?.avalancheType?.type_9);
 useEffect(()=>{
-    let conditions = quickValues;
-    conditions.values['rodeSlopeTypes'] = {
-        'mellow': rodeMellow,
-        'alpine': rodeAlpine,
-        'convex': rodeConvex,
-        'dense': rodeDense,
-        'steep':rodeSteep,
-        'openTrees': rodeOpen,
-        'cut': rodeCut,
-        'sunny': rodeSunny
+    let conditions = formValues;
+    conditions.values['avalancheType'] = {
+       type_1: avalancheType1,
+       type_2: avalancheType2,
+       type_3: avalancheType3,
+       type_4: avalancheType4,
+       type_5: avalancheType5,
+       type_6: avalancheType6,
+       type_7: avalancheType7,
+       type_8: avalancheType8,
+       type_9: avalancheType9,
     }
-    conditions.status = true;
-    setQuickValues(conditions);
-     
-    // console.log(quickValues);
-},[rodeMellow,rodeAlpine,rodeConvex,rodeDense,rodeSteep,rodeOpen,rodeCut,rodeSunny]);
+    // conditions.status = true;
+    setFormValues(conditions);
+    console.log(formValues);
+},[avalancheType1,avalancheType2,avalancheType3,avalancheType4,avalancheType5,avalancheType6,avalancheType7,avalancheType8,avalancheType9])
 
-//avoided slopes 
-const [avoidAlpine, setAvoidAlpine] = useState(quickValues.values?.avoidedSlopeTypes?.alpine);
-const [avoidDense, setAvoidDense] = useState(quickValues.values?.avoidedSlopeTypes?.dense);
-const [avoidSteep, setAvoidSteep] = useState(quickValues.values?.avoidedSlopeTypes?.steep);
-const [avoidOpen, setAvoidOpen] = useState(quickValues.values?.avoidedSlopeTypes?.openTrees);
-const [avoidCut, setAvoidCut] = useState(quickValues.values?.avoidedSlopeTypes?.cut);
-const [avoidSunny, setAvoidSunny] = useState(quickValues.values?.avoidedSlopeTypes?.sunny);
 
+const [heightRange1, setHeightRange1] = useState(formValues.values?.heightRange?.range_1);
+const [heightRange2, setHeightRange2] = useState(formValues.values?.heightRange?.range_2);
+const [heightRange3, setHeightRange3] = useState(formValues.values?.heightRange?.range_3);
+const [heightRange4, setHeightRange4] = useState(formValues.values?.heightRange?.range_4);
 useEffect(()=>{
-    let conditions = quickValues;
-    conditions.values['avoidedSlopeTypes'] = {
-        'alpine': avoidAlpine,
-        'dense': avoidDense,
-        'steep': avoidSteep,
-        'openTrees': avoidOpen,
-        'cut': avoidCut,
-        'sunny': avoidSunny
+    let conditions = formValues;
+    conditions.values['heightRange'] = {
+        range_1: heightRange1,
+        range_2: heightRange2,
+        range_3: heightRange3,
+        range_4: heightRange4,
     }
-    conditions.status = true;
-    setQuickValues(conditions);
-    // console.log(quickValues);
-},[avoidAlpine,avoidDense,avoidSteep,avoidOpen,avoidCut,avoidSunny]);
+    // conditions.status = true;
+    setFormValues(conditions);
+    console.log(formValues);
+},[heightRange1,heightRange2,heightRange3,heightRange4])
 
-
-//weather conditions
-const [warmDay, setWarmDay] = useState(quickValues.values?.dayType?.warm);
-const [foggyDay, setFoggyDay] = useState(quickValues.values?.dayType?.foggy);
-const [cloudyDay, setCloudyDay] = useState(quickValues.values?.dayType?.cloudy);
-const [stormyDay, setStormyDay] = useState(quickValues.values?.dayType?.stormy);
-const [windyDay, setWindyDay] = useState(quickValues.values?.dayType?.windy);
-const [wetDay, setWetDay] = useState(quickValues.values?.dayType?.wet);
-const [coldDay, setColdDay] = useState(quickValues.values?.dayType?.cold);
-const [sunnyDay, setSunnyDay] = useState(quickValues.values?.dayType?.sunny);
-
+const [orientation, setOrientation] = useState(formValues.values?.orientation);
+const [orientationN, setOrientationN] = useState(formValues.values?.orientation?.N);
+const [orientationNE, setOrientationNE] = useState(formValues.values?.orientation?.NE);
+const [orientationE, setOrientationE] = useState(formValues.values?.orientation?.E);
+const [orientationSE, setOrientationSE] = useState(formValues.values?.orientation?.SE);
+const [orientationS, setOrientationS] = useState(formValues.values?.orientation?.S);
+const [orientationSO, setOrientationSO] = useState(formValues.values?.orientation?.SO);
+const [orientationO, setOrientationO] = useState(formValues.values?.orientation?.O);
+const [orientationNO, setOrientationNO] = useState(formValues.values?.orientation?.NO);
 useEffect(()=>{
-    let conditions = quickValues;
-    conditions.values['dayType'] = {
-        'warm': warmDay,
-        'foggy': foggyDay,
-        'cloudy': cloudyDay,
-        'stormy': stormyDay,
-        'windy': windyDay,
-        'cold': coldDay,
-        'wet': wetDay, 
-        'sunny': sunnyDay
-    }
-    conditions.status = true;
-    setQuickValues(conditions);
-    // console.log(quickValues);
-},[warmDay,foggyDay,cloudyDay,stormyDay,windyDay,coldDay,wetDay,sunnyDay]);
+    let conditions = formValues;
+    conditions.values['orientation'] = {
+        N: orientationN,
+        NE: orientationNE,
+        E: orientationE,
+        SE: orientationSE,
+        S: orientationS,
+        SO: orientationSO,
+        O: orientationO,
+        NO: orientationNO,
 
-//avalanche conditions:
-const [newConditions, setNewConditions] = useState(quickValues.values?.avalancheConditions?.newConditions);
-const [avalanches, setAvalanches] = useState(quickValues.values?.avalancheConditions?.slabs);
-const [sounds, setSounds] = useState(quickValues.values?.avalancheConditions?.sounds);
-const [temperatureChange, setTemperatureChange] = useState(quickValues.values?.avalancheConditions?.tempChanges);
-
-useEffect(()=>{
-    let conditions = quickValues;
-    conditions.values['avalancheConditions'] = {
-        'newConditions': newConditions,
-        'slabs': avalanches,
-        'sounds': sounds,
-        'tempChanges': temperatureChange,
     }
-    conditions.status = true;
-    setQuickValues(conditions);
-},[newConditions,avalanches,sounds,temperatureChange]);
+    // conditions.status = true;
+    setFormValues(conditions);
+    console.log(formValues);
+},[orientationN,orientationNE,orientationE,orientationSE,orientationS,orientationO,orientationNO])
 
 //comments 
-const [comments, setComments] = useState(quickValues.values?.otherComments);
+const [comments, setComments] = useState(formValues.values?.otherComments);
 
 useEffect(()=>{
-    let conditions = quickValues;
+    let conditions = formValues;
     conditions.values['otherComments'] = comments
     conditions.status = true;
-    setQuickValues(conditions);
+    setFormValues(conditions);
 },[comments]);
 
-const data = [
-    {label: 'Amazing'},
-    {label: 'Good'},
-    {label: 'Ok'},
-    {label: 'Terrible'},
+
+const whenOptions = [
+        {label: '< 12 horas'},
+        {label: '12 - 24 horas'},
+        {label: '24 - 48 horas'},
+        {label: '> 48 horas'},
     ];
 
+const amountOptions = [
+        {label: '1'},
+        {label: '2-5'},
+        {label: '6-10'},
+        {label: '10-20'},
+        {label: '>20'},
+    ];
+
+const triggerOptions = [
+        {label: 'Accidental'},
+        {label: 'Natural'},
+        {label: 'Artificial'},
+    ];
+
+const windExposureOptions = [
+        {label: 'Sotavento'},
+        {label: 'Sobrevento'},
+        {label: 'Carga cruzada'},
+        {label: 'Sin exposicion al viento'},
+    ];
 
 return(
     <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
         <ScrollView >
             <View style={styles.container}>
                 <View style={styles.introContainer} >
-                    <Text style={styles.intro}>Use the Quick Report to quickly share information 
-                    about your trip. You can create a comprehensive repotr by adding more details in 
-                    the Avalanche, Snowpack, Weather and/or Incident tabs.</Text> 
+                    <Text style={styles.intro}>Avalanche text intro.... HERE </Text> 
                 </View>
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
-                    <Text>Riding quality was:</Text>
+                    <Text>La observación fué hace:</Text>
                         <RadioButtonRN
                             textColor={'black'}
                             circleSize={14}
-                            data={data}
-                            initial={ridingQuality ? ridingQuality : null}
+                            data={whenOptions}
+                            initial={when ? when : null}
                             box={false}
                             selectedBtn={(e) => {
-                                // console.log(data.map(object => object.label).indexOf(e.label));
-                                //console.log(e.label)
-                                setRidingQuality(data.map(object => object.label).indexOf(e.label)+1);
+                                setWhen(whenOptions.map(object => object.label).indexOf(e.label)+1);
                             }}
                             />
                 </View>
-                
+
                 <View style={styles.formContainer} >
-                    <View style={styles.spacer}></View>
-
-                    <Text>Snow conditions were:</Text>
-
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                        <CheckBox
-                            value={deepPowder}
-                            style={[ { height: 20, width: 20 } ]}
-                            boxType={'circle'}
-                            animationDuration={0.4}
-                            onAnimationType={'flat'}
-                            offAnimationType={'flat'}
-                            onValueChange={(newValue) => setDeepPowder(newValue)}
-                        />
-      
-                            <Text style={{marginLeft:10}}>Deep Powder</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}> 
-                            <CheckBox
-                            style={[ { height: 20, width: 20 } ]}
-                            disabled={false}
-                            boxType={'circle'}
-                            animationDuration={0.2}
-                            onAnimationType={'flat'}
-                            offAnimationType={'flat'}
-                            value={wet}
-                            onValueChange={(newValue) => setWet(newValue)}
+                    <View style={styles.spacer}/>
+                    <Text>Número de avalanchas:</Text>
+                        <RadioButtonRN
+                            textColor={'black'}
+                            circleSize={14}
+                            data={amountOptions}
+                            initial={amount ? amount : null}
+                            box={false}
+                            selectedBtn={(e) => {
+                                setAmount(amountOptions.map(object => object.label).indexOf(e.label)+1);
+                            }}
                             />
-                            <Text style={{marginLeft:10}}>Wet</Text>
-                        </View>
-                    </View>   
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                            style={[ { height: 20, width: 20 } ]}
-                            disabled={false}
-                            boxType={'circle'}
-                            animationDuration={0.2}
-                            onAnimationType={'flat'}
-                            offAnimationType={'flat'}
-                            value={crusty}
-                            onValueChange={(newValue) => setCrusty(newValue)}
-
-                            />
-                            <Text style={{marginLeft:10}}>Crusty</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                           style={[ { height: 20, width: 20 } ]}
-                           disabled={false}
-                           boxType={'circle'}
-                           animationDuration={0.2}
-                           onAnimationType={'flat'}
-                           offAnimationType={'flat'}
-                           value={powder}
-                           onValueChange={(newValue) => setPowder(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Powder</Text>
-                        </View> 
-                    </View>   
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                          style={[ { height: 20, width: 20 } ]}
-                          disabled={false}
-                          boxType={'circle'}
-                          animationDuration={0.2}
-                          onAnimationType={'flat'}
-                          offAnimationType={'flat'}
-                          value={heavy}
-                          onValueChange={(newValue) => setHeavy(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Heavy</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                         style={[ { height: 20, width: 20 } ]}
-                         disabled={false}
-                         boxType={'circle'}
-                         animationDuration={0.2}
-                         onAnimationType={'flat'}
-                         offAnimationType={'flat'}
-                         value={windAffected}
-                         onValueChange={(newValue) => setWindAffected(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Wind Affected</Text>
-                        </View> 
-                    </View>
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                           style={[ { height: 20, width: 20 } ]}
-                           disabled={false}
-                           boxType={'circle'}
-                           animationDuration={0.2}
-                           onAnimationType={'flat'}
-                           offAnimationType={'flat'}
-                           value={hard}
-                           onValueChange={(newValue) => setHard(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Hard</Text>
-                        </View>
-                    </View>
                 </View>
+   
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}></View>
 
-                    <Text>We rode:</Text>
-
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                        <CheckBox
-                            value={rodeMellow}
-                            style={[ { height: 20, width: 20 } ]}
-                            boxType={'circle'}
-                            animationDuration={0.4}
-                            onAnimationType={'flat'}
-                            offAnimationType={'flat'}
-                            onValueChange={(newValue) => setRodeMellow(newValue)}
-                        />
-      
-                            <Text style={{marginLeft:10}}>Mellow slopes</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}> 
-                            <CheckBox
-                            style={[ { height: 20, width: 20 } ]}
-                            disabled={false}
-                            boxType={'circle'}
-                            animationDuration={0.2}
-                            onAnimationType={'flat'}
-                            offAnimationType={'flat'}
-                            value={rodeConvex}
-                            onValueChange={(newValue) => setRodeConvex(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Convex slopes</Text>
-                        </View>
-                    </View>   
+                    <Text>Medida:</Text>
+                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Si dudas entre dos tipos, puedes marcar las dos</Text>        
                     <View style={styles.formGroup}>
                         <View style={styles.checkboxGroup}>
                             <CheckBox
-                            style={[ { height: 20, width: 20 } ]}
-                            disabled={false}
-                            boxType={'circle'}
-                            animationDuration={0.2}
-                            onAnimationType={'flat'}
-                            offAnimationType={'flat'}
-                            value={rodeAlpine}
-                            onValueChange={(newValue) => setRodeAlpine(newValue)}
-
-                            />
-                            <Text style={{marginLeft:10}}>Alpine slopes</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                           style={[ { height: 20, width: 20 } ]}
-                           disabled={false}
-                           boxType={'circle'}
-                           animationDuration={0.2}
-                           onAnimationType={'flat'}
-                           offAnimationType={'flat'}
-                           value={rodeDense}
-                           onValueChange={(newValue) => setRodeDense(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Dense slopes</Text>
-                        </View> 
-                    </View>   
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                          style={[ { height: 20, width: 20 } ]}
-                          disabled={false}
-                          boxType={'circle'}
-                          animationDuration={0.2}
-                          onAnimationType={'flat'}
-                          offAnimationType={'flat'}
-                          value={rodeSteep}
-                          onValueChange={(newValue) => setRodeSteep(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Steep slopes</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                         style={[ { height: 20, width: 20 } ]}
-                         disabled={false}
-                         boxType={'circle'}
-                         animationDuration={0.2}
-                         onAnimationType={'flat'}
-                         offAnimationType={'flat'}
-                         value={rodeOpen}
-                         onValueChange={(newValue) => setRodeOpen(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Open trees</Text>
-                        </View> 
-                    </View>
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                          style={[ { height: 20, width: 20 } ]}
-                          disabled={false}
-                          boxType={'circle'}
-                          animationDuration={0.2}
-                          onAnimationType={'flat'}
-                          offAnimationType={'flat'}
-                          value={rodeCut}
-                          onValueChange={(newValue) => setRodeCut(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Cut blocks</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                         style={[ { height: 20, width: 20 } ]}
-                         disabled={false}
-                         boxType={'circle'}
-                         animationDuration={0.2}
-                         onAnimationType={'flat'}
-                         offAnimationType={'flat'}
-                         value={rodeSunny}
-                         onValueChange={(newValue) => setRodeSunny(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Suny slopes</Text>
-                        </View> 
-                    </View>
-                </View>
-                <View style={styles.formContainer} >
-                    <View style={styles.spacer}></View>
-
-                    <Text>We stayed away from:</Text>
-  
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                            style={[ { height: 20, width: 20 } ]}
-                            disabled={false}
-                            boxType={'circle'}
-                            animationDuration={0.2}
-                            onAnimationType={'flat'}
-                            offAnimationType={'flat'}
-                            value={avoidAlpine}
-                            onValueChange={(newValue) => setAvoidAlpine(newValue)}
-
-                            />
-                            <Text style={{marginLeft:10}}>Alpine slopes</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                           style={[ { height: 20, width: 20 } ]}
-                           disabled={false}
-                           boxType={'circle'}
-                           animationDuration={0.2}
-                           onAnimationType={'flat'}
-                           offAnimationType={'flat'}
-                           value={avoidDense}
-                           onValueChange={(newValue) => setAvoidDense(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Dense slopes</Text>
-                        </View> 
-                    </View>   
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                          style={[ { height: 20, width: 20 } ]}
-                          disabled={false}
-                          boxType={'circle'}
-                          animationDuration={0.2}
-                          onAnimationType={'flat'}
-                          offAnimationType={'flat'}
-                          value={avoidSteep}
-                          onValueChange={(newValue) => setAvoidSteep(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Steep slopes</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                         style={[ { height: 20, width: 20 } ]}
-                         disabled={false}
-                         boxType={'circle'}
-                         animationDuration={0.2}
-                         onAnimationType={'flat'}
-                         offAnimationType={'flat'}r
-                         value={avoidOpen}
-                         onValueChange={(newValue) => setAvoidOpen(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Open trees</Text>
-                        </View> 
-                    </View>
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                          style={[ { height: 20, width: 20 } ]}
-                          disabled={false}
-                          boxType={'circle'}
-                          animationDuration={0.2}
-                          onAnimationType={'flat'}
-                          offAnimationType={'flat'}r
-                          value={avoidCut}
-                          onValueChange={(newValue) => setAvoidCut(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Cut blocks</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                         style={[ { height: 20, width: 20 } ]}
-                         disabled={false}
-                         boxType={'circle'}
-                         animationDuration={0.2}
-                         onAnimationType={'flat'}
-                         offAnimationType={'flat'}r
-                         value={avoidSunny}
-                         onValueChange={(newValue) => setAvoidSunny(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Suny slopes</Text>
-                        </View> 
-                    </View>
-                </View>
-                <View style={styles.formContainer} >
-                    <View style={styles.spacer}></View>
-
-                    <Text>The day was:</Text>
-
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                        <CheckBox
-                            value={warmDay}
-                            style={[ { height: 20, width: 20 } ]}
-                            boxType={'circle'}
-                            animationDuration={0.4}
-                            onAnimationType={'flat'}
-                            offAnimationType={'flat'}
-                            onValueChange={(newValue) => setWarmDay(newValue)}
-                        />
-      
-                            <Text style={{marginLeft:10}}>Warm</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}> 
-                            <CheckBox
-                            style={[ { height: 20, width: 20 } ]}
-                            disabled={false}
-                            boxType={'circle'}
-                            animationDuration={0.2}
-                            onAnimationType={'flat'}
-                            offAnimationType={'flat'}
-                            value={foggyDay}
-                            onValueChange={(newValue) => setFoggyDay(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Foggy</Text>
-                        </View>
-                    </View>   
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                            style={[ { height: 20, width: 20 } ]}
-                            disabled={false}
-                            boxType={'circle'}
-                            animationDuration={0.2}
-                            onAnimationType={'flat'}
-                            offAnimationType={'flat'}
-                            value={cloudyDay}
-                            onValueChange={(newValue) => setCloudyDay(newValue)}
-
-                            />
-                            <Text style={{marginLeft:10}}>Cloudy</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                           style={[ { height: 20, width: 20 } ]}
-                           disabled={false}
-                           boxType={'circle'}
-                           animationDuration={0.2}
-                           onAnimationType={'flat'}
-                           offAnimationType={'flat'}
-                           value={stormyDay}
-                           onValueChange={(newValue) => setStormyDay(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Stormy</Text>
-                        </View> 
-                    </View>   
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                          style={[ { height: 20, width: 20 } ]}
-                          disabled={false}
-                          boxType={'circle'}
-                          animationDuration={0.2}
-                          onAnimationType={'flat'}
-                          offAnimationType={'flat'}
-                          value={windyDay}
-                          onValueChange={(newValue) => setWindyDay(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Windy</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                         style={[ { height: 20, width: 20 } ]}
-                         disabled={false}
-                         boxType={'circle'}
-                         animationDuration={0.2}
-                         onAnimationType={'flat'}
-                         offAnimationType={'flat'}
-                         value={coldDay}
-                         onValueChange={(newValue) => setColdDay(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Cold</Text>
-                        </View> 
-                    </View>
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                          style={[ { height: 20, width: 20 } ]}
-                          disabled={false}
-                          boxType={'circle'}
-                          animationDuration={0.2}
-                          onAnimationType={'flat'}
-                          offAnimationType={'flat'}
-                          value={wetDay}
-                          onValueChange={(newValue) => setWetDay(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Wet</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                         style={[ { height: 20, width: 20 } ]}
-                         disabled={false}
-                         boxType={'circle'}
-                         animationDuration={0.2}
-                         onAnimationType={'flat'}
-                         offAnimationType={'flat'}
-                         value={sunnyDay}
-                         onValueChange={(newValue) => setSunnyDay(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Sunny</Text>
-                        </View> 
-                    </View>
-                </View>
-                <View style={styles.formContainer} >
-                    <View style={styles.spacer}></View>
-
-                    <Text>Avalanche conditions:</Text>
-
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                                value={newConditions}
+                                value={dangerLevel1}
                                 style={[ { height: 20, width: 20 } ]}
                                 boxType={'circle'}
                                 animationDuration={0.4}
                                 onAnimationType={'flat'}
                                 offAnimationType={'flat'}
-                                onValueChange={(newValue) => setNewConditions(newValue)}
+                                onValueChange={(newValue) => setDangerLevel1(newValue)}
                             />
-                            <Text style={{marginLeft:10}}>30cm + of new snow, or significant drifting, or rain in the last 48 hours.</Text>
+                            <Text style={{marginLeft:10}}>1-Peligro de enterramiento mínimo (peligro de caída)</Text>
                         </View>
                     </View>   
                     <View style={styles.formGroup}>
                         <View style={styles.checkboxGroup}>
                             <CheckBox
-                                value={avalanches}
+                                value={dangerLevel2}
                                 style={[ { height: 20, width: 20 } ]}
                                 boxType={'circle'}
                                 animationDuration={0.4}
                                 onAnimationType={'flat'}
                                 offAnimationType={'flat'}
-                                onValueChange={(newValue) => setAvalanches(newValue)}
+                                onValueChange={(newValue) => setDangerLevel2(newValue)}
                             />
-                            <Text style={{marginLeft:10}}>Slab avalanches today or yesterday.</Text>
+                            <Text style={{marginLeft:10}}>2-Puede enterrar, herir o matar a una persona.</Text>
                         </View>
                     </View>  
                     <View style={styles.formGroup}>
                         <View style={styles.checkboxGroup}>
                             <CheckBox
-                                value={sounds}
+                                value={dangerLevel3}
                                 style={[ { height: 20, width: 20 } ]}
                                 boxType={'circle'}
                                 animationDuration={0.4}
                                 onAnimationType={'flat'}
                                 offAnimationType={'flat'}
-                                onValueChange={(newValue) => setSounds(newValue)}
+                                onValueChange={(newValue) => setDangerLevel3(newValue)}
                             />
-                            <Text style={{marginLeft:10}}>Whumpfing or drum-like sounds or shooting cracks.</Text>
+                            <Text style={{marginLeft:10}}>3-Puede enterrar o destruir un coche.</Text>
                         </View>
                     </View>  
                     <View style={styles.formGroup}>
                         <View style={styles.checkboxGroup}>
                             <CheckBox
-                                value={temperatureChange}
+                                value={dangerLevel4}
                                 style={[ { height: 20, width:  20} ]}
                                 boxType={'circle'}
                                 animationDuration={0.4}
                                 onAnimationType={'flat'}
                                 offAnimationType={'flat'}
-                                onValueChange={(newValue) => setTemperatureChange(newValue)}
+                                onValueChange={(newValue) => setDangerLevel4(newValue)}
                             />
-                            <Text style={{marginLeft:10}}>Rapid temperature rise to near zero degrees or wet surface snow.</Text>
+                            <Text style={{marginLeft:10}}>4-Puede enterrar o destruir un vagon de tren.</Text>
                         </View>
                     </View>  
+                    <View style={styles.formGroup}>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={dangerLevel5}
+                                style={[ { height: 20, width:  20} ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setDangerLevel5(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>5-Puede modificar el paisaje, possibilidad de daños desastrosos.</Text>
+                        </View>
+                    </View>  
+                </View>
+                <View style={styles.formContainer} >
+                    <View style={styles.spacer}></View>
+
+                    <Text>Tipología de avalancha:</Text>
+                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Si dudas entre dos tipos, puedes marcar las dos</Text>        
+                    <View style={styles.formGroup}>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={avalancheType1}
+                                style={[ { height: 20, width: 20 } ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setAvalancheType1(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>Placa nieve reciente.</Text>
+                        </View>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={avalancheType2}
+                                style={[ { height: 20, width: 20 } ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setAvalancheType2(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>Placa de viento.</Text>
+                        </View> 
+                    </View>   
+                    <View style={styles.formGroup}>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={avalancheType3}
+                                style={[ { height: 20, width: 20 } ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setAvalancheType3(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>Placa capa debil persistente</Text>
+                        </View>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={avalancheType4}
+                                style={[ { height: 20, width: 20 } ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setAvalancheType4(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>Placa húmeda</Text>
+                        </View>
+                    </View>  
+                    <View style={styles.formGroup}>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={avalancheType5}
+                                style={[ { height: 20, width: 20 } ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setAvalancheType5(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>Cornisa</Text>
+                        </View>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={avalancheType6}
+                                style={[ { height: 20, width:  20} ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setAvalancheType6(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>Cornisa y placa</Text>
+                        </View>
+                    </View>  
+                    <View style={styles.formGroup}>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={avalancheType7}
+                                style={[ { height: 20, width:  20} ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setAvalancheType7(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>Puntual húmeda</Text>
+                        </View>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={avalancheType8}
+                                style={[ { height: 20, width:  20} ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setAvalancheType8(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>Puntual seca</Text>
+                        </View>
+                       
+                    </View>  
+                    <View style={styles.formGroup}>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={avalancheType9}
+                                style={[ { height: 20, width:  20} ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setAvalancheType9(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>Deslizamiento basal</Text>
+                        </View>
+                    </View>  
+                </View>
+                <View style={styles.formContainer} >
+                    <View style={styles.spacer}></View>
+
+                    <Text>Características de la avalancha:</Text>
+                    {/* <Text style={{fontSize:12, color: 'gray', padding:5}}>Si dudas entre dos tipos, puedes marcar las dos</Text>         */}
+                    
+                    <View style={styles.inputGroup}>
+                        <View style={[styles.inputContainer, {width:"30%"}]}>
+                            <TextInput
+                                value={depth}
+                                style={styles.input}
+                                multiline={false}
+                                numberOfLines={1}
+                                placeholder="Profundidad (cm)"
+                                onChangeText={(text) => setDepth(text)}
+                                />
+                        </View>
+                        <View style={[styles.inputContainer, {width:"30%"}]}>
+                            <TextInput
+                                value={width}
+                                style={styles.input}
+                                multiline={false}
+                                numberOfLines={1}
+                                placeholder="Ancho (m)"
+                                onChangeText={(text) => setWidth(text)}
+                                />
+                        </View>
+                        <View style={[styles.inputContainer, {width:"30%"}]}>
+                            <TextInput
+                                value={length}
+                                style={styles.input}
+                                multiline={false}
+                                numberOfLines={1}
+                                placeholder="Largo (m)"
+                                onChangeText={(text) => setLength(text)}
+                                />
+                        </View>
+                    </View>
+                    <View style={styles.inputGroup}>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                value={snowType}
+                                style={styles.input}
+                                multiline={false}
+                                numberOfLines={1}
+                                placeholder="Grano de la capa debil"
+                                onChangeText={(text) => setSnowType(text)}
+                                />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                value={inclination}
+                                style={styles.input}
+                                multiline={false}
+                                numberOfLines={1}
+                                placeholder="Inclinación zona de salida (º)"
+                                onChangeText={(text) => setInclination(text)}
+                                />
+                        </View>
+                    </View> 
+                </View>
+                <View style={styles.formContainer} >
+                    <View style={styles.spacer}></View>
+                        <Text>Desencadenamiento:</Text>
+                        <RadioButtonRN
+                            textColor={'black'}
+                            circleSize={14}
+                            data={triggerOptions}
+                            initial={trigger ? trigger : null}
+                            box={false}
+                            selectedBtn={(e) => {
+                                setTrigger(triggerOptions.map(object => object.label).indexOf(e.label)+1);
+                            }}
+                            />
+                 </View> 
+                 <View style={styles.formContainer} >
+                    <View style={styles.spacer}></View>
+
+                    <Text>Franja altitudinal:</Text>
+                    {/* <Text style={{fontSize:12, color: 'gray', padding:5}}>Si dudas entre dos tipos, puedes marcar las dos</Text>         */}
+                    <View style={styles.formGroup}>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={heightRange1}
+                                style={[ { height: 20, width: 20 } ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setHeightRange1(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}> inferior a 1.600 m</Text>
+                        </View>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={heightRange2}
+                                style={[ { height: 20, width: 20 } ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setHeightRange2(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>entre 1.600 - 2.000 m</Text>
+                        </View> 
+                    </View>   
+                    <View style={styles.formGroup}>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={heightRange3}
+                                style={[ { height: 20, width: 20 } ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setHeightRange3(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>entre 2.000 - 2.400 m</Text>
+                        </View>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={heightRange4}
+                                style={[ { height: 20, width: 20 } ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setHeightRange4(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}> superior a 2.400 m</Text>
+                        </View>
+                        
+                    </View>  
+                    <View style={styles.inputGroup}>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                value={height}
+                                style={styles.input}
+                                multiline={false}
+                                numberOfLines={1}
+                                placeholder="Cota altimetrica zona de salida (m)"
+                                onChangeText={(text) => setHeight(text)}
+                                />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                value={inclination}
+                                style={styles.input}
+                                multiline={false}
+                                numberOfLines={1}
+                                placeholder="Inclinación zona de salida (º)"
+                                onChangeText={(text) => setInclination(text)}
+                                />
+                        </View>
+                    </View> 
+                </View>
+                 <View style={styles.formContainer} >
+                 <View style={styles.spacer}></View>
+                    <Text>Orientación:</Text>
+                    <View style={styles.formGroup}>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={orientationN}
+                                style={[ { height: 20, width: 20 } ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setOrientationN(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>N</Text>
+                        </View>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={orientationNE}
+                                style={[ { height: 20, width:  20} ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setOrientationNE(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>NE</Text>
+                        </View>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={orientationE}
+                                style={[ { height: 20, width:  20} ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setOrientationE(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>E</Text>
+                        </View>
+                    </View> 
+                    <View style={styles.formGroup}>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={orientationSE}
+                                style={[ { height: 20, width: 20 } ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setOrientationSE(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>SE</Text>
+                        </View>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={orientationS}
+                                style={[ { height: 20, width:  20} ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setOrientationS(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>S</Text>
+                        </View>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={orientationSO}
+                                style={[ { height: 20, width:  20} ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setOrientationSO(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>SO</Text>
+                        </View>
+                    </View> 
+                    <View style={styles.formGroup}>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={orientationO}
+                                style={[ { height: 20, width: 20 } ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setOrientationO(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>O</Text>
+                        </View>
+                        <View style={styles.checkboxGroup}>
+                            <CheckBox
+                                value={orientationNO}
+                                style={[ { height: 20, width:  20} ]}
+                                boxType={'circle'}
+                                animationDuration={0.4}
+                                onAnimationType={'flat'}
+                                offAnimationType={'flat'}
+                                onValueChange={(newValue) => setOrientationNO(newValue)}
+                            />
+                            <Text style={{marginLeft:10}}>NO</Text>
+                        </View>
+                        <View style={styles.checkboxGroup}>
+                            
+                        </View>
+                    </View> 
+                </View>
+
+                <View style={styles.formContainer} >
+                 <View style={styles.spacer}></View>
+                    <Text>Exposición:</Text>
+                    <RadioButtonRN
+                            textColor={'black'}
+                            circleSize={14}
+                            data={windExposureOptions}
+                            initial={windExposure ? windExposure : null}
+                            box={false}
+                            selectedBtn={(e) => {
+                                setWindExposure(windExposureOptions.map(object => object.label).indexOf(e.label)+1);
+                            }}
+                            />
                 </View>
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}></View>
 
                     <Text>Other comments:</Text>
 
-                    
-                    <View style={styles.inputContainer}>
+                    <View style={styles.textAreaContainer}>
                         <TextInput
                             value={comments}
                             multiline={true}
                             numberOfLines={4}
-                            style={styles.input}
+                            style={styles.textArea}
                             onChangeText={(text) => setComments(text)}
                             />
                     </View>
@@ -772,6 +782,23 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         backgroundColor: 'white',
+        width: '45%',
+        borderColor: '#e8e8e8',
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        marginVertical: 5,
+    },
+    inputGroup:{
+        padding: 10,
+        marginRight: 10,
+        flex:1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    textAreaContainer:{
+        backgroundColor: 'white',
         width: '100%',
         borderColor: '#e8e8e8',
         borderWidth: 1,
@@ -779,13 +806,20 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         marginVertical: 5,
     },
-    input: {
+    textArea: {
         borderColor: "gray",
         width: "100%",
         height:'30%',
         paddingTop: 10,
         paddingBottom: 10,
-    }
+    },
+    input: {
+        borderColor: "gray",
+        width: "100%",
+        paddingTop: 10,
+        paddingBottom: 10,
+      },
+
 });
 
 export default AvalancheObservationTypeDetail;

@@ -139,7 +139,8 @@ export default function ObservationDetail({ route, navigation }) {
 
           <CustomButton 
             text={'Ubicación: '+ getValues("location")} 
-            type="tertiary"
+            type="custom"
+            fColor="gray"
             onPress={() => {
               navigation.navigate('Location Picker',{index, resetPin: true});
             }} 
@@ -147,7 +148,8 @@ export default function ObservationDetail({ route, navigation }) {
 
           <CustomButton 
             text="Fotos" 
-            type="tertiary"
+            type="custom"
+            fColor="gray"
             onPress={() => {
               console.log('photos library to be called');
               navigation.navigate('Imagenes',{index});
@@ -157,13 +159,16 @@ export default function ObservationDetail({ route, navigation }) {
           <View style={{marginTop: 50}}>
               
             <Text style={{marginBottom: 10, fontWeight:'bold'}}>Observaciones</Text>
-            <CustomButton text="Quick" type="custom" order="top" bgColor={"#62a256"} fgColor='white' iconName={observation.observationTypes.quick?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Rapida')} />
-            <CustomButton text="Avalanche" type="custom" order="middle" bgColor={"#48a5e9"} fgColor='white' iconName={"add-circle"} onPress={() => navigation.navigate('Avalancha')} />
-            <CustomButton text="Snowpack" type="custom" order="middle" bgColor={"#4052ac"} fgColor='white' iconName={"add-circle"} onPress={() => navigation.navigate('Manto de nieve')} />
-            <CustomButton text="Weather" type="custom" order="middle" bgColor={"#f5c144"} fgColor='white' iconName={"add-circle"} onPress={()=>{console.log('seting type Weather')}} />
-            <CustomButton text="Incident" type="custom" order="bottom" bgColor={"#e15141"} fgColor='white' iconName={"add-circle"} onPress={()=>{console.log('seting type Incident')}} />
+            <CustomButton text="Quick" type="custom" order="top" bgColor={"#48a5e9"} fColor='white' iconName={observation.observationTypes.quick?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Rapida')} />
+            <CustomButton text="Avalanche" type="custom" order="middle" bgColor={"#4062ff"} fColor='white' iconName={observation.observationTypes.avalanche?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Avalancha')} />
+            <CustomButton text="Snowpack" type="custom" order="bottom" bgColor={"#48a5e9"} fColor='white' iconName={"add-circle"} onPress={() => navigation.navigate('Manto de nieve')} />
+            {/* <CustomButton text="Weather" type="custom" order="middle" bgColor={"#f5c144"} fgColor='white' iconName={"add-circle"} onPress={()=>{console.log('seting type Weather')}} />
+            <CustomButton text="Incident" type="custom" order="bottom" bgColor={"#e15141"} fgColor='white' iconName={"add-circle"} onPress={()=>{console.log('seting type Incident')}} /> */}
           </View>
-          <Button style={styles.button} title="Submit" onPress={handleSubmit(onSubmit)} />
+          <View style={{marginTop: 50}}>
+            <CustomButton text="Submit" bgColor={"#62a256"} fgColor='white' iconName={null} onPress={handleSubmit(onSubmit)} />
+          </View>
+       
           {/* <Text style={styles.status}> {keyboardStatus}</Text> */}
         </View>
       
@@ -185,11 +190,6 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     padding: 5
-  },
-  button: {
-    width: "100%",
-    color: 'white',
-    background: 'blue'
   },
   datePicker:{
     width: "100%",
