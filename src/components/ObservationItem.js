@@ -7,13 +7,14 @@ import {ObservationContext } from '../context/ObservationContext';
 
 export default function Item({ item, index,  navigation  }) {
     const {setSelectedIndex, updateSelectedIndex} = useContext(ObservationContext);
+    console.log(item);
     return (
       <View style={styles.listItem}>
        {/* <Image source={{uri:item.photo}}  style={{width:60, height:60,borderRadius:30, marginRight: 10}} /> */}
         <View style={{marginTop:10,alignItems:"flex-start",flex:1}}>
           <Text style={{fontWeight:"bold"}}>{item.title}</Text>
           <Text>{moment(item.date).format('Do MMMM YYYY')}</Text>
-          
+          <Text>{item.status == 0 ? 'Draft' : ''}</Text>
         </View>
         <TouchableOpacity 
             style={{height:50,width:50, justifyContent:"center",alignItems:"center"}}
@@ -24,7 +25,7 @@ export default function Item({ item, index,  navigation  }) {
             }}
         >
           {/* <Text style={{color:"green"}}>Edit</Text> */}
-          <MaterialIcons name='chevron-right' size={20} color="#333" style={{marginRight: 5}}/>
+          <MaterialIcons name='arrow-forward-ios' size={20} color="#333" style={{marginRight: 5}}/>
         </TouchableOpacity>
       </View>
     );

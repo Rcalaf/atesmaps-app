@@ -1,26 +1,27 @@
 import React, { useState, useEffect, useContext } from 'react';
 import type {Node} from 'react';
 
+
 import {
     StatusBar,
     StyleSheet,
     useColorScheme,
     View,
+    ScrollView,
     Text,
     TouchableOpacity,
-    SafeAreaView
+    SafeAreaView,
+    ActivityIndicator
   } from 'react-native';
 
- import axios from 'axios';
- import { BASE_URL } from '../config';
-
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import CustomInput from "../components/CustomInput";
-import CustomButton from "../components/CustomButton";
-import DateTimePicker from '@react-native-community/datetimepicker';
+import axios from 'axios';
+import { BASE_URL } from '../config';
 
 import { AuthContext } from '../context/AuthContext';
-import { useForm, Controller } from "react-hook-form";
+
+import UserForm from '../components/UserForm';
+import CustomButton from "../components/CustomButton";
+
 
 // const Stack = createNativeStackNavigator();
 
@@ -30,105 +31,97 @@ const Profile: () => Node = () => {
 
 const {logout, userDetails,userToken} = useContext(AuthContext);
 
-// useEffect(()=>{
-//   console.log('Showing Profile');
-//   console.log(userDetails);
-//   let response = axios.post(`${BASE_URL}/users`,{'id': userDetails.id},{
-//     headers: { Authorization: `Bearer ${userToken}` }});
-//   console.log(response.data);
-//  // console.log(observation);
-// },[]);
+const [user, setUser] = useState(null);
+
+const sentData = async (id,data) => {
+  try {
+    const response = await axios({
+      method: "put",
+      url: `${BASE_URL}/users/${id}`,
+      data: data,
+      //headers: { "Content-Type": "multipart/form-data" },
+      headers: {"Authorization": `Bearer ${userToken}`}
+    });
+    //let response = await axios.post(`${BASE_URL}/users/${id}`,data,{ "Content-Type": "multipart/form-data" });
+    console.log('-----Performed a user updat to the API-----')
+    console.log(response);
+  } catch (error) {
+    console.log('error triggered while sending data')
+    console.log(error);
+  }
+};
+
+const getUserData = async (id) => {
+  try{
+    const response = await axios({
+      method: "get",
+      url: `${BASE_URL}/users/${id}`,
+      //headers: { "Content-Type": "multipart/form-data" },
+      headers: {"Authorization": `Bearer ${userToken}`}
+    });
+    //console.log(response.data);
+    return response.data  
+  }catch (error) {
+    console.log(error);
+  }
+}
 
 useEffect(()=>{
-  console.log(userDetails);
-  console.log(userDetails.accessToken);
+  const fetchUser = async () => {
+    setUser(await getUserData(userDetails.userId))
+  }
+  fetchUser();
+  console.log(user);
+  //console.log(userDetails.accessToken);
 },[])
 
-const showDatepicker = () => {
-  // console.log('showing date picker...');
-  // showMode('date');
-  setShow(!show);
-};
 
-const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
-  defaultValues: {
-    name: "",
-    email: userDetails.email,
-    password: "",
-  }
-});
 
 const onSubmit = (data) => {
-  console.log(data);
+  //console.log(getValues('password'));
+  //console.log(getValues('password') != '')
+  //console.log(user);
+  let formData = new FormData(data);
+  sentData(userDetails.userId, data);
+  //console.log(formData);
+  //console.log(data);
 };
 
-return(
-    <SafeAreaView style={styles.safeContainer}>
-      <View style={styles.container}>
-        <View style={{marginTop: 50}}>
-            <Text>This is your profile page</Text>
-            <CustomInput
-              name="email"
-              placeholder="Email"
-              control={control}
-              rules={{required: 'Email is required'}}
-              // onPress={showDatepicker}
-            />
 
-            <CustomInput
-              name="password"
-              placeholder="Password"
-              control={control}
-              rules={{required: 'password is required'}}
-              // onPress={showDatepicker}
-            />
+return user ? (
+  <SafeAreaView style={styles.safeContainer}>
+  <ScrollView style={styles.container}>
+    <UserForm preloadedValues={user} onSubmit={onSubmit}/>
+    {/* <View>
+      <CustomButton text="Logout" bgColor={"#f00"} fgColor='white' iconName={null} onPress={() => {logout()}} />
+    </View> */}
+    <View style={styles.space} />
+  </ScrollView>
+</SafeAreaView>
 
-          </View>
-          <View style={{marginTop: 50}}>
-          <Text>This is your profile page</Text>
-          <CustomInput
-            name="name"
-            placeholder="Nombre"
-            control={control}
-            rules={{required: 'Name is required'}}
-            // onPress={showDatepicker}
-          />
-
-          <Text>This is your profile page</Text>
-          <CustomInput
-            name="lastName"
-            placeholder="Apellidos"
-            control={control}
-            rules={{required: 'lastName is required'}}
-            // onPress={showDatepicker}
-          />
-
-        </View>
-        <View style={{marginTop: 50}}>
-            <CustomButton text="Guardar" bgColor={"#62a256"} fgColor='white' iconName={null} onPress={handleSubmit(onSubmit)} />
-        </View>
-        <View>
-          <Text>This is your profile page</Text>
-          <TouchableOpacity style={{backgroundColor: '#3098CF', padding: 20, borderRadius:10, marginBottom: 20}} onPress={() => {logout()}}>
-            <Text style={{textAlign:'center', color:'#fff', fontWeight: '700', fontSize: 17  }}>Logout</Text>
-          </TouchableOpacity>
-        </View>
+) : ( 
+      <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>
+        <ActivityIndicator size={'large'}/> 
       </View>
-    </SafeAreaView>
-    
- 
-)};
+    )};
+
+
 
 const styles = StyleSheet.create({
-    safeContainer: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-    },
-    container: {
+  safeContainer: {
       flex: 1,
-      padding: 15
-    },
-  });
+      flexDirection: 'column',
+      justifyContent: 'center',
+      paddingBottom: 40
+  },
+  container: {
+    flex: 1,
+    padding: 15,
+    
+  },
+  space: {
+    height: 50,
+  }
+});
 
 export default Profile;

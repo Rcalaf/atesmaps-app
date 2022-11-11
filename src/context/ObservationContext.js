@@ -39,8 +39,7 @@ export const ObservationProvider = ({children}) => {
         let aux = observations;
         aux[index] = obj;
         setObservations(aux);
-        setEditingObservation(obj);
-        
+        setEditingObservation(obj);    
         // setIsLoading(false);
     }
 

@@ -4,15 +4,20 @@ import { useForm, Controller } from "react-hook-form";
 import moment from 'moment';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
-// import RNDateTimePicker from '@react-native-community/datetimepicker';
+
+import axios from 'axios';
+import { BASE_URL } from '../config';
 
 import CustomButton from "../components/CustomButton";
 import CustomInput from "../components/CustomInput";
 
 import { ObservationContext } from '../context/ObservationContext';
+import { AuthContext } from '../context/AuthContext';
 
 export default function ObservationDetail({ route, navigation }) {
     const {editingObservation, observations, updateObervations } = useContext(ObservationContext);
+    const {userDetails,userToken} = useContext(AuthContext);
+
     const [index, setIndex] = useState(route.params?.index);
     const [update, setUpdate] = useState(route.params?.update);
 
@@ -26,6 +31,26 @@ export default function ObservationDetail({ route, navigation }) {
     const formatLocation = (locationDetails) =>{
       return locationDetails.latitude + ', ' +locationDetails.longitude;
     }
+
+    const sentData = async (id,data) => {
+      
+      try {
+        const response = await axios({
+          method: "post",
+          url: `${BASE_URL}/observations`,
+          data: data,
+          //headers: { "Content-Type": "multipart/form-data" },
+          headers: {"Authorization": `Bearer ${userToken}`}
+        });
+        //let response = await axios.post(`${BASE_URL}/users/${id}`,data,{ "Content-Type": "multipart/form-data" });
+       // console.log('-----Performed a user updat to the API-----')
+        //console.log(response);
+      } catch (error) {
+        //console.log('error triggered while sending data')
+        console.log(error);
+      }
+    };
+    
 
     const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
       defaultValues: {
@@ -46,13 +71,20 @@ export default function ObservationDetail({ route, navigation }) {
 
     
     const onSubmit = (data) => {
+     
       let obj = data;
       obj.date = moment(rawDate).format();
       obj.location = location;
       obj.observationTypes = editingObservation.observationTypes;
+     
       updateObervations(obj,index);
-      navigation.goBack();
-    };
+      console.log(obj);
+      console.log('----- BEGGIN Generation From data ------ ')
+      let formData = new FormData(obj);
+      console.log(formData);
+      console.log('----- END Generation From data ------ ')
+      sentData(userDetails.userId,obj);
+    }; 
 
     const onChange = (event, selectedDate) => {
       const currentDate = selectedDate;
@@ -69,12 +101,10 @@ export default function ObservationDetail({ route, navigation }) {
 
     useEffect(()=>{
       console.log('Observation has been updated');
+      editingObservation.user = userDetails.userId;
       setObservation(editingObservation);
      // console.log(observation);
     },[editingObservation]);
-
-  
-
 
     useEffect(()=>{
       setLocation(editingObservation.location);
@@ -185,7 +215,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 36
+    padding: 15
   },
   errorText: {
     color: 'red',

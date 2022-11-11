@@ -19,8 +19,8 @@ import CheckBox from '@react-native-community/checkbox';
 import { ObservationContext } from '../context/ObservationContext';
 
 const QuickObservationTypeDetail: () => Node = () => {
+    
 const { editingObservation, setEditingObservation  } = useContext(ObservationContext);
-
 const [quickValues, setQuickValues] = useState(editingObservation.observationTypes?.quick ? editingObservation.observationTypes?.quick : {status: false, values: {}});
 
 useEffect(()=>{
@@ -218,7 +218,7 @@ return(
                             initial={activityType ? activityType : null}
                             box={false}
                             selectedBtn={(e) => {
-                                setRidingQuality(data.map(object => object.label).indexOf(e.label)+1);
+                                setActivityType(activityData.map(object => object.label).indexOf(e.label)+1);
                             }}
                             />
                 </View>

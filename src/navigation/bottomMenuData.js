@@ -1,7 +1,8 @@
 import Profile from '../screens/Profile';
 import MapExplorer from '../screens/MapExplorer';
 import LocationPicker from '../screens/LocationPicker';
-import Observation from './ObservationStack';
+import ObservationStack from './ObservationStack';
+import ProfileStack from './ProfileStack';
 // import PagesScreen from '../pages/PagesViewContainer';
 // import ComponentsScreen from '../components/ComponentsViewContainer';
 
@@ -11,21 +12,22 @@ const iconGrids = require('../../assets/images/tabbar/grids.png');
 const iconPages = require('../../assets/images/tabbar/pages.png');
 const iconComponents = require('../../assets/images/tabbar/components.png');
 
+
 const bottomMenuData = [
   {
-    name: 'Home',
-    component: Profile,
-    icon: iconHome,
+    name: 'Perfil',
+    component: ProfileStack,
+    icon: 'account',
   },
-  {
-    name: 'Map',
-    component: MapExplorer,
-    icon: iconCalendar,
-  },
+  // {
+  //   name: 'Map',
+  //   component: MapExplorer,
+  //   icon: iconCalendar,
+  // },
   {
     name: 'Observaciones',
-    component: Observation,
-    icon: iconGrids,
+    component: ObservationStack,
+    icon: 'eye',
   },
 //   {
 //     name: 'Pages',

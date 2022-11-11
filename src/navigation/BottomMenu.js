@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text, View, Image, StyleSheet, Platform } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 import bottomMenuData from './bottomMenuData';
@@ -19,14 +20,17 @@ export default function BottomTabs() {
           headerShown: false, 
           tabBarIcon: ({ focused }) => (
             <View style={styles.tabBarItemContainer}>
-              <Image
+              <MaterialCommunityIcons size={25} 
+            color={'#5f5f5f'} name={item.icon} 
+            style={[styles.tabBarIcon, focused && styles.tabBarIconFocused]}/>
+              {/* <Image
                 resizeMode="contain"
                 source={item.icon}
                 style={[styles.tabBarIcon, focused && styles.tabBarIconFocused]}
-              />
+              /> */}
             </View>
           ),
-          tabBarLabel: ({ focused }) => <Text style={{ fontSize: 12, color: focused ? '#555CC4' : '#5f5f5f' }}>{item.name}</Text>,
+          tabBarLabel: ({ focused }) => <Text style={{ fontSize: 12, color: focused ? '#307df6' : '#5f5f5f' }}>{item.name}</Text>,
         }}
         />        
       ))}
@@ -48,6 +52,6 @@ const styles = StyleSheet.create({
     height: 23,
   },
   tabBarIconFocused: {
-    tintColor: '#555CC4',
+    color: '#307df6',
   },
 });

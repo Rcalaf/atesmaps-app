@@ -31,7 +31,7 @@ import {LocationContext } from '../context/LocationContext';
 
 const Stack = createNativeStackNavigator();
 
-const Observation: () => Node = ({ navigation, route }) => {
+const ObservationStack: () => Node = ({ navigation, route }) => {
 
 const {lastIndex, selectedIndex, setSelectedIndex, observations, newObservation, deleteObservation} = useContext(ObservationContext);
 // let index = observations.length > 0 ? observations.length-1 : 0;
@@ -142,4 +142,4 @@ const styles = StyleSheet.create({
     }
   });
 
-export default Observation;
+export default ObservationStack;

@@ -70,7 +70,7 @@ const Login: () => Node = ({navigation}) => {
           <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom: 30}}>
             <Text>New to AtesMaps?</Text>
             <TouchableOpacity onPress={() => {
-              navigation.popToTop();
+              //navigation.popToTop();
               navigation.navigate('Register');
             }}>
                 <Text style={{color: '#3098CF', fontWeight: '700'  }}>  Register</Text>

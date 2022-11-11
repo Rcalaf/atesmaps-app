@@ -21,7 +21,7 @@ export const AuthProvider = ({children}) => {
             let user = {userName, userEmail, userId} = response.data;
             //console.log('This is after logging:')
             //console.log(user);
-            //console.log('------------------------')
+            console.log('------------------------')
             await AsyncStorage.setItem('userToken', response.data.accessToken);
             await AsyncStorage.setItem('userDetails', JSON.stringify(user));
             setUserToken(response.data.accessToken);
