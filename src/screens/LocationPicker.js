@@ -96,9 +96,10 @@ const LocationPicker: () => Node = ({ route, navigation }) => {
 return(
     <View style={styles.container}>
         <MapView
-        //provider={this.props.provider}
+          // provider={this.props.provider}
           style={styles.map}
           showsUserLocation = {true}
+          mapType="satellite"
           initialRegion={{
             latitude: location.latitude,
             longitude: location.longitude,

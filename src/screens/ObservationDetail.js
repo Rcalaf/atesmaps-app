@@ -29,27 +29,24 @@ export default function ObservationDetail({ route, navigation }) {
     
 
     const formatLocation = (locationDetails) =>{
-      return locationDetails.latitude + ', ' +locationDetails.longitude;
+      return locationDetails?.latitude + ', ' +locationDetails?.longitude;
     }
 
-    const sentData = async (id,data) => {
-      
-      try {
-        const response = await axios({
-          method: "post",
-          url: `${BASE_URL}/observations`,
-          data: data,
-          //headers: { "Content-Type": "multipart/form-data" },
-          headers: {"Authorization": `Bearer ${userToken}`}
-        });
-        //let response = await axios.post(`${BASE_URL}/users/${id}`,data,{ "Content-Type": "multipart/form-data" });
-       // console.log('-----Performed a user updat to the API-----')
-        //console.log(response);
-      } catch (error) {
-        //console.log('error triggered while sending data')
-        console.log(error);
-      }
-    };
+    // const sentData = async (id,data) => {
+    //   try {
+    //     const response = await axios({
+    //       method: "post",
+    //       url: `${BASE_URL}/observations`,
+    //       data: data,
+    //       //headers: { "Content-Type": "multipart/form-data" },
+    //       headers: {"Authorization": `Bearer ${userToken}`}
+    //     });
+    //     console.log(response);
+    //   } catch (error) {
+    //     //console.log('error triggered while sending data')
+    //     console.log(error);
+    //   }
+    // };
     
 
     const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
@@ -83,7 +80,7 @@ export default function ObservationDetail({ route, navigation }) {
       let formData = new FormData(obj);
       console.log(formData);
       console.log('----- END Generation From data ------ ')
-      sentData(userDetails.userId,obj);
+     // sentData(userDetails.userId,obj);
     }; 
 
     const onChange = (event, selectedDate) => {
@@ -101,7 +98,7 @@ export default function ObservationDetail({ route, navigation }) {
 
     useEffect(()=>{
       console.log('Observation has been updated');
-      editingObservation.user = userDetails.userId;
+      // editingObservation.user = userDetails.userId;
       setObservation(editingObservation);
      // console.log(observation);
     },[editingObservation]);
@@ -176,7 +173,7 @@ export default function ObservationDetail({ route, navigation }) {
             }} 
           />
 
-          <CustomButton 
+          {/* <CustomButton 
             text="Fotos" 
             type="custom"
             fColor="gray"
@@ -184,7 +181,7 @@ export default function ObservationDetail({ route, navigation }) {
               console.log('photos library to be called');
               navigation.navigate('Imagenes',{index});
             }} 
-          />
+          /> */}
 
           <View style={{marginTop: 50}}>
               

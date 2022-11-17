@@ -22,11 +22,11 @@ export default function ObservationDetail({ navigation }) {
     
     //const [numOfItems, setNumOfItems] = useState(setNumOfItems)
 
-    // console.log(observations.length);
+    // console.log(observations);
 
     if( observations.length < 1 ) {
 
-      const observation = {
+      let observation = {
         title: 'Has no title',
         date: Date.now(),
         location: {
@@ -35,24 +35,25 @@ export default function ObservationDetail({ navigation }) {
         },
         observationTypes:{},
         status: 0,
+        submitted: false,
       }
 
 
       return(
         <View style={styles.container}>
-        <MaterialIcons 
-           // name='add-a-photo'
-           name='my-library-books'
-           size={50} 
-           color={'gray'}
-           style={{marginBottom: 20}}/>
-       <Text>No se ha creado ninguna observación.</Text>
-       <Button style={styles.button} title="Añadir observación"  onPress={() => {
-                newObservation(observation);
-                let index = lastIndex;      
-                navigation.navigate('Observación', {index})
-                }} />
-   </View>
+          <MaterialIcons 
+            // name='add-a-photo'
+            name='my-library-books'
+            size={50} 
+            color={'gray'}
+            style={{marginBottom: 20}}/>
+          <Text>No se ha creado ninguna observación.</Text>
+          <Button style={styles.button} title="Añadir observación"  onPress={async () => {
+                  await newObservation(observation);
+                  let index = lastIndex;      
+                  navigation.navigate('Observación', {index})
+                  }} />
+        </View>
       )
     }
   

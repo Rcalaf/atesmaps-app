@@ -68,8 +68,8 @@ return(
           headerRight: () => (
            
             <Pressable
-              onPress={() => {
-                newObservation(observation);
+              onPress={async ()  => {
+                await newObservation(observation);
                 let index = lastIndex;      
                 navigation.navigate('Observación', {index})
                 }}

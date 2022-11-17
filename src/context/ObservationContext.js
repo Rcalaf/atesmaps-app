@@ -1,14 +1,16 @@
-import React, {createContext, useState, useEffect} from 'react';
+import React, {createContext, useContext, useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 
 import { BASE_URL } from '../config';
 
-
+import { AuthContext } from '../context/AuthContext';
 export const ObservationContext = createContext();
 
 export const ObservationProvider = ({children}) => {
+    const {userDetails,userToken} = useContext(AuthContext);
+
     const [isLoading, setIsLoading] = useState(false);
     const [observations, setObservations] = useState([]);
     // const [snowType, setSnowType] = useState({});
@@ -16,18 +18,73 @@ export const ObservationProvider = ({children}) => {
     const [lastIndex, setLastIndex] = useState(null);
     const [selectedIndex, setSelectedIndex] = useState(null);
 
-
-    const newObservation = (observation) => {
-       // setIsLoading(true);
-        setObservations( (arr) => {
-            return [...arr, observation]});
-        setEditingObservation(observation);
-        //setIsLoading(false);
+    const setList = async (observations) => {
+        try {
+            await AsyncStorage.setItem('list', JSON.stringify(observations));
+        } catch (err) {
+            console.log(err);
+        }
     }
 
-    // const updateObservationSonwType = (snowTypeObjetc) => {
-    //     console.log(snowTypeObjetc);
-    // }
+    const getList = async () => {
+        let list;
+        try {
+            list = JSON.parse(await AsyncStorage.getItem('list'));
+        } catch (err) {
+            console.log(err);
+        }
+        return list;
+    }
+
+    const sentRequest = async (url, method, data) => {
+        console.log(url);
+        console.log(method);
+        console.log(data);
+        try {
+          const response = await axios({
+            method: method,
+            url: `${BASE_URL}${url}`,
+            data: data,
+            //headers: { "Content-Type": "multipart/form-data" },
+            headers: {"Authorization": `Bearer ${userToken}`}
+          });
+          return response;
+        } catch (error) {
+          //console.log('error triggered while sending data')
+          console.log(error);
+          return error;
+        }
+    };
+
+    const getData = async () => {
+        try{
+            let response = await sentRequest(`/observations/user/${userDetails.userId}`, "get", '');
+            //TODO: Sync local data with new data
+            await AsyncStorage.setItem('list', JSON.stringify(response.data));
+            setObservations(response.data);
+        }catch (err){
+            console.log(err);
+            //NO internet, then use LOCAL DATA
+            let list = JSON.parse(await AsyncStorage.getItem('list'));
+            setObservations(list);
+        }
+       
+    }
+    
+    const newObservation = async (observation) => {
+        setIsLoading(true);
+            observation.user = userDetails.userId;
+            let response = await sentRequest('/observations', "post", observation)
+            observation._id = response.data._id
+            setObservations( (arr) => {
+                return [...arr, observation]});
+            setEditingObservation(observation);
+        setIsLoading(false);
+    }
+
+    const syncObservations = () => {
+
+    }
 
     const updateSelectedIndex = (index) => {
         setEditingObservation(observations[index]); 
@@ -38,13 +95,15 @@ export const ObservationProvider = ({children}) => {
         // setIsLoading(true);
         let aux = observations;
         aux[index] = obj;
+
         setObservations(aux);
         setEditingObservation(obj);    
         // setIsLoading(false);
     }
 
-    const deleteObservation = () => {
+    const deleteObservation = async () => {
         console.log('Remove observation');
+        let response = await sentRequest(`/observations`, "delete", editingObservation);
         setEditingObservation({});
         setObservations( (arr) => {
             observations.splice(selectedIndex,1)
@@ -54,24 +113,9 @@ export const ObservationProvider = ({children}) => {
         setSelectedIndex(null);
     }
 
-    // const isSync = () =>{r
-    //     //TODO check if network and sync observation list...
-    //     try {
-    //         setIsLoading(true);
-    //     } catch (e) {
-    //         console.log('error on is loadin method:');
-    //         console.log(e);
-    //     }
-    //     setIsLoading(false);
-    // }
-
-    /*useEffect(()=>{
-        console.log('refreshing observation...');
-        
-    }, [observation]);*/
-
     useEffect(()=>{
         let index = observations.length 
+        console.log(index);
         setLastIndex(index);
         setSelectedIndex(index-1);
     },[observations]);
@@ -80,6 +124,15 @@ export const ObservationProvider = ({children}) => {
         console.log('editingObservation has been updated....');
         //console.log(editingObservation);
     },[editingObservation]);
+
+    const syncData = async () =>{
+        
+    }
+
+    useEffect(()=>{  
+        console.log('Loading data...');  
+        getData();
+    },[userDetails])
 
     return(
         <ObservationContext.Provider 
@@ -90,7 +143,7 @@ export const ObservationProvider = ({children}) => {
                 setSelectedIndex,
                 setEditingObservation,
                 updateSelectedIndex,
-                // updateObservationSonwType,
+                sentRequest,
                 isLoading, 
                 observations,
                 editingObservation,

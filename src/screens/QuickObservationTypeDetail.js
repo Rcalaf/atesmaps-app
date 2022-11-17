@@ -19,7 +19,7 @@ import CheckBox from '@react-native-community/checkbox';
 import { ObservationContext } from '../context/ObservationContext';
 
 const QuickObservationTypeDetail: () => Node = () => {
-    
+
 const { editingObservation, setEditingObservation  } = useContext(ObservationContext);
 const [quickValues, setQuickValues] = useState(editingObservation.observationTypes?.quick ? editingObservation.observationTypes?.quick : {status: false, values: {}});
 
@@ -205,7 +205,7 @@ return(
             <View style={styles.container}>
                 <View style={styles.introContainer} >
                     <Text style={styles.intro}>Use the Quick Report to quickly share information 
-                    about your trip. You can create a comprehensive repotr by adding more details in 
+                    about your trip. You can create a comprehensive report by adding more details in 
                     the Avalanche, Snowpack, Weather and/or Incident tabs.</Text> 
                 </View>
                 <View style={styles.formContainer} >

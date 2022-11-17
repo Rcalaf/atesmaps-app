@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
     bottom: Platform.OS === 'ios' ? -5 : 0,
   },
   tabBarIcon: {
-    width: 23,
-    height: 23,
+    width: 25,
+    height: 25,
   },
   tabBarIconFocused: {
     color: '#307df6',
