@@ -126,15 +126,16 @@ const UserForm = ({preloadedValues, onSubmit}) => {
                 <CustomInput
                   name="password"
                   placeholder="Password"
+                  secureTextEntry={true}
                   control={control}
-                  rules={{required: {value: (getValues('password') != '') ,message: 'password is required'}}}
+                  //rules={{required: {value: (getValues('password') != '') ,message: 'password is required'}}}
                   // onPress={showDatepicker}
                 />
     
                 <CustomInput
                   name="passwordConfirmation"
                   placeholder="Confrimación password"
-    
+                  secureTextEntry={true}
                   control={control}
                   //rules={{required: 'password is required'}}
                   // onPress={showDatepicker}

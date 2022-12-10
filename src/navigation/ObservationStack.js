@@ -21,6 +21,7 @@ import AvalancheObservationTypeDetail from '../screens/AvalancheObservationTypeD
 import SnowpackObservationTypeDetail from '../screens/SnowpackObservationTypeDetail';
 import ObservationImageList from '../screens/ObservationImageList';
 import LocationPicker from '../screens/LocationPicker';
+import ShowObservation from '../screens/ShowObservation';
 
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -62,54 +63,45 @@ return(
       <Stack.Screen 
         name="Lista de Observaciones" 
         component={Observations} 
-        options={{
-          headerShown: true ,
-        //headerTitle: () => <Text>Title...</Text>,
-          headerRight: () => (
+      //   options={{
+      //     headerShown: true ,
+      //   //headerTitle: () => <Text>Title...</Text>,
+      //     headerRight: () => (
            
-            <Pressable
-              onPress={async ()  => {
-                await newObservation(observation);
-                let index = lastIndex;      
-                navigation.navigate('Observación', {index})
-                }}
-            >
-                <MaterialCommunityIcons size={25} 
-            color={'#307df6'} name="eye-plus"/>
-            </Pressable>
-            // <Button
-            //   onPress={() => {
-            //     newObservation(observation);
-            //     let index = lastIndex;      
-            //     navigation.navigate('Observación', {index})
-            //     }
-            //   }
-            //   title="Add"
-            //   // color="#000"
-            // />
-            
-        )
-      }}/>
+      //       <Pressable
+      //         onPress={async ()  => {
+      //           await newObservation(observation);
+      //           let index = lastIndex;      
+      //           navigation.navigate('Observación', {index})
+      //           }}
+      //       >
+      //           <MaterialCommunityIcons size={25} 
+      //       color={'#307df6'} name="eye-plus"/>
+      //       </Pressable>
+      //   )
+      // }}
+      />
       <Stack.Screen 
         name="Observación" 
         component={ObservationDetail}
         options={{
-          headerShown: true ,
+          headerShown: true,
         //headerTitle: () => <Text>Title...</Text>,
-          headerRight: () => (
-            <Button
-              onPress={() => {
-                let index = selectedIndex;
-                console.log(index);
-                deleteObservation();
-                navigation.navigate('Lista de Observaciones');
-              }
-              }
-              title="Remove"
-              color="#f00"
-            />
-        )
+        //   headerRight: () => (
+        //     <Button
+        //       onPress={() => {
+        //         let index = selectedIndex;
+        //         console.log(index);
+        //         deleteObservation();
+        //         navigation.navigate('Lista de Observaciones');
+        //       }
+        //       }
+        //       title="Remove"
+        //       color="#f00"
+        //     />
+        // )
       }} />
+      <Stack.Screen name="Detalles" component={ShowObservation} />
       <Stack.Screen name="Imagenes" component={ObservationImageList} />
 
       <Stack.Screen 

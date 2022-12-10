@@ -3,7 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 import { BASE_URL } from '../config';
-
+import { AccessControlTranslationFilterSensitiveLog } from '@aws-sdk/client-s3';
+import  Snackbar  from "react-native-snackbar";
 
 export const AuthContext = createContext();
 
@@ -12,22 +13,38 @@ export const AuthProvider = ({children}) => {
     const [userToken, setUserToken] = useState(null);
     const [userDetails, setUserDetails] = useState(null);
 
+
+
+    const updateUser = async (data) => {
+        await AsyncStorage.setItem('userDetails', JSON.stringify(data));
+        setUserDetails(data);
+    }
+
     const login = async (email, password) => {
         try {
             setIsLoading(true);
             let response = await axios.post(`${BASE_URL}/auth/login`,{'email': email, 'pwd':password});
-            console.log(response.data);
+            console.log(response.data.status);
             //console.log(response.data.accessToken);
-            let user = {userName, userEmail, userId} = response.data;
-            //console.log('This is after logging:')
-            //console.log(user);
-            console.log('------------------------')
+            //let user = {userName, userEmail, userId} = response.data;
+            let user = response.data.user;
+            // console.log('This is after logging:')
+            // console.log(user);
+            // console.log('------------------------')
             await AsyncStorage.setItem('userToken', response.data.accessToken);
             await AsyncStorage.setItem('userDetails', JSON.stringify(user));
             setUserToken(response.data.accessToken);
             setUserDetails(user);
         } catch (e) {
             console.log(e);
+            Snackbar.show({
+                text: 'Password o email incorrectos',
+                duration: Snackbar.LENGTH_SHORT,
+                numberOfLines: 2,
+                textColor: "#fff",
+                backgroundColor: "#B00020",
+            });
+
         }
         setIsLoading(false);
     }
@@ -37,17 +54,27 @@ export const AuthProvider = ({children}) => {
             console.log(userName + ', '+email+', '+password);
             setIsLoading(true);
             let response = await axios.post(`${BASE_URL}/register`,{'userName':userName, 'email': email, 'pwd':password});
-            let user = {userName, userEmail, userId} = response.data;
+            console.log(response.data);
+            //let user = {userName, userEmail, userId} = response.data;
+            let user = response.data.user;
             await AsyncStorage.setItem('userToken', response.data.accessToken);
             await AsyncStorage.setItem('userDetails', JSON.stringify(user));
             setUserToken(response.data.accessToken);
             setUserDetails(user);
         } catch (e) {
+            console.log('error:')
             console.log(e);
+            Snackbar.show({
+                text: e.response.status,
+                duration: Snackbar.LENGTH_SHORT,
+                numberOfLines: 2,
+                textColor: "#fff",
+                backgroundColor: "#B00020",
+            });
         }
         setIsLoading(false);
     }
-
+ 
     const logout = async () => {
         try {
             setIsLoading(true);
@@ -57,6 +84,13 @@ export const AuthProvider = ({children}) => {
             await AsyncStorage.removeItem('userDetails');
         } catch (e) {
             console.log(e);
+            Snackbar.show({
+                text: e.response.status,
+                duration: Snackbar.LENGTH_SHORT,
+                numberOfLines: 2,
+                textColor: "#fff",
+                backgroundColor: "#B00020",
+            });
         }
         setIsLoading(false);
     }
@@ -82,8 +116,14 @@ export const AuthProvider = ({children}) => {
         isLoggedIn();
     }, [])
 
+
+    useEffect(()=>{
+        console.log('user details updated....')
+        // isLoggedIn();
+    }, [userDetails])
+
     return(
-        <AuthContext.Provider value={{signUp, login, logout, isLoading, userToken, userDetails }}> 
+        <AuthContext.Provider value={{signUp, login, updateUser, logout, isLoading, userToken, userDetails }}> 
             {children}
         </AuthContext.Provider>
     )

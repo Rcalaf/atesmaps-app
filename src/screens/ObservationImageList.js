@@ -8,16 +8,20 @@ import {
     useColorScheme,
     View,
     Text,
+    FlatList,
     TouchableOpacity
   } from 'react-native';
 
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import fs from "react-native-fs";
+const Base64Binary = require('base64-arraybuffer');
 
-import { AuthContext } from '../context/AuthContext';
+import { ObservationContext } from '../context/ObservationContext';
+
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import ImagePicker from 'react-native-image-crop-picker';
 import CustomButton from "../components/CustomButton";
-
+import Item from '../components/ImageItem';
 
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
@@ -26,17 +30,19 @@ import { baseGestureHandlerProps } from 'react-native-gesture-handler/lib/typesc
 import { ListBucketsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { s3Client } from "../aws/s3";
 
-
-//import {path} from "path";
-import fs from "react-native-fs";
-const Base64Binary = require('base64-arraybuffer');
-
 const ObservationImagesList: () => Node = () => {
 
-// const {logout} = useContext(AuthContext);
-const {image,setImage} = useState(null);
+const { editingObservation, setEditingObservation, updateObservations  } = useContext(ObservationContext);
+const [images, setImages] = useState([]);
+const [image, setImage] = useState(null);
+
 const sheetRef = useRef();
 const fall = new Animated.Value(1);
+
+useEffect(()=>{
+  console.log('Image List updated:');
+  console.log(images);
+},[images]);
 
 
 const uploadFile = async (image) => {
@@ -70,10 +76,10 @@ const takePhotoFromCamera = () => {
     compressImageMaxHeight: 300,
     cropping: true,
     compressImageQuality: 0.7
-  }).then(image => {
-    console.log(image.filename);
-    setImage(image.filename);
-    uploadFile(image);
+  }).then(chosenImage => {
+    // setImage(image.filename);
+    setImages( (arr) => { return [...arr, chosenImage.filename]});
+    //uploadFile(chosenImage);
     sheetRef.current.snapTo(1);
   });
 }
@@ -85,10 +91,10 @@ const choosePhotoFromLibrary = () => {
     height: 300,
     cropping: true,
     compressImageQuality: 0.7
-  }).then(image => {
-    console.log(image.filename);
-    setImage(image.filename);
-    uploadFile(image);
+  }).then(chosenImage => {
+    //console.log(sheetRef);
+    setImages( (arr) => { return [...arr, chosenImage.filename]});
+    //uploadFile(chosenImage);
     sheetRef.current.snapTo(1);
   });
 }
@@ -133,6 +139,30 @@ const renderHeader = () => (
     </View>
   </View>
 );
+
+if(images.length > 0){
+  return(
+    <>
+    <Animated.View style={[styles.container, {opacity: Animated.add(0.1, Animated.multiply(fall,1.0))}]}>
+      <FlatList
+          data={images}
+          renderItem={({ item, index }) => <Item item={item} index={index} navigation={navigation}/>}
+          keyExtractor={(item,index) => index}
+          />
+    </Animated.View>
+    <BottomSheet
+          ref={sheetRef}
+          snapPoints={[330, -100]}
+          initialSnap={1}
+          callbackNode={fall}
+          enabledGestureInteration={true}
+          borderRadius={10}
+          renderContent={renderContent}
+          renderHeader={renderHeader}
+        />
+ </>
+  )
+}
 
 
 return(

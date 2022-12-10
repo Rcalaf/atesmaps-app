@@ -45,18 +45,6 @@ const CustomRadioButton = ({
                   onChange(data.map(object => object.label).indexOf(e.label)+1);
               }}
               />
-{/* 
-            <TextInput
-              value={value}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              onFocus={onPress}
-              multiline={multiline}
-              numberOfLines={numberOfLines}
-              placeholder={placeholder}
-              style={styles.input}
-              secureTextEntry={secureTextEntry}
-            /> */}
           </View>
           {error && (
             <Text style={{color: 'red', alignSelf: 'stretch'}}>{error.message || 'Error'}</Text>

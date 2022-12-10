@@ -13,33 +13,16 @@ export const ObservationProvider = ({children}) => {
 
     const [isLoading, setIsLoading] = useState(false);
     const [observations, setObservations] = useState([]);
+    const [historicObservations, setHistoricObservations] = useState([]);
     // const [snowType, setSnowType] = useState({});
     const [editingObservation, setEditingObservation] = useState({});
     const [lastIndex, setLastIndex] = useState(null);
     const [selectedIndex, setSelectedIndex] = useState(null);
 
-    const setList = async (observations) => {
-        try {
-            await AsyncStorage.setItem('list', JSON.stringify(observations));
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    const getList = async () => {
-        let list;
-        try {
-            list = JSON.parse(await AsyncStorage.getItem('list'));
-        } catch (err) {
-            console.log(err);
-        }
-        return list;
-    }
-
     const sentRequest = async (url, method, data) => {
-        console.log(url);
+        /*console.log(url);
         console.log(method);
-        console.log(data);
+        console.log(data);*/
         try {
           const response = await axios({
             method: method,
@@ -58,66 +41,84 @@ export const ObservationProvider = ({children}) => {
 
     const getData = async () => {
         try{
-            let response = await sentRequest(`/observations/user/${userDetails.userId}`, "get", '');
+            let response = await sentRequest(`/observations/user/${userDetails?._id}`, "get", '');
             //TODO: Sync local data with new data
-            await AsyncStorage.setItem('list', JSON.stringify(response.data));
-            setObservations(response.data);
-        }catch (err){
+            if (response.data) {
+                setHistoricObservations(response.data);
+            }
+            
+        } catch (err){
             console.log(err);
-            //NO internet, then use LOCAL DATA
-            let list = JSON.parse(await AsyncStorage.getItem('list'));
-            setObservations(list);
         }
-       
+        let list = JSON.parse(await AsyncStorage.getItem('list'));
+        if(list) setObservations(list);
     }
     
     const newObservation = async (observation) => {
         setIsLoading(true);
             observation.user = userDetails.userId;
             let response = await sentRequest('/observations', "post", observation)
-            observation._id = response.data._id
-            setObservations( (arr) => {
-                return [...arr, observation]});
+            if (response.data) observation._id = response.data._id
+
+            let aux = observations;
+            aux.push(observation);
+
+            // setObservations( (arr) => { return [...arr, observation]});
+            setObservations(aux);
+            await AsyncStorage.setItem('list', JSON.stringify(aux)); 
+            //TODO: update asyncStorage List property
             setEditingObservation(observation);
         setIsLoading(false);
     }
 
-    const syncObservations = () => {
-
-    }
-
+  
     const updateSelectedIndex = (index) => {
         setEditingObservation(observations[index]); 
         setSelectedIndex(index)
     }
 
-    const updateObervations = (obj, index) => {
+    const updateObservations = async (obj) => {
+        console.log('calling update observations');
+        
         // setIsLoading(true);
         let aux = observations;
-        aux[index] = obj;
-
+        aux[selectedIndex] = obj;
+        setEditingObservation(obj); 
         setObservations(aux);
-        setEditingObservation(obj);    
+        await AsyncStorage.setItem('list', JSON.stringify(aux));
+        console.log('------------------');  
         // setIsLoading(false);
     }
 
     const deleteObservation = async () => {
         console.log('Remove observation');
-        let response = await sentRequest(`/observations`, "delete", editingObservation);
+        //let response = await sentRequest(`/observations`, "delete", editingObservation);
+        //TODO: update async storage list
+        let aux = observations;
+        aux.splice(selectedIndex,1);
         setEditingObservation({});
-        setObservations( (arr) => {
-            observations.splice(selectedIndex,1)
-            return observations});
-        let index = observations.length 
+        setObservations(aux);
+        // setObservations( (arr) => {
+        //     observations.splice(selectedIndex,1)
+        //     return observations});
+        // console.log(aux);
+        // console.log('---');
+        // console.log(observations);
+        // console.log('---END REmoving observation---');
+
+        await AsyncStorage.setItem('list', JSON.stringify(aux));
+        let index = aux.length 
         setLastIndex(index);
         setSelectedIndex(null);
+        // navigation.navigate('Lista de Observaciones');
     }
 
     useEffect(()=>{
         let index = observations.length 
-        console.log(index);
+       // console.log(index);
         setLastIndex(index);
         setSelectedIndex(index-1);
+        // setList();
     },[observations]);
 
     useEffect(()=>{
@@ -125,20 +126,16 @@ export const ObservationProvider = ({children}) => {
         //console.log(editingObservation);
     },[editingObservation]);
 
-    const syncData = async () =>{
-        
-    }
-
     useEffect(()=>{  
-        console.log('Loading data...');  
+        console.log('Loading user data...');  
         getData();
-    },[userDetails])
+    },[userDetails]);
 
     return(
         <ObservationContext.Provider 
             value={{
                 newObservation, 
-                updateObervations, 
+                updateObservations, 
                 deleteObservation,
                 setSelectedIndex,
                 setEditingObservation,
@@ -146,6 +143,7 @@ export const ObservationProvider = ({children}) => {
                 sentRequest,
                 isLoading, 
                 observations,
+                historicObservations,
                 editingObservation,
                 lastIndex,
                 selectedIndex

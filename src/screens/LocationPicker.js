@@ -22,11 +22,12 @@ import { LocationContext } from '../context/LocationContext';
 
 const LocationPicker: () => Node = ({ route, navigation }) => {
     const { location } = useContext(LocationContext);
-    const { editingObservation, setEditingObservation, updateObervations, selectedIndex} = useContext(ObservationContext);
-    const [pickedLocation, setPickedLocation]= useState({latitude:editingObservation.location.latitude,longitude:editingObservation.location.longitude}); 
+    const { editingObservation, setEditingObservation, updateObservations, selectedIndex} = useContext(ObservationContext);
+    const [pickedLocation, setPickedLocation]= useState({latitude:Number(editingObservation.location.latitude),longitude:Number(editingObservation.location.longitude)}); 
     // const [ observation, setObservation ] = useState(observations[route.params?.index]);
     const [marker, setMarker] = useState({
-      coordinate: editingObservation.location,
+      // coordinate: editingObservation.location,
+      coordinate: {latitude:Number(editingObservation.location.latitude),longitude:Number(editingObservation.location.longitude)},
       key: 1,
       color: '#ff0000'
   });
@@ -46,7 +47,7 @@ const LocationPicker: () => Node = ({ route, navigation }) => {
               setEditingObservation({...editingObservation, location:pickedLocation});
               navigation.navigate('Observación', {index, update:true})
             }}
-            title="Save"
+            title="Guardar"
           />
         )
         // headerRight: (props) => (
@@ -57,15 +58,17 @@ const LocationPicker: () => Node = ({ route, navigation }) => {
       //check documentation here: https://reactnavigation.org/docs/navigation-prop/#setparams
     }, [navigation, pickedLocation]);
 
-      const getMapRegion = () => {
-        //console.log('Updating map location');
-        //console.log(location);  
-        return {latitude: location?.latitude,
-                longitude: location?.longitude,
-                latitudeDelta: location?.latitudeDelta,
-                longitudeDelta: location?.longitudeDelta}
-        
-      };
+    const getMapRegion = () => {
+      //console.log('Updating map location');
+      console.log(location); 
+       
+      return {latitude: pickedLocation.latitude ? pickedLocation.latitude : location?.latitude,
+              longitude: pickedLocation.longitude ? pickedLocation.longitude : location?.longitude,
+              latitudeDelta: pickedLocation.latitudeDelta ? pickedLocation.latitudeDelta : location?.latitudeDelta,
+              longitudeDelta: pickedLocation.longitudeDelta ? pickedLocation.longitudeDelta : location?.longitudeDelta,
+            }
+      
+    };
 
     const onMapPress = (e) => {
         //console.log(e.nativeEvent.coordinate)
@@ -101,10 +104,10 @@ return(
           showsUserLocation = {true}
           mapType="satellite"
           initialRegion={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-            latitudeDelta:  location.latitudeDelta,
-            longitudeDelta: location.longitudeDelta,
+            latitude: pickedLocation.latitude ? pickedLocation.latitude : location.latitude,
+            longitude: pickedLocation.longitude ? pickedLocation.longitude : location.longitude,
+            latitudeDelta: pickedLocation.latitudeDelta ? pickedLocation.latitudeDelta : location.latitudeDelta,
+            longitudeDelta: pickedLocation.longitudeDelta ? pickedLocation.longitudeDelta : location.longitudeDelta,
           }}
           onPress={onMapPress}
           region={getMapRegion()}>
@@ -117,7 +120,7 @@ return(
             : null
           }
         </MapView>
-        { marker || location ? 
+        {/* { marker || location ? 
         <View style={styles.topButtonContainer}>
           <TouchableOpacity
             onPress={() => setMarker(null)}
@@ -126,7 +129,7 @@ return(
           </TouchableOpacity>
         </View>
       : 
-      null }
+      null } */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             onPress={() => {
@@ -138,7 +141,7 @@ return(
               });
             }}
             style={styles.bubble}>
-            <Text>Clica per esborrar selecció</Text>
+            <Text>Borra selección</Text>
           </TouchableOpacity>
         </View>
       </View>

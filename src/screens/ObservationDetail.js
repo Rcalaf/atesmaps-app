@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, {useState, useEffect, useLayoutEffect, useContext} from "react";
 import { Text, View, TextInput, Button, Alert, StyleSheet, Keyboard } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import moment from 'moment';
@@ -15,7 +15,7 @@ import { ObservationContext } from '../context/ObservationContext';
 import { AuthContext } from '../context/AuthContext';
 
 export default function ObservationDetail({ route, navigation }) {
-    const {editingObservation, observations, updateObervations } = useContext(ObservationContext);
+    const {editingObservation, selectedIndex, observations, deleteObservation, updateObservations } = useContext(ObservationContext);
     const {userDetails,userToken} = useContext(AuthContext);
 
     const [index, setIndex] = useState(route.params?.index);
@@ -32,21 +32,32 @@ export default function ObservationDetail({ route, navigation }) {
       return locationDetails?.latitude + ', ' +locationDetails?.longitude;
     }
 
-    // const sentData = async (id,data) => {
-    //   try {
-    //     const response = await axios({
-    //       method: "post",
-    //       url: `${BASE_URL}/observations`,
-    //       data: data,
-    //       //headers: { "Content-Type": "multipart/form-data" },
-    //       headers: {"Authorization": `Bearer ${userToken}`}
-    //     });
-    //     console.log(response);
-    //   } catch (error) {
-    //     //console.log('error triggered while sending data')
-    //     console.log(error);
-    //   }
-    // };
+    const parseLocation = (locationString) => {
+      return {latitude:Number(locationString.split(',')[0]), longitude: Number(locationString.split(',')[1])}
+    }
+
+    const sentData = async (id,data) => {
+    
+      data.user = id;
+      try {
+        const response = await axios({
+          method: "post",
+          url: `${BASE_URL}/observations`,
+          data: data,
+          //headers: { "Content-Type": "multipart/form-data" },
+          headers: {"Authorization": `Bearer ${userToken}`}
+        });
+        //console.log(response.message);
+        //console.log(response.status);
+        if (response.status === 201){
+            console.log('cleaning local storage');
+            deleteObservation();
+            navigation.navigate('Lista de Observaciones');
+        }
+      } catch (error) {
+        console.log(error.response.status);
+      }
+    };
     
 
     const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
@@ -57,30 +68,57 @@ export default function ObservationDetail({ route, navigation }) {
       }
     });
 
-    // React.useLayoutEffect(() => {
-    //   // navigation.setOptions({
-    //   //   title: value === '' ? 'No title' : value,
-    //   // });
-    //   //TODO: Here we can dynamically change the header of the screen....
-    //   //check documentation here: https://reactnavigation.org/docs/navigation-prop/#setparams
-    // }, [navigation]);
+    useLayoutEffect(() => {
+      navigation.setOptions({
+        // title: value === '' ? 'No title' : value,
+        headerRight: () => (
+          <Button
+            onPress={() => {
+              // console.log(handleSubmit);
+              handleSubmit(onSave)();
+              // let index = route.params?.index;
+              // setEditingObservation({...editingObservation, location:pickedLocation});
+              navigation.navigate('Lista de Observaciones');
+            }}
+            title="Guardar"
+          />
+        )
+        
+        // headerRight: (props) => (
+        //   <HeaderBackButton labelVisible={true} onPress={()=>{}}></HeaderBackButton>
+        // )
+      });
+      //TODO: Here we can dynamically change the header of the screen....
+      //check documentation here: https://reactnavigation.org/docs/navigation-prop/#setparams
+    }, [navigation]);
+
+
+    const onSave = (data) => {
+      // console.log('Saving data...')
+      console.log(parseLocation(data.location));
+      let obj = data;
+      obj.date = moment(rawDate).format();
+      
+      obj.location = parseLocation(data.location);
+      obj.status = 0;
+      obj.observationTypes = editingObservation.observationTypes;
+      console.log(obj);
+      updateObservations(obj);
+
+    }
 
 
     
     const onSubmit = (data) => {
-     
+      console.log(data);
+      console.log(errors);
       let obj = data;
+      //TODO: check if date updates properly
       obj.date = moment(rawDate).format();
       obj.location = location;
       obj.observationTypes = editingObservation.observationTypes;
      
-      updateObervations(obj,index);
-      console.log(obj);
-      console.log('----- BEGGIN Generation From data ------ ')
-      let formData = new FormData(obj);
-      console.log(formData);
-      console.log('----- END Generation From data ------ ')
-     // sentData(userDetails.userId,obj);
+      sentData(userDetails._id,obj);  
     }; 
 
     const onChange = (event, selectedDate) => {
@@ -108,6 +146,8 @@ export default function ObservationDetail({ route, navigation }) {
       setValue('location', formatLocation(editingObservation.location));
       route.params={index}
     },[route.params?.update]);
+
+    
   
 
     return (
@@ -173,7 +213,7 @@ export default function ObservationDetail({ route, navigation }) {
             }} 
           />
 
-          {/* <CustomButton 
+          <CustomButton 
             text="Fotos" 
             type="custom"
             fColor="gray"
@@ -181,20 +221,32 @@ export default function ObservationDetail({ route, navigation }) {
               console.log('photos library to be called');
               navigation.navigate('Imagenes',{index});
             }} 
-          /> */}
+          />
 
           <View style={{marginTop: 50}}>
               
             <Text style={{marginBottom: 10, fontWeight:'bold'}}>Observaciones</Text>
             <CustomButton text="Quick" type="custom" order="top" bgColor={"#48a5e9"} fColor='white' iconName={observation.observationTypes.quick?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Rapida')} />
-            <CustomButton text="Avalanche" type="custom" order="middle" bgColor={"#4062ff"} fColor='white' iconName={observation.observationTypes.avalanche?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Avalancha')} />
-            <CustomButton text="Snowpack" type="custom" order="bottom" bgColor={"#48a5e9"} fColor='white' iconName={"add-circle"} onPress={() => navigation.navigate('Manto de nieve')} />
+            <CustomButton text="Avalanche" type="custom" order="middle" bgColor={"#4062ff"} fColor='white' iconName={observation.observationTypes.avalanche?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Avalancha')} /> 
+            <CustomButton text="Snowpack" type="custom" order="bottom" bgColor={"#48a5e9"} fColor='white' iconName={observation.observationTypes.snowpack?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Manto de nieve')} />
             {/* <CustomButton text="Weather" type="custom" order="middle" bgColor={"#f5c144"} fgColor='white' iconName={"add-circle"} onPress={()=>{console.log('seting type Weather')}} />
             <CustomButton text="Incident" type="custom" order="bottom" bgColor={"#e15141"} fgColor='white' iconName={"add-circle"} onPress={()=>{console.log('seting type Incident')}} /> */}
           </View>
           <View style={{marginTop: 50}}>
-            <CustomButton text="Submit" bgColor={"#62a256"} fgColor='white' iconName={null} onPress={handleSubmit(onSubmit)} />
+            <CustomButton text="Subir a Atesmaps" bgColor={"#62a256"} fgColor='white' iconName={null} onPress={handleSubmit(onSubmit)} />
           </View>
+          <View >
+            <CustomButton text="Eliminar" 
+                bgColor={"#f00"} 
+                fgColor='white' 
+                iconName={null} 
+                onPress={() => {
+                  //let index = selectedIndex;
+                  deleteObservation();
+                  navigation.navigate('Lista de Observaciones');
+                }} />
+          </View>
+       
        
           {/* <Text style={styles.status}> {keyboardStatus}</Text> */}
         </View>

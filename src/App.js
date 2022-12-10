@@ -14,9 +14,14 @@ import AppNav from './navigation/AppNav';
 import { AuthProvider } from './context/AuthContext';
 import { ObservationProvider } from './context/ObservationContext';
 import { LocationProvider } from './context/LocationContext';
+// import  Snackbar  from "react-native-snackbar";
 
 const App: () => Node = () => {
-  
+  // Snackbar.show({
+  //   text: 'Hello world',
+  //   duration: Snackbar.LENGTH_SHORT,
+  // });
+
   return (
   
     <AuthProvider>

@@ -8,14 +8,22 @@ import {
     useColorScheme,
     View,
     Text,
+    Image,
     TextInput,
     TouchableOpacity
   } from 'react-native';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
+import CustomButton from "../../components/CustomButton";
+import CustomInput from "../../components/CustomInput";
+
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthContext } from '../../context/AuthContext';
+import  Snackbar  from "react-native-snackbar";
+
+import { useForm, Controller } from "react-hook-form";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +35,46 @@ const Registration: () => Node = () => {
 
   const {signUp} = useContext(AuthContext);
 
+  const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
+    //defaultValues: preloadedValues
+    defaultValues: {
+        userName: '',
+        email: '',
+        password: '',
+        passwordConfirmation: ''
+    }
+  });
+
+  const submit = (data) => {
+    console.log('performing login...');
+    console.log(data);
+
+    if(data.password != data.passwordConfirmation) {
+      console.log('password is different...');
+      Snackbar.show({
+          text: 'Los passwords no coinciden',
+          duration: Snackbar.LENGTH_SHORT,
+          numberOfLines: 2,
+          textColor: "#fff",
+          backgroundColor: "#B00020",
+      });
+      return null;
+    }
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data.email)){
+      signUp(data.userName, data.password, data.email);
+    }else{
+      Snackbar.show({
+        text: 'El formato del email es incorrecto',
+        duration: Snackbar.LENGTH_SHORT,
+        numberOfLines: 2,
+        textColor: "#fff",
+        backgroundColor: "#B00020",
+      });
+      return null;
+    }
+  }
+
+
   return(
       <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
         <View style={{paddingHorizontal: 25}}>
@@ -34,8 +82,55 @@ const Registration: () => Node = () => {
               <Text style={{fontSize: 28, fontWeight: '500', color: '#333', marginBottom: 25}}>Register</Text>
           </View> */}
 
+          <View style={{top: '-10%',justifyContent: 'center',alignItems: 'center'}}>
+                <Image
+                style={{height: 200, width: 235}}
+                 source={require('../../../assets/images/logos/logo-vertical-small.png')}
+                /> 
+          </View>
 
-          <View style={{flexDirection: 'row', borderBottomColor:'#ccc', borderBottomWidth: 1, paddingBottom: 8, marginBottom: 25}}>
+          <CustomInput
+            name="userName"
+            placeholder="Nombre de rccusuario"
+            control={control}
+            // customStyles={{width:"100%"}}
+            rules={{required: 'Introduce el nombre de usuario, no usar characteres especials.'}}
+            // onPress={showDatepicker}
+            />
+
+          <CustomInput
+            name="email"
+            placeholder="Email"
+            control={control}
+            // customStyles={{width:"100%"}}
+            rules={{required: 'Introduce el Email'}}
+
+            // onPress={showDatepicker}
+            />
+
+          <CustomInput
+            name="password"
+            placeholder="Password"
+            control={control}
+            secureTextEntry={true}
+            // customStyles={{width:"100%"}}
+            rules={{required: 'Introduce el password'}}
+
+            // onPress={showDatepicker}
+            />
+
+          <CustomInput
+            name="passwordConfirmation"
+            placeholder="Confirmación de password"
+            control={control}
+            secureTextEntry={true}
+            // customStyles={{width:"100%"}}
+            rules={{required: 'Confirma el password'}}
+
+            // onPress={showDatepicker}
+            />
+
+          {/* <View style={{flexDirection: 'row', borderBottomColor:'#ccc', borderBottomWidth: 1, paddingBottom: 8, marginBottom: 25}}>
             <MaterialIcons name='person' size={20} color="#333" style={{marginRight: 5}}/>
             <TextInput 
               placeholder='User Name' 
@@ -44,56 +139,15 @@ const Registration: () => Node = () => {
               onChangeText={text => setUserName(text)} 
             />
 
-          </View>
-          <View style={{flexDirection: 'row', borderBottomColor:'#ccc', borderBottomWidth: 1, paddingBottom: 8, marginBottom: 25}}>
-            <MaterialIcons name='alternate-email' size={20} color="#333" style={{marginRight: 5}}/>
-            <TextInput 
-              placeholder='Email' 
-              style={{flex: 1, paddingVertical: 0}} 
-              keyboardType='email-address'
-              value={email}
-              onChangeText={text => setEmail(text)} 
-             />
-          </View>
-          <View style={{flexDirection: 'row', borderBottomColor:'#ccc', borderBottomWidth: 1, paddingBottom: 8, marginBottom: 25}}>
-            <MaterialIcons 
-              name='lock' 
-              size={20} 
-              color="#333" 
-              style={{marginRight: 5}}/>
-            <TextInput 
-              
-              placeholder='Password' 
-              style={{flex: 1, paddingVertical: 0}} 
-              secureTextEntry={true} 
-              value={password}
-              onChangeText={text => setPassword(text)} 
-              />
-              {/* <TouchableOpacity onPress={() => {}}>
-                 <Text style={{color: '#3098CF', fontWeight: '700'  }}>Forgot?</Text>
-              </TouchableOpacity> */}
-          </View>
-          <View style={{flexDirection: 'row', borderBottomColor:'#ccc', borderBottomWidth: 1, paddingBottom: 8, marginBottom: 25}}>
-            <MaterialIcons 
-              name='lock' 
-              size={20} 
-              color="#333" 
-              style={{marginRight: 5}}/>
-            <TextInput 
-              
-              placeholder='Password confirmation' 
-              style={{flex: 1, paddingVertical: 0}} 
-              secureTextEntry={true} 
-              value={passwordConfirmation}
-              onChangeText={text => setPasswordConfirmation(text)} 
-            />
-              {/* <TouchableOpacity onPress={() => {}}>
-                 <Text style={{color: '#3098CF', fontWeight: '700'  }}>Forgot?</Text>
-              </TouchableOpacity> */}
-          </View>
-          <TouchableOpacity style={{backgroundColor: '#3098CF', padding: 20, borderRadius:10, marginBottom: 20}} onPress={() => {signUp(userName, password, email)}}>
+          </View> */}
+          
+    
+          <View style={{marginTop: 0}}>
+                <CustomButton text="Enviar" bgColor={"#3098CF"} fgColor='white' iconName={null} onPress={handleSubmit(submit)} />
+            </View>
+          {/* <TouchableOpacity style={{backgroundColor: '#3098CF', padding: 20, borderRadius:10, marginBottom: 20}} onPress={() => {signUp(userName, password, email)}}>
               <Text style={{textAlign:'center', color:'#fff', fontWeight: '700', fontSize: 17  }}>Register</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           {/* <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom: 30}}>
             <Text>New to AtesMaps?</Text>
             <TouchableOpacity onPress={() => {}}>

@@ -32,17 +32,6 @@ return(
           headerShown: true ,
         //headerTitle: () => <Text>Title...</Text>,
            headerRight: () => (
-            
-          //   <Pressable
-          //     onPress={() => {
-          //       newObservation(observation);
-          //       let index = lastIndex;      
-          //       navigation.navigate('Observación', {index})
-          //       }}
-          //   >
-          //       <MaterialCommunityIcons size={25} 
-          //   color={'#307df6'} name="eye-plus"/>
-          //   </Pressable>
              <Button
               onPress={() => {
                 console.log('LogOut triggered...');
@@ -52,7 +41,6 @@ return(
               title="Logout"
               color="red"
             />
-            
         )
       }}/>
     </Stack.Navigator>

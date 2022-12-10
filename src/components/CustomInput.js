@@ -11,6 +11,7 @@ const CustomInput = ({
   multiline=false,
   numberOfLines=1,
   onPress,
+  customStyles={}
 }) => {
   return (
     <Controller
@@ -23,6 +24,7 @@ const CustomInput = ({
           <View
             style={[
               styles.container,
+              customStyles,
               {borderColor: error ? 'red' : '#e8e8e8'},
             ]}
           >
@@ -34,7 +36,7 @@ const CustomInput = ({
               multiline={multiline}
               numberOfLines={numberOfLines}
               placeholder={placeholder}
-              style={styles.input}
+              style={[styles.input ]}
               secureTextEntry={secureTextEntry}
             />
           </View>

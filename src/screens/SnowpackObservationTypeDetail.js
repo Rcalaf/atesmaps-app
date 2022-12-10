@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useContext } from 'react';
 import type {Node} from 'react';
 import RadioButtonRN from 'radio-buttons-react-native';
 
@@ -8,6 +8,7 @@ import {
     StyleSheet,
     ScrollView,
     useColorScheme,
+    Button,
     View,
     Text,
     TextInput
@@ -16,128 +17,238 @@ import Section from '../components/Section';
 
 import CheckBox from '@react-native-community/checkbox';
 import CustomInput from "../components/CustomInput";
+import CustomRadioButton from "../components/CustomRadioButton";
+import CustomButton from "../components/CustomButton";
+import CustomCheckbox from "../components/CustomCheckbox";
+
+import { useForm, Controller } from "react-hook-form";
 
 import { ObservationContext } from '../context/ObservationContext';
 
-const SnowpackObservationTypeDetail: () => Node = () => {
-const { editingObservation, setEditingObservation  } = useContext(ObservationContext);
+const SnowpackObservationTypeDetail: () => Node = ({ route, navigation }) => {
+    useLayoutEffect(() => {
+        navigation.setOptions({
+          // title: value === '' ? 'No title' : value,
+          headerRight: () => (
+            <Button
+              onPress={() => {
+                console.log('Saving quick observation on local storage....');
+                // console.log(getValues());
+                // console.log(errors);
+                 handleSubmit(updateData)();
+              
+                // navigation.navigate('Observación', {index, update:true})
+              }}
+              title="Save"
+            />
+          )
+        });
+        //TODO: Here we can dynamically change the header of the screen....
+        //check documentation here: https://reactnavigation.org/docs/navigation-prop/#setparams
+      }, [navigation]);
+const { editingObservation, setEditingObservation,updateObservations  } = useContext(ObservationContext);
+const [snowpackValues, setSnowpackValues] = useState(editingObservation.observationTypes?.snowpack ? editingObservation.observationTypes?.snowpack : {status: false, values: {}});
 
-const [formValues, setFormValues] = useState(editingObservation.observationTypes?.snowpack ? editingObservation.observationTypes?.snowpack : {status: false, values: {}});
 
-useEffect(()=>{
-    let observation = editingObservation.observationTypes;
-    observation['snowpack'] = formValues; 
-    setEditingObservation({...editingObservation,observationTypes: observation});
-},[formValues]);
+console.log(snowpackValues)
+console.log(editingObservation.observationTypes.snowpack);
+const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
+    defaultValues: {
+        // range_1: snowpackValues.values.altitudeRange?.range_1 ? snowpackValues.values.altitudeRange?.range_1 : null,
+        // range_2: snowpackValues.values.altitudeRange?.range_2 ? snowpackValues.values.altitudeRange?.range_2 : null,
+        // range_3: snowpackValues.values.altitudeRange?.range_3 ? snowpackValues.values.altitudeRange?.range_3 : null,
+        // range_4: snowpackValues.values.altitudeRange?.range_4 ? snowpackValues.values.altitudeRange?.range_4 : null,
+        altitude: snowpackValues.values?.altitude ? snowpackValues.values?.altitude : null,
+        altitudeRange1: snowpackValues.values?.altitudeRange?.range_1 ? snowpackValues.values?.altitudeRange?.range_1 : null,
+        altitudeRange2: snowpackValues.values?.altitudeRange?.range_2 ? snowpackValues.values?.altitudeRange?.range_2 : null,
+        altitudeRange3: snowpackValues.values?.altitudeRange?.range_3 ? snowpackValues.values?.altitudeRange?.range_3 : null,
+        altitudeRange4: snowpackValues.values?.altitudeRange?.range_4 ? snowpackValues.values?.altitudeRange?.range_4 : null,
+        orientationN: snowpackValues.values?.orientation?.N ? snowpackValues.values?.orientation?.N : null,
+        orientationNE: snowpackValues.values?.orientation?.NE ? snowpackValues.values?.orientation?.NE : null,
+        orientationE: snowpackValues.values?.orientation?.E ? snowpackValues.values?.orientation?.E : null,
+        orientationSE: snowpackValues.values?.orientation?.SE ? snowpackValues.values?.orientation?.SE : null,
+        orientationS: snowpackValues.values?.orientation?.S ? snowpackValues.values?.orientation?.S : null,
+        orientationSO: snowpackValues.values?.orientation?.SO ? snowpackValues.values?.orientation?.SO : null, 
+        orientationO: snowpackValues.values?.orientation?.O ? snowpackValues.values?.orientation?.O : null,
+        orientationNO: snowpackValues.values?.orientation?.NO ? snowpackValues.values?.orientation?.NO : null,
+        depth: snowpackValues.values?.depth ? snowpackValues.values?.depth : null,
+        observationType: snowpackValues.values?.observationType ? snowpackValues.values?.observationType : null,
+        woumpfs:snowpackValues.values?.woumpfs ? snowpackValues.values?.woumpfs : null, 
+        sounds:snowpackValues.values?.sounds ? snowpackValues.values?.sounds : null, 
+        layerSnowType:snowpackValues.values?.layerSnowType ? snowpackValues.values?.layerSnowType : null, 
+        footPenetration:snowpackValues.values?.footPenetration ? snowpackValues.values?.footPenetration : null,
+        skiPenetration:snowpackValues.values?.skiPenetration ? snowpackValues.values?.skiPenetration : null,
+        handTest:snowpackValues.values?.handTest ? snowpackValues.values?.handTest : null, 
+        compresionTest:snowpackValues.values?.compresionTest ? snowpackValues.values?.compresionTest : null,
+        extensionTest:snowpackValues.values?.extensionTest ? snowpackValues.values?.extensionTest : null,
+        fractureType:snowpackValues.values?.fractureType ? snowpackValues.values?.fractureType : null,
+        fractureDepth:snowpackValues.values?.fractureDepth ? snowpackValues.values?.fractureDepth : null,
+        layerHardness:snowpackValues.values?.layerHardness ? snowpackValues.values?.layerHardness : null,
+        snowHumidity:snowpackValues.values?.snowHumidity ? snowpackValues.values?.snowHumidity : null, 
+        snowType:snowpackValues.values?.snowType ? snowpackValues.values?.snowType : null,
+        comments:snowpackValues.values?.comments ? snowpackValues.values?.comments : null,
+    }
+});
+
+const updateData = () => {
+    console.log('------Quick report---------');
+    const values = getValues();
+    console.log(values);
+
+    let aux = {values: {}}
+
+    aux['values'].observationType= values.observationType;
+
+    aux['values'].altitude= values.altitude;
+
+    aux['values']['altitudeRange'] = {
+        'range_1': values.altitudeRange1,
+        'range_2': values.altitudeRange2,
+        'range_3': values.altitudeRange3,
+        'range_4': values.altitudeRange4,
+    }
+    aux['values']['orientation'] = {
+        'N': values.orientationN,
+        'NE': values.orientationNE,
+        'E': values.orientationE,
+        'SE': values.orientationSE,
+        'SO': values.orientationSO,
+        'O': values.orientationO,
+        'NO': values.orientationNO,
+    }
+
+    aux['values'].depth= values.depth;
+    aux['values'].woumpfs= values.woumpfs;
+    aux['values'].sounds= values.sounds;
+    aux['values'].layerSnowType= values.layerSnowType;
+    aux['values'].footPenetration= values.footPenetration;
+    aux['values'].skiPenetration= values.skiPenetration;
+
+    aux['values'].handTest= values.skiPenetration;
+    aux['values'].compresionTest= values.compresionTest;
+    aux['values'].extensionTest= values.extensionTest;
+    aux['values'].fractureType= values.fractureType;
+    aux['values'].fractureDepth= values.fractureDepth;
+    aux['values'].layerHardness= values.layerHardness;
+    aux['values'].layerHumidity= values.layerHumidity;
+    aux['values'].snowType= values.snowType;
+    aux['values'].comments= values.comments;
+
+    aux.status = true;
+    
+    // console.log(aux.status);
+    setSnowpackValues(aux);
+    
+    let observation = editingObservation;
+    observation.observationTypes['snowpack'] = aux; 
+    setEditingObservation({...editingObservation, observationTypes: observation.observationTypes['snowpack']});
+    updateObservations(observation);
+    console.log("Value updated...");
+    console.log('---------------------------');
+}
 
 //Snow conditions:
-const [altitude, setAltitude] = useState(formValues.values?.altitude);
-useEffect(()=>{
-    let conditions = formValues;
-    conditions.values['altitude'] = altitude
-    // conditions.status = true;
-    setFormValues(conditions);
+const [altitude, setAltitude] = useState(snowpackValues.values?.altitude);
+
+
+const [altitudeRange1, setAltitudeRange1] = useState(snowpackValues.values?.altitudeRange?.range_1);
+const [altitudeRange2, setAltitudeRange2] = useState(snowpackValues.values?.altitudeRange?.range_2);
+const [altitudeRange3, setAltitudeRange3] = useState(snowpackValues.values?.altitudeRange?.range_3);
+const [altitudeRange4, setAltitudeRange4] = useState(snowpackValues.values?.altitudeRange?.range_4);
+// useEffect(()=>{
+//     let conditions = snowpackValues;
+//     conditions.values['altitudeRange'] = {
+//         range_1: altitudeRange1,
+//         range_2: altitudeRange2,
+//         range_3: altitudeRange3,
+//         range_4: altitudeRange4,
+//     }
+//     // conditions.status = true;
+//     setsnowpackValues(conditions);
+
+// },[altitudeRange1,altitudeRange2,altitudeRange3,altitudeRange4])
+
+const [orientationN, setOrientationN] = useState(snowpackValues.values?.orientation?.N);
+const [orientationNE, setOrientationNE] = useState(snowpackValues.values?.orientation?.NE);
+const [orientationE, setOrientationE] = useState(snowpackValues.values?.orientation?.E);
+const [orientationSE, setOrientationSE] = useState(snowpackValues.values?.orientation?.SE);
+const [orientationS, setOrientationS] = useState(snowpackValues.values?.orientation?.S);
+const [orientationSO, setOrientationSO] = useState(snowpackValues.values?.orientation?.SO);
+const [orientationO, setOrientationO] = useState(snowpackValues.values?.orientation?.O);
+const [orientationNO, setOrientationNO] = useState(snowpackValues.values?.orientation?.NO);
+// useEffect(()=>{
+//     let conditions = snowpackValues;
+//     conditions.values['orientation'] = {
+//         N: orientationN,
+//         NE: orientationNE,
+//         E: orientationE,
+//         SE: orientationSE,
+//         S: orientationS,
+//         SO: orientationSO,
+//         O: orientationO,
+//         NO: orientationNO,
+//     }
+//     // conditions.status = true;
+//     setsnowpackValues(conditions);
  
-},[altitude]);
+// },[orientationN,orientationNE,orientationE,orientationSE,orientationS,orientationO,orientationNO])
 
-const [altitudeRange1, setAltitudeRange1] = useState(formValues.values?.altitudeRange?.range_1);
-const [altitudeRange2, setAltitudeRange2] = useState(formValues.values?.altitudeRange?.range_2);
-const [altitudeRange3, setAltitudeRange3] = useState(formValues.values?.altitudeRange?.range_3);
-const [altitudeRange4, setAltitudeRange4] = useState(formValues.values?.altitudeRange?.range_4);
-useEffect(()=>{
-    let conditions = formValues;
-    conditions.values['altitudeRange'] = {
-        range_1: altitudeRange1,
-        range_2: altitudeRange2,
-        range_3: altitudeRange3,
-        range_4: altitudeRange4,
-    }
-    // conditions.status = true;
-    setFormValues(conditions);
+const [depth, setDepth] = useState(snowpackValues.values?.depth);
+// useEffect(()=>{
+//     let conditions = snowpackValues;
+//     conditions.values['depth'] = depth
+//     // conditions.status = true;
+//     setsnowpackValues(conditions);
+// },[depth]);
+const [observationType, setObservationType] = useState(snowpackValues.values?.observationType);
+// useEffect(()=>{
+//     let conditions = snowpackValues;
+//     conditions.values['observationType'] = observationType
+//     // conditions.status = true;
+//     setsnowpackValues(conditions);
+// },[observationType]);
+const [woumpfs, setWoumpfs] = useState(snowpackValues.values?.woumpfs);
+const [sounds, setSounds] = useState(snowpackValues.values?.sounds);
+const [layerSnowType, setLayerSnowType] = useState(snowpackValues.values?.layerSnowType);
+const [footPenetration, setFootPenetration] = useState(snowpackValues.values?.footPenetration);
+const [skiPenetration, setSkiPenetration] = useState(snowpackValues.values?.skiPenetration);
+const [handTest, setHandTest] = useState(snowpackValues.values?.handTest);
+const [compresionTest, setCompresionTest] = useState(snowpackValues.values?.compresionTest);
+const [extensionTest, setExtensionTest] = useState(snowpackValues.values?.extensionTest);
+const [fractureType, setFractureType] = useState(snowpackValues.values?.fractureType);
+const [fractureDepth, setFractureDepth] = useState(snowpackValues.values?.fractureDepth);
+const [layerHardness, setLayerHardness] = useState(snowpackValues.values?.layerHardness);
+const [snowHumidity, setSnowHumidity] = useState(snowpackValues.values?.snowHumidity);
+const [snowType, setSnowType] = useState(snowpackValues.values?.snowType);
 
-},[altitudeRange1,altitudeRange2,altitudeRange3,altitudeRange4])
-
-const [orientationN, setOrientationN] = useState(formValues.values?.orientation?.N);
-const [orientationNE, setOrientationNE] = useState(formValues.values?.orientation?.NE);
-const [orientationE, setOrientationE] = useState(formValues.values?.orientation?.E);
-const [orientationSE, setOrientationSE] = useState(formValues.values?.orientation?.SE);
-const [orientationS, setOrientationS] = useState(formValues.values?.orientation?.S);
-const [orientationSO, setOrientationSO] = useState(formValues.values?.orientation?.SO);
-const [orientationO, setOrientationO] = useState(formValues.values?.orientation?.O);
-const [orientationNO, setOrientationNO] = useState(formValues.values?.orientation?.NO);
-useEffect(()=>{
-    let conditions = formValues;
-    conditions.values['orientation'] = {
-        N: orientationN,
-        NE: orientationNE,
-        E: orientationE,
-        SE: orientationSE,
-        S: orientationS,
-        SO: orientationSO,
-        O: orientationO,
-        NO: orientationNO,
-    }
-    // conditions.status = true;
-    setFormValues(conditions);
- 
-},[orientationN,orientationNE,orientationE,orientationSE,orientationS,orientationO,orientationNO])
-
-const [depth, setDepth] = useState(formValues.values?.depth);
-useEffect(()=>{
-    let conditions = formValues;
-    conditions.values['depth'] = depth
-    // conditions.status = true;
-    setFormValues(conditions);
-},[depth]);
-const [observationType, setObservationType] = useState(formValues.values?.observationType);
-useEffect(()=>{
-    let conditions = formValues;
-    conditions.values['observationType'] = observationType
-    // conditions.status = true;
-    setFormValues(conditions);
-},[observationType]);
-const [woumpfs, setWoumpfs] = useState(formValues.values?.woumpfs);
-const [sounds, setSounds] = useState(formValues.values?.sounds);
-const [layerSnowType, setLayerSnowType] = useState(formValues.values?.layerSnowType);
-const [footPenetration, setFootPenetration] = useState(formValues.values?.footPenetration);
-const [skiPenetration, setSkiPenetration] = useState(formValues.values?.skiPenetration);
-const [handTest, setHandTest] = useState(formValues.values?.handTest);
-const [compresionTest, setCompresionTest] = useState(formValues.values?.compresionTest);
-const [extensionTest, setExtensionTest] = useState(formValues.values?.extensionTest);
-const [fractureType, setFractureType] = useState(formValues.values?.fractureType);
-const [fractureDepth, setFractureDepth] = useState(formValues.values?.fractureDepth);
-const [layerHardness, setLayerHardness] = useState(formValues.values?.layerHardness);
-const [snowHumidity, setSnowHumidity] = useState(formValues.values?.snowHumidity);
-const [snowType, setSnowType] = useState(formValues.values?.snowType);
-
-useEffect(()=>{
-    let conditions = formValues;
-    conditions.values['woumpfs'] = woumpfs
-    conditions.values['sounds'] = sounds
-    conditions.values['layerSnowType'] = layerSnowType
-    conditions.values['footPenetration'] = footPenetration
-    conditions.values['skiPenetration'] = skiPenetration
-    conditions.values['handTest'] = handTest
-    conditions.values['compresionTest'] = compresionTest
-    conditions.values['extensionTest'] = extensionTest
-    conditions.values['fractureType'] = fractureType
-    conditions.values['fractureDepth'] = fractureDepth
-    conditions.values['layerHardness'] = layerHardness
-    conditions.values['snowHumidity'] = snowHumidity
-    conditions.values['snowType'] = snowType
-    // conditions.status = true;
-    setFormValues(conditions);
-},[woumpfs,sounds,layerSnowType,footPenetration,skiPenetration,handTest, compresionTest,extensionTest,fractureType,fractureDepth,layerHardness,snowHumidity,snowType]);
+// useEffect(()=>{
+//     let conditions = snowpackValues;
+//     conditions.values['woumpfs'] = woumpfs
+//     conditions.values['sounds'] = sounds
+//     conditions.values['layerSnowType'] = layerSnowType
+//     conditions.values['footPenetration'] = footPenetration
+//     conditions.values['skiPenetration'] = skiPenetration
+//     conditions.values['handTest'] = handTest
+//     conditions.values['compresionTest'] = compresionTest
+//     conditions.values['extensionTest'] = extensionTest
+//     conditions.values['fractureType'] = fractureType
+//     conditions.values['fractureDepth'] = fractureDepth
+//     conditions.values['layerHardness'] = layerHardness
+//     conditions.values['snowHumidity'] = snowHumidity
+//     conditions.values['snowType'] = snowType
+//     // conditions.status = true;
+//     setsnowpackValues(conditions);
+// },[woumpfs,sounds,layerSnowType,footPenetration,skiPenetration,handTest, compresionTest,extensionTest,fractureType,fractureDepth,layerHardness,snowHumidity,snowType]);
 
 //comments 
-const [comments, setComments] = useState(formValues.values?.otherComments);
+const [comments, setComments] = useState(snowpackValues.values?.otherComments);
 
-useEffect(()=>{
-    let conditions = formValues;
-    conditions.values['cxz  omments'] = comments
-    conditions.status = true;
-    setFormValues(conditions);
-},[comments]);
+// useEffect(()=>{
+//     let conditions = snowpackValues;
+//     conditions.values['cxz  omments'] = comments
+//     conditions.status = true;
+//     setsnowpackValues(conditions);
+// },[comments]);
 
 
 const typeOptions = [
@@ -229,287 +340,221 @@ return(
                 </View>
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
-                    <Text>La observación fué hace:</Text>
-                        <RadioButtonRN
-                            textColor={'black'}
-                            circleSize={14}
-                            data={typeOptions}
-                            initial={observationType ? observationType : null}
-                            box={false}
-                            selectedBtn={(e) => {
-                                setObservationType(typeOptions.map(object => object.label).indexOf(e.label)+1);
-                            }}
-                            />
+                    <CustomRadioButton 
+                        name="observationType"
+                        title="La observación fué hace:"
+                        control={control}
+                        data={typeOptions}
+                        rules={{required: 'Campo obligatorio'}}
+                        box={false}
+                        textColor={'black'}
+                        circleSize={14}
+                    />
+                  
                 </View>
 
-           
-                 <View style={styles.formContainer} >
-                    <View style={styles.spacer}></View>
-                    <Text>Franja altitudinal:</Text>
-                    {/* <Text style={{fontSize:12, color: 'gray', padding:5}}>Si dudas entre dos tipos, puedes marcar las dos</Text>         */}
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                                value={altitudeRange1}
-                                style={[ { height: 20, width: 20 } ]}
-                                boxType={'circle'}
-                                animationDuration={0.4}
-                                onAnimationType={'flat'}
-                                offAnimationType={'flat'}
-                                onValueChange={(newValue) => setAltitudeRange1(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}> inferior a 1.600 m</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                                value={altitudeRange2}
-                                style={[ { height: 20, width: 20 } ]}
-                                boxType={'circle'}
-                                animationDuration={0.4}
-                                onAnimationType={'flat'}
-                                offAnimationType={'flat'}
-                                onValueChange={(newValue) => setAltitudeRange2(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>entre 1.600 - 2.000 m</Text>
-                        </View> 
-                    </View>   
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                                value={altitudeRange3}
-                                style={[ { height: 20, width: 20 } ]}
-                                boxType={'circle'}
-                                animationDuration={0.4}
-                                onAnimationType={'flat'}
-                                offAnimationType={'flat'}
-                                onValueChange={(newValue) => setAltitudeRange3(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>entre 2.000 - 2.400 m</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                                value={altitudeRange4}
-                                style={[ { height: 20, width: 20 } ]}
-                                boxType={'circle'}
-                                animationDuration={0.4}
-                                onAnimationType={'flat'}
-                                offAnimationType={'flat'}
-                                onValueChange={(newValue) => setAltitudeRange4(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}> superior a 2.400 m</Text>
-                        </View>
-                        
-                    </View>  
-                  
-                    <View style={[styles.inputContainer, {width:"100%"}]}>
-                        <TextInput
-                            value={altitude}
-                            style={styles.input}
-                            multiline={false}
-                            numberOfLines={1}
-                            placeholder="(m)"
-                            onChangeText={(text) => setAltitude(text)}
-                            />
-                    </View>    
-                </View>
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}></View>
+                    {/* <View
+                        style={[
+                        styles.container,
+                        { borderColor: errors.deepPowder ? 'red' : 'none',
+                            borderWidth:  errors.deepPowder ? 1 : 0,
+                            borderRadius: errors.deepPowder ? 5 : 0,
+                            padding: errors.deepPowder ? 5 : 0
+                        }
+                        ]}
+                    > */}
+                    <Text>Franja altitudinal:</Text>
+                    <View style={styles.formGroup}>
+                        <CustomCheckbox name="altitudeRange1"
+                                        title="inferior a 1.600 m" 
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                        <CustomCheckbox name="altitudeRange2" 
+                                        title="entre 1.600 - 2.000 m"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                    </View> 
+
+                    <View style={styles.formGroup}>
+                        <CustomCheckbox name="altitudeRange3"
+                                        title="entre 2.000 - 2.400 m" 
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                        <CustomCheckbox name="altitudeRange4" 
+                                        title="superior a 2.400 m"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                       
+                    </View> 
+                    <CustomInput
+                        name="altitude"
+                        placeholder="(m)"
+                        control={control}
+                        // rules={{required: 'Title is required'}}
+                    />      
+                </View>
+                {/* {errors.deepPowder && (
+                    <Text style={{color: 'red', alignSelf: 'stretch'}}>{errors.deepPowder?.message || 'Error'}</Text>
+                )} 
+                </View>*/}
+
+                <View style={styles.formContainer} >
+                    <View style={styles.spacer}></View>
+                    {/* <View
+                        style={[
+                        styles.container,
+                        { borderColor: errors.deepPowder ? 'red' : 'none',
+                            borderWidth:  errors.deepPowder ? 1 : 0,
+                            borderRadius: errors.deepPowder ? 5 : 0,
+                            padding: errors.deepPowder ? 5 : 0
+                        }
+                        ]}
+                    > */}
                     <Text>Orientación:</Text>
                     <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                                value={orientationN}
-                                style={[ { height: 20, width: 20 } ]}
-                                boxType={'circle'}
-                                animationDuration={0.4}
-                                onAnimationType={'flat'}
-                                offAnimationType={'flat'}
-                                onValueChange={(newValue) => setOrientationN(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>N</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                                value={orientationNE}
-                                style={[ { height: 20, width:  20} ]}
-                                boxType={'circle'}
-                                animationDuration={0.4}
-                                onAnimationType={'flat'}
-                                offAnimationType={'flat'}
-                                onValueChange={(newValue) => setOrientationNE(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>NE</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                                value={orientationE}
-                                style={[ { height: 20, width:  20} ]}
-                                boxType={'circle'}
-                                animationDuration={0.4}
-                                onAnimationType={'flat'}
-                                offAnimationType={'flat'}
-                                onValueChange={(newValue) => setOrientationE(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>E</Text>
-                        </View>
+                        <CustomCheckbox name="orientationN"
+                                        title="N" 
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                        <CustomCheckbox name="orientationNE" 
+                                        title="NE"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                         <CustomCheckbox name="orientationE" 
+                                        title="E"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                    </View> 
+
+                    <View style={styles.formGroup}>
+                        <CustomCheckbox name="orientationSE"
+                                        title="SE" 
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                        <CustomCheckbox name="orientationS" 
+                                        title="S"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                         <CustomCheckbox name="orientationSO" 
+                                        title="SO"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                       
                     </View> 
                     <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                                value={orientationSE}
-                                style={[ { height: 20, width: 20 } ]}
-                                boxType={'circle'}
-                                animationDuration={0.4}
-                                onAnimationType={'flat'}
-                                offAnimationType={'flat'}
-                                onValueChange={(newValue) => setOrientationSE(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>SE</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                                value={orientationS}
-                                style={[ { height: 20, width:  20} ]}
-                                boxType={'circle'}
-                                animationDuration={0.4}
-                                onAnimationType={'flat'}
-                                offAnimationType={'flat'}
-                                onValueChange={(newValue) => setOrientationS(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>S</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                                value={orientationSO}
-                                style={[ { height: 20, width:  20} ]}
-                                boxType={'circle'}
-                                animationDuration={0.4}
-                                onAnimationType={'flat'}
-                                offAnimationType={'flat'}
-                                onValueChange={(newValue) => setOrientationSO(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>SO</Text>
-                        </View>
-                    </View> 
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                                value={orientationO}
-                                style={[ { height: 20, width: 20 } ]}
-                                boxType={'circle'}
-                                animationDuration={0.4}
-                                onAnimationType={'flat'}
-                                offAnimationType={'flat'}
-                                onValueChange={(newValue) => setOrientationO(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>O</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                                value={orientationNO}
-                                style={[ { height: 20, width:  20} ]}
-                                boxType={'circle'}
-                                animationDuration={0.4}
-                                onAnimationType={'flat'}
-                                offAnimationType={'flat'}
-                                onValueChange={(newValue) => setOrientationNO(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>NO</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
+                        <CustomCheckbox name="orientationO"
+                                        title="O" 
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                        <CustomCheckbox name="orientationNO" 
+                                        title="NO"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                         <View style={styles.checkboxGroup}>
                             
-                        </View>
+                            </View>
+                        
+                       
                     </View> 
+                  
+                  
                 </View>
+                {/* {errors.deepPowder && (
+                    <Text style={{color: 'red', alignSelf: 'stretch'}}>{errors.deepPowder?.message || 'Error'}</Text>
+                )} 
+                </View>*/}
 
                 <View style={styles.formContainer} >
                 <View style={styles.spacer}></View>
                     <Text>Profundidad del manto:</Text>
-                    <View style={[styles.inputContainer, {width:"100%"}]}>
-                        <TextInput
-                            value={depth}
-                            style={styles.input}
-                            multiline={false}
-                            numberOfLines={1}
-                            placeholder="Cota altimetrica (m)"
-                            onChangeText={(text) => setDepth(text)}
-                            />
-                    </View> 
+                    <CustomInput
+                        name="depth"
+                        placeholder="Cota altimetrica (m)"
+                        control={control}
+                        // rules={{required: 'Title is required'}}
+                    />       
                 </View>
 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
-                    <Text>Has escuchado/sentido woumpfs?</Text>
-                        <RadioButtonRN
-                            textColor={'black'}
-                            circleSize={14}
-                            data={booleanOptions}
-                            initial={woumpfs ? woumpfs : null}
-                            box={false}
-                            selectedBtn={(e) => {
-                                setWoumpfs(booleanOptions.map(object => object.label).indexOf(e.label)+1);
-                            }}
-                            />
+                   
+                    <CustomRadioButton 
+                        name="woumpfs"
+                        title="Has escuchado/sentido woumpfs?"
+                        control={control}
+                        data={booleanOptions}
+                        // rules={{required: 'Campo obligatorio'}}
+                        box={false}
+                        textColor={'black'}
+                        circleSize={14}
+                    />
+               
                 </View>
 
                 <View style={styles.formContainer} >
+               
                     <View style={styles.spacer}/>
-                    <Text>Has escuchado crujidos?</Text>
-                        <RadioButtonRN
-                            textColor={'black'}
-                            circleSize={14}
-                            data={booleanOptions}
-                            initial={sounds ? sounds : null}
-                            box={false}
-                            selectedBtn={(e) => {
-                                setSounds(booleanOptions.map(object => object.label).indexOf(e.label)+1);
-                            }}
-                            />
+                    <CustomRadioButton 
+                        name="sounds"
+                        title="Has escuchado crujidos?"
+                        control={control}
+                        data={booleanOptions}
+                        // rules={{required: 'Campo obligatorio'}}
+                        box={false}
+                        textColor={'black'}
+                        circleSize={14}
+                    />
                 </View>
             
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
-                    <Text>Nieve en superfície</Text>
-                        <RadioButtonRN
-                            textColor={'black'}
-                            circleSize={14}
-                            data={snowTypeOptions}
-                            initial={layerSnowType ? layerSnowType : null}
-                            box={false}
-                            selectedBtn={(e) => {
-                                setLayerSnowType(snowTypeOptions.map(object => object.label).indexOf(e.label)+1);
-                            }}
-                            />
+                    <CustomRadioButton 
+                        name="layerSnowType"
+                        title="Nieve en superfície"
+                        control={control}
+                        data={snowTypeOptions}
+                        // rules={{required: 'Campo obligatorio'}}
+                        box={false}
+                        textColor={'black'}
+                        circleSize={14}
+                    />
+                   
                 </View>
 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}></View>
                     <Text>Penetración pie:</Text>
-                    <View style={[styles.inputContainer, {width:"100%"}]}>
-                        <TextInput
-                            value={footPenetration}
-                            style={styles.input}
-                            multiline={false}
-                            numberOfLines={1}
-                            placeholder="(cm)"
-                            onChangeText={(text) => setFootPenetration(text)}
-                            />
-                    </View> 
+                    <CustomInput
+                        name="footPenetration"
+                        placeholder="(cm)"
+                        control={control}
+                        // rules={{required: 'Title is required'}}
+                    />   
                 </View>
             
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}></View>
                     <Text>Penetración esqui:</Text>
-                    <View style={[styles.inputContainer, {width:"100%"}]}>
-                        <TextInput
-                            value={skiPenetration}
-                            style={styles.input}
-                            multiline={false}
-                            numberOfLines={1}
-                            placeholder="(cm)"
-                            onChangeText={(text) => setSkiPenetration(text)}
-                            />
-                    </View> 
+                    <CustomInput
+                        name="skiPenetration"
+                        placeholder="(cm)"
+                        control={control}
+                        // rules={{required: 'Title is required'}}
+                    />   
                 </View>
 
                 <View style={styles.formContainer} >
@@ -529,107 +574,98 @@ return(
 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
-                    <Text>Test Compresión (CT)</Text>
-                        <RadioButtonRN
-                            textColor={'black'}
-                            circleSize={14}
-                            data={ctOptions}
-                            initial={compresionTest ? compresionTest : null}
-                            box={false}
-                            selectedBtn={(e) => {
-                                setCompresionTest(ctOptions.map(object => object.label).indexOf(e.label)+1);
-                            }}
-                            />
+                    <CustomRadioButton 
+                        name="compresionTest"
+                        title="Test Compresión (CT)"
+                        control={control}
+                        data={ctOptions}
+                        // rules={{required: 'Campo obligatorio'}}
+                        box={false}
+                        textColor={'black'}
+                        circleSize={14}
+                    />
+                    
                 </View>
 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
-                    <Text>Test Columna Extendida (ECT)</Text>
-                        <RadioButtonRN
-                            textColor={'black'}
-                            circleSize={14}
-                            data={ectOptions}
-                            initial={extensionTest ? extensionTest : null}
-                            box={false}
-                            selectedBtn={(e) => {
-                                setExtensionTest(ectOptions.map(object => object.label).indexOf(e.label)+1);
-                            }}
-                            />
+                    <CustomRadioButton 
+                        name="extensionTest"
+                        title="Test Columna Extendida (ECT)"
+                        control={control}
+                        data={ectOptions}
+                        // rules={{required: 'Campo obligatorio'}}
+                        box={false}
+                        textColor={'black'}
+                        circleSize={14}
+                    />
+                   
                 </View>
 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
-                    <Text>Tipo de fractura</Text>
-                        <RadioButtonRN
-                            textColor={'black'}
-                            circleSize={14}
-                            data={fractureOptions}
-                            initial={fractureType ? fractureType : null}
-                            box={false}
-                            selectedBtn={(e) => {
-                                setFractureType(fractureOptions.map(object => object.label).indexOf(e.label)+1);
-                            }}
-                            />
+                    <CustomRadioButton 
+                        name="fractureType"
+                        title="Tipo de fractura"
+                        control={control}
+                        data={fractureOptions}
+                        // rules={{required: 'Campo obligatorio'}}
+                        box={false}
+                        textColor={'black'}
+                        circleSize={14}
+                    />
                 </View>
 
                 <View style={styles.formContainer} >
                 <View style={styles.spacer}></View>
                     <Text>Profundidad de fractura (cm, desde la superfície):</Text>
-                    <View style={[styles.inputContainer, {width:"100%"}]}>
-                        <TextInput
-                            value={fractureDepth}
-                            style={styles.input}
-                            multiline={false}
-                            numberOfLines={1}
-                            placeholder="Cota altimetrica (m)"
-                            onChangeText={(text) => setFractureDepth(text)}
-                            />
-                    </View> 
+                    <CustomInput
+                        name="fractureDepth"
+                        placeholder="Cota altimetrica (m)"
+                        control={control}
+                        // rules={{required: 'Title is required'}}
+                    />   
+                  
                 </View>
 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
-                    <Text>Dureza de la capa</Text>
-                        <RadioButtonRN
-                            textColor={'black'}
-                            circleSize={14}
-                            data={hardnessOptions}
-                            initial={layerHardness ? layerHardness : null}
-                            box={false}
-                            selectedBtn={(e) => {
-                                setLayerHardness(hardnessOptions.map(object => object.label).indexOf(e.label)+1);
-                            }}
-                            />
+                    <CustomRadioButton 
+                        name="layerHardness"
+                        title="Dureza de la capa"
+                        control={control}
+                        data={hardnessOptions}
+                        // rules={{required: 'Campo obligatorio'}}
+                        box={false}
+                        textColor={'black'}
+                        circleSize={14}
+                    />
                 </View>
 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
-                    <Text>Humedad de la capa</Text>
-                        <RadioButtonRN
-                            textColor={'black'}
-                            circleSize={14}
-                            data={humidityOptions}
-                            initial={snowHumidity ? snowHumidity : null}
-                            box={false}
-                            selectedBtn={(e) => {
-                                setSnowHumidity(humidityOptions.map(object => object.label).indexOf(e.label)+1);
-                            }}
-                            />
+                    <CustomRadioButton 
+                        name="snowHumidity"
+                        title="Humedad de la capa"
+                        control={control}
+                        data={humidityOptions}
+                        // rules={{required: 'Campo obligatorio'}}
+                        box={false}
+                        textColor={'black'}
+                        circleSize={14}
+                    />
+                   
                 </View>
 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}></View>
                     <Text>Tipo de grano:</Text>
-                    <View style={[styles.inputContainer, {width:"100%"}]}>
-                        <TextInput
-                            value={snowType}
-                            style={styles.input}
-                            multiline={false}
-                            numberOfLines={1}
-                            placeholder="(cm)"
-                            onChangeText={(text) => setSnowType(text)}
-                            />
-                    </View> 
+                    <CustomInput
+                        name="snowType"
+                        placeholder="(cm)"
+                        control={control}
+                        // rules={{required: 'Title is required'}}
+                    />  
                 </View>
 
                 <View style={styles.formContainer} >

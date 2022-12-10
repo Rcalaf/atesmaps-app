@@ -140,8 +140,8 @@ android {
                // resolutionStrategy { force 'androidx.core:core:1.6.0' }
                //Kotlin
                resolutionStrategy { force 'androidx.core:core-ktx:1.6.0' }
-}
-            }
+            //}
+        }
         applicationId "com.atesmapsapp"
         minSdkVersion rootProject.ext.minSdkVersion
         // targetSdkVersion rootProject.ext.targetSdkVersion
