@@ -25,10 +25,10 @@ import { ObservationContext } from '../context/ObservationContext';
 
 const QuickObservationTypeDetail: () => Node = ({ route, navigation }) => {
 
-const { editingObservation, setEditingObservation, updateObservations  } = useContext(ObservationContext);
+const { editingObservation, selectedIndex, setEditingObservation, updateObservations  } = useContext(ObservationContext);
 const [ quickValues, setQuickValues ] = useState(editingObservation.observationTypes?.quick ? editingObservation.observationTypes?.quick : {status: false, values: {}});
 
-const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
+const { control, handleSubmit, formState: { errors }, getValues, setValue, reset } = useForm({
     //defaultValues: preloadedValues
     defaultValues: {
         deepPowder: quickValues.values.snowConditions?.deepPowder ? quickValues.values.snowConditions?.deepPowder : null,
@@ -83,13 +83,15 @@ useLayoutEffect(() => {
           
             // navigation.navigate('Observación', {index, update:true})
           }}
-          title="Save"
+          title="Guardar"
         />
       )
     });
     //TODO: Here we can dynamically change the header of the screen....
     //check documentation here: https://reactnavigation.org/docs/navigation-prop/#setparams
   }, [navigation]);
+
+
 
 const updateData = () => {
     console.log('------Quick report---------');
@@ -98,8 +100,6 @@ const updateData = () => {
 
     let aux = {values: {}}
 
-
-    
     aux['values']['snowConditions'] = {
         'deepPowder': values.deepPowder,
         'crusty': values.crusty,
@@ -146,22 +146,29 @@ const updateData = () => {
     aux['values'].activityType = values.activityType
 
     aux.status = true;
-
-    console.log(aux);
+ 
     setQuickValues(aux);
     
     let observation = editingObservation;
     observation.observationTypes['quick'] = aux; 
     setEditingObservation({...editingObservation, observationTypes: observation.observationTypes['quick']});
     updateObservations(observation);
-    console.log("Value updated...");
-    console.log('---------------------------');
+    navigation.navigate('Observación',{selectedIndex});
 }
 
 const removeData = () => {
     console.log('------Quick report---------');
     console.log("Delete Quick report observation...");  
+
+   
+    let observation = editingObservation;
+    observation.observationTypes['quick'] = {status: false, values: {}}; 
+    setEditingObservation({...editingObservation, observationTypes: observation.observationTypes['quick']});
+    updateObservations(observation);
+    
+    console.log(observation);
     console.log('---------------------------');
+    navigation.navigate('Observación',{selectedIndex});
 }
 
 //Snow conditions:
@@ -671,11 +678,12 @@ return(
                                 />
                         </View>
                         <View style={{marginBottom: 30}}>
-                            <CustomButton text="Submit" bgColor={"#62a256"} fgColor='white' iconName={null} onPress={handleSubmit(updateData)} />
+                            <CustomButton text="Borrar observación rápida" bgColor={"#B00020"} fgColor='white' iconName={null} onPress={removeData} />
                         </View>
                 </View>    
 
             </View>
+            <View style={styles.space} />
         </ScrollView>
     </SafeAreaView>
 )};
@@ -744,7 +752,10 @@ const styles = StyleSheet.create({
         width: '100%',
         borderColor: 'none',
         marginVertical: 5,
-    },
+    }, 
+    space: {
+        height: 150,
+    }
 });
 
 export default QuickObservationTypeDetail;

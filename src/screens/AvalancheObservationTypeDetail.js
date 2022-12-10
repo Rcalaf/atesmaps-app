@@ -26,7 +26,7 @@ import CustomCheckbox from "../components/CustomCheckbox";
 import CustomInput from "../components/CustomInput";
 
 const AvalancheObservationTypeDetail: () => Node = ({ route, navigation }) => {
-const { editingObservation, updateObservations, setEditingObservation  } = useContext(ObservationContext);
+const { editingObservation, selectedIndex, updateObservations, setEditingObservation  } = useContext(ObservationContext);
 
 const [avalancheValues, setAvalancheValues] = useState(editingObservation.observationTypes?.avalanche ? editingObservation.observationTypes?.avalanche : {status: false, values: {}});
 const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
@@ -95,6 +95,22 @@ useLayoutEffect(() => {
   }, [navigation]);
 
 
+  const removeData = () => {
+    console.log('------Avalanche report---------');
+    console.log("Delete Avalanche report observation...");  
+
+   
+    let observation = editingObservation;
+    observation.observationTypes['avalanche'] = {status: false, values: {}}; 
+    setEditingObservation({...editingObservation, observationTypes: observation.observationTypes['avalanche']});
+    updateObservations(observation);
+    
+    console.log(observation);
+    console.log('---------------------------');
+    navigation.navigate('Observación',{selectedIndex});
+}
+
+
 
 const updateData = () => {
     console.log('------Avalanche report---------');
@@ -160,6 +176,7 @@ const updateData = () => {
     updateObservations(observation);
     console.log("Value updated...");
     console.log('---------------------------');
+    navigation.navigate('Observación',{selectedIndex});
 }
 
 
@@ -749,24 +766,27 @@ return(
                     />
                    
                 </View>
+                
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}></View>
+                         <Text>Otras observaciones:</Text>
 
-                    <Text>Other comments:</Text>
-                    <CustomInput
-                            name="comments"
-                            placeholder=""
-                            control={control}
-                            multiline={true}
-                            numberOfLines={4}
-                            customStyles={styles.textArea}
-                            //   rules={{required: 'Email is required'}}
-                            // onPress={showDatepicker}
-                            />
-
-                
-                </View>    
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                value={comments}
+                                multiline={true}
+                                numberOfLines={4}
+                                style={styles.input}
+                                placeholder={"1000 letras max"}
+                                onChangeText={(text) => setComments(text)}
+                                />
+                        </View>
+                        <View style={{marginBottom: 30}}>
+                            <CustomButton text="Borrar datos" bgColor={"#B00020"} fgColor='white' iconName={null} onPress={removeData} />
+                        </View>
+                </View>
             </View>
+            <View style={styles.space} />
         </ScrollView>
     </SafeAreaView>
 )};
@@ -817,23 +837,6 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         backgroundColor: 'white',
-        width: '45%',
-        borderColor: '#e8e8e8',
-        borderWidth: 1,
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        marginVertical: 5,
-    },
-    inputGroup:{
-        padding: 10,
-        marginRight: 10,
-        flex:1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    textAreaContainer:{
-        backgroundColor: 'white',
         width: '100%',
         borderColor: '#e8e8e8',
         borderWidth: 1,
@@ -841,20 +844,21 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         marginVertical: 5,
     },
-    textArea: {
-        borderColor: "gray",
-        width: "100%",
-        height:'30%',
-        paddingTop: 10,
-        paddingBottom: 10,
-    },
     input: {
         borderColor: "gray",
         width: "100%",
+        height:'24%',
         paddingTop: 10,
         paddingBottom: 10,
-      },
+    },
+    container: {
+        width: '100%',
+        borderColor: 'none',
+        marginVertical: 5,
+    }, 
+    space: {
+        height: 150,
+    }
 
 });
-
 export default AvalancheObservationTypeDetail;

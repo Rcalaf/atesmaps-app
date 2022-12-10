@@ -32,7 +32,7 @@ const Profile: () => Node = () => {
 
 const {isLoading, logout, updateUser, userDetails, userToken} = useContext(AuthContext);
 
-const [user, setUser] = useState(null);
+const [user, setUser] = useState(userDetails);
 
 const sentData = async (id,data) => {
   try {

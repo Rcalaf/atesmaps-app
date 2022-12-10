@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useLayoutEffect, useContext} from "react";
-import { Text, View, TextInput, Button, Alert, StyleSheet, Keyboard } from "react-native";
+import { Text, View, TextInput, Button, Alert, StyleSheet, SafeAreaView, Keyboard } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import moment from 'moment';
 
@@ -96,6 +96,7 @@ export default function ObservationDetail({ route, navigation }) {
     const onSave = (data) => {
       // console.log('Saving data...')
       console.log(parseLocation(data.location));
+      console.log();
       let obj = data;
       obj.date = moment(rawDate).format();
       
@@ -110,15 +111,20 @@ export default function ObservationDetail({ route, navigation }) {
 
     
     const onSubmit = (data) => {
-      console.log(data);
-      console.log(errors);
-      let obj = data;
-      //TODO: check if date updates properly
-      obj.date = moment(rawDate).format();
-      obj.location = location;
-      obj.observationTypes = editingObservation.observationTypes;
-     
-      sentData(userDetails._id,obj);  
+
+      if(editingObservation.observationTypes.quick?.status ||
+         editingObservation.observationTypes.snowConditions?.status ||
+         editingObservation.observationTypes.avalancheConditions?.status){
+          console.log('at least one report...')
+          // let obj = data;
+          // //TODO: check if date updates properly
+          // obj.date = moment(rawDate).format();
+          // obj.location = location;
+          // obj.observationTypes = editingObservation.observationTypes;
+      }else{
+
+      }
+      //sentData(userDetails._id,obj);  
     }; 
 
     const onChange = (event, selectedDate) => {
@@ -151,7 +157,7 @@ export default function ObservationDetail({ route, navigation }) {
   
 
     return (
-  
+      <SafeAreaView style={styles.safeContainer}>
         <View style={styles.container}>
           <CustomInput
             name="title"
@@ -237,7 +243,7 @@ export default function ObservationDetail({ route, navigation }) {
           </View>
           <View >
             <CustomButton text="Eliminar" 
-                bgColor={"#f00"} 
+                bgColor={"#B00020"} 
                 fgColor='white' 
                 iconName={null} 
                 onPress={() => {
@@ -250,7 +256,7 @@ export default function ObservationDetail({ route, navigation }) {
        
           {/* <Text style={styles.status}> {keyboardStatus}</Text> */}
         </View>
-      
+      </SafeAreaView>
     );
 }
 
@@ -276,5 +282,11 @@ const styles = StyleSheet.create({
   status: {
     padding: 10,
     textAlign: "center"
-  }
+  },
+  safeContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    paddingBottom: 40
+},
 });

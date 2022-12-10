@@ -13,8 +13,6 @@ export const AuthProvider = ({children}) => {
     const [userToken, setUserToken] = useState(null);
     const [userDetails, setUserDetails] = useState(null);
 
-
-
     const updateUser = async (data) => {
         await AsyncStorage.setItem('userDetails', JSON.stringify(data));
         setUserDetails(data);

@@ -42,7 +42,7 @@ const CustomRadioButton = ({
               initial={value ? value : null}
               box={box}
               selectedBtn={(e) => {
-                  onChange(data.map(object => object.label).indexOf(e.label)+1);
+                  onChange(data.map(object => object.label).indexOf(e?.label)+1);
               }}
               />
           </View>

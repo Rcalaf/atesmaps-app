@@ -19,6 +19,7 @@ import CheckBox from '@react-native-community/checkbox';
 import CustomInput from "../components/CustomInput";
 import CustomRadioButton from "../components/CustomRadioButton";
 import CustomButton from "../components/CustomButton";
+
 import CustomCheckbox from "../components/CustomCheckbox";
 
 import { useForm, Controller } from "react-hook-form";
@@ -39,19 +40,17 @@ const SnowpackObservationTypeDetail: () => Node = ({ route, navigation }) => {
               
                 // navigation.navigate('Observación', {index, update:true})
               }}
-              title="Save"
+              title="Guardar"
             />
           )
         });
         //TODO: Here we can dynamically change the header of the screen....
         //check documentation here: https://reactnavigation.org/docs/navigation-prop/#setparams
       }, [navigation]);
-const { editingObservation, setEditingObservation,updateObservations  } = useContext(ObservationContext);
+const { editingObservation, selectedIndex, setEditingObservation,updateObservations  } = useContext(ObservationContext);
 const [snowpackValues, setSnowpackValues] = useState(editingObservation.observationTypes?.snowpack ? editingObservation.observationTypes?.snowpack : {status: false, values: {}});
 
 
-console.log(snowpackValues)
-console.log(editingObservation.observationTypes.snowpack);
 const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
     defaultValues: {
         // range_1: snowpackValues.values.altitudeRange?.range_1 ? snowpackValues.values.altitudeRange?.range_1 : null,
@@ -89,6 +88,21 @@ const { control, handleSubmit, formState: { errors }, getValues, setValue } = us
         comments:snowpackValues.values?.comments ? snowpackValues.values?.comments : null,
     }
 });
+
+const removeData = () => {
+    console.log('------Snowpack report---------');
+    console.log("Delete Snowpack report observation...");  
+
+   
+    let observation = editingObservation;
+    observation.observationTypes['snowpack'] = {status: false, values: {}}; 
+    setEditingObservation({...editingObservation, observationTypes: observation.observationTypes['snowpack']});
+    updateObservations(observation);
+    
+    console.log(observation);
+    console.log('---------------------------');
+    navigation.navigate('Observación',{selectedIndex});
+}
 
 const updateData = () => {
     console.log('------Quick report---------');
@@ -145,6 +159,8 @@ const updateData = () => {
     updateObservations(observation);
     console.log("Value updated...");
     console.log('---------------------------');
+
+    navigation.navigate('Observación',{selectedIndex});
 }
 
 //Snow conditions:
@@ -670,21 +686,26 @@ return(
 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}></View>
+                         <Text>Otras observaciones:</Text>
 
-                    <Text>Other comments:</Text>
-
-                    
-                    <View style={styles.textAreaContainer}>
-                        <TextInput
-                            value={comments}
-                            multiline={true}
-                            numberOfLines={4}
-                            style={styles.textArea}
-                            onChangeText={(text) => setComments(text)}
-                            />
-                    </View>
-                </View>    
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                value={comments}
+                                multiline={true}
+                                numberOfLines={4}
+                                style={styles.input}
+                                placeholder={"1000 letras max"}
+                                onChangeText={(text) => setComments(text)}
+                                />
+                        </View>
+                        <View style={{marginBottom: 30}}>
+                            <CustomButton text="Borrar datos" bgColor={"#B00020"} fgColor='white' iconName={null} onPress={removeData} />
+                        </View>
+                </View> 
+                
             </View>
+            
+            <View style={styles.space} />
         </ScrollView>
     </SafeAreaView>
 )};
@@ -735,23 +756,6 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         backgroundColor: 'white',
-        width: '45%',
-        borderColor: '#e8e8e8',
-        borderWidth: 1,
-        borderRadius: 5,
-        paddingHorizontal: 10,
-        marginVertical: 5,
-    },
-    inputGroup:{
-        padding: 10,
-        marginRight: 10,
-        flex:1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    textAreaContainer:{
-        backgroundColor: 'white',
         width: '100%',
         borderColor: '#e8e8e8',
         borderWidth: 1,
@@ -759,19 +763,21 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         marginVertical: 5,
     },
-    textArea: {
-        borderColor: "gray",
-        width: "100%",
-        height:'30%',
-        paddingTop: 10,
-        paddingBottom: 10,
-    },
     input: {
         borderColor: "gray",
         width: "100%",
+        height:'20%',
         paddingTop: 10,
         paddingBottom: 10,
-      },
+    },
+    container: {
+        width: '100%',
+        borderColor: 'none',
+        marginVertical: 5,
+    }, 
+    space: {
+        height: 150,
+    }
 
 });
 
