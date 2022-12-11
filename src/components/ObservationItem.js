@@ -13,14 +13,14 @@ export default function Item({ item, index,  navigation  }) {
       if (item.status == 0) {
         return (
           <View style={styles.itemStatus}>
-            <Text style={{fontSize:10, textAlign: 'center', color: 'white'}}>{item.status == 0 ? 'Drafts' : null}</Text>
+            <Text style={{fontSize:10, textAlign: 'center', color: 'white'}}>{'Borrador'}</Text>
           </View>
         )
       }
       if (item.status == 1) {
         return (
           <View style={[styles.itemStatus,{backgroundColor:"orange"}]}>
-            <Text style={{fontSize:10, textAlign: 'center', color: 'white'}}>{item.status == 0 ? 'Drafts' : item.status == 1 ? 'en revisión' : null}</Text>
+            <Text style={{fontSize:10, textAlign: 'center', color: 'white'}}>{ 'En revisión'}</Text>
           </View>
         )
       }

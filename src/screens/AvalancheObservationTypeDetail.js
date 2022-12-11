@@ -13,8 +13,8 @@ import {
     Text,
     TextInput
 } from 'react-native';
-import Section from '../components/Section';
 
+import  Snackbar  from "react-native-snackbar";
 import CheckBox from '@react-native-community/checkbox';
 
 import { ObservationContext } from '../context/ObservationContext';
@@ -96,8 +96,8 @@ useLayoutEffect(() => {
 
 
   const removeData = () => {
-    console.log('------Avalanche report---------');
-    console.log("Delete Avalanche report observation...");  
+    // console.log('------Avalanche report---------');
+    // console.log("Delete Avalanche report observation...");  
 
    
     let observation = editingObservation;
@@ -105,15 +105,23 @@ useLayoutEffect(() => {
     setEditingObservation({...editingObservation, observationTypes: observation.observationTypes['avalanche']});
     updateObservations(observation);
     
-    console.log(observation);
-    console.log('---------------------------');
+    // console.log(observation);
+    // console.log('---------------------------');
+    
     navigation.navigate('Observación',{selectedIndex});
+    Snackbar.show({
+        text: 'Tu observación sobre avalanchas se ha eliminado.',
+        duration: Snackbar.LENGTH_SHORT,
+        numberOfLines: 2,
+        textColor: "#fff",
+        backgroundColor: "#B00020",
+    });
 }
 
 
 
 const updateData = () => {
-    console.log('------Avalanche report---------');
+    // console.log('------Avalanche report---------');
     const values = getValues();
     ///console.log(values);
 
@@ -165,6 +173,7 @@ const updateData = () => {
     aux.values.amount = values.amount;
     aux.values.windExposure = values.windExposure;
 
+    aux.status = true;
     // console.log("----------------");
     // console.log(aux);
     // console.log("----------------");
@@ -174,9 +183,18 @@ const updateData = () => {
     observation.observationTypes['avalanche'] = aux; 
     setEditingObservation({...editingObservation, observationTypes: observation.observationTypes['avalanche']});
     updateObservations(observation);
-    console.log("Value updated...");
-    console.log('---------------------------');
+    
+    // console.log("Value updated...");
+    // console.log('---------------------------');
     navigation.navigate('Observación',{selectedIndex});
+    Snackbar.show({
+        text: 'Tu observación sobre avalanchas se ha guardado.',
+        duration: Snackbar.LENGTH_SHORT,
+        numberOfLines: 2,
+        textColor: "#fff",
+        backgroundColor: "#62a256",
+    });
+
 }
 
 

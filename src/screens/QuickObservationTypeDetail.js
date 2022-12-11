@@ -17,6 +17,8 @@ import {
 import CustomRadioButton from "../components/CustomRadioButton";
 import CustomButton from "../components/CustomButton";
 import CustomCheckbox from "../components/CustomCheckbox";
+import  Snackbar  from "react-native-snackbar";
+
 
 // import CheckBox from '@react-native-community/checkbox';
 import { useForm, Controller } from "react-hook-form";
@@ -76,11 +78,10 @@ useLayoutEffect(() => {
       headerRight: () => (
         <Button
           onPress={() => {
-            console.log('Saving quick observation on local storage....');
             // console.log(getValues());
-            // console.log(errors);
+            console.log(errors);
             handleSubmit(updateData)();
-          
+           
             // navigation.navigate('Observación', {index, update:true})
           }}
           title="Guardar"
@@ -153,12 +154,19 @@ const updateData = () => {
     observation.observationTypes['quick'] = aux; 
     setEditingObservation({...editingObservation, observationTypes: observation.observationTypes['quick']});
     updateObservations(observation);
+    Snackbar.show({
+        text: 'Tu observación rápida se ha guardado.',
+        duration: Snackbar.LENGTH_SHORT,
+        numberOfLines: 2,
+        textColor: "#fff",
+        backgroundColor: "#62a256",
+    });
     navigation.navigate('Observación',{selectedIndex});
 }
 
 const removeData = () => {
-    console.log('------Quick report---------');
-    console.log("Delete Quick report observation...");  
+    // console.log('------Quick report---------');
+    // console.log("Delete Quick report observation...");  
 
    
     let observation = editingObservation;
@@ -166,8 +174,15 @@ const removeData = () => {
     setEditingObservation({...editingObservation, observationTypes: observation.observationTypes['quick']});
     updateObservations(observation);
     
-    console.log(observation);
-    console.log('---------------------------');
+    // console.log(observation);
+    // console.log('---------------------------');
+    Snackbar.show({
+        text: 'Tu observación rápida se ha eliminado.',
+        duration: Snackbar.LENGTH_SHORT,
+        numberOfLines: 2,
+        textColor: "#fff",
+        backgroundColor: "#B00020",
+    });
     navigation.navigate('Observación',{selectedIndex});
 }
 

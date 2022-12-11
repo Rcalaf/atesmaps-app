@@ -2,10 +2,11 @@ import React, {createContext, useContext, useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-
+import  Snackbar  from "react-native-snackbar";
 import { BASE_URL } from '../config';
 
 import { AuthContext } from '../context/AuthContext';
+
 export const ObservationContext = createContext();
 
 export const ObservationProvider = ({children}) => {
@@ -68,6 +69,13 @@ export const ObservationProvider = ({children}) => {
             await AsyncStorage.setItem('list', JSON.stringify(aux)); 
             //TODO: update asyncStorage List property
             setEditingObservation(observation);
+            Snackbar.show({
+                text: 'Tu borrador de observación se ha creado.',
+                duration: Snackbar.LENGTH_SHORT,
+                numberOfLines: 2,
+                textColor: "#fff",
+                backgroundColor: "#62a256",
+            });
         setIsLoading(false);
     }
 
@@ -78,7 +86,7 @@ export const ObservationProvider = ({children}) => {
     }
 
     const updateObservations = async (obj) => {
-        console.log('calling update observations');
+       // console.log('calling update observations');
         
         // setIsLoading(true);
         let aux = observations;
@@ -86,8 +94,9 @@ export const ObservationProvider = ({children}) => {
         setEditingObservation(obj); 
         setObservations(aux);
         await AsyncStorage.setItem('list', JSON.stringify(aux));
-        console.log('------------------');  
+       // console.log('------------------');  
         // setIsLoading(false);
+        
     }
 
     const deleteObservation = async () => {
@@ -110,6 +119,13 @@ export const ObservationProvider = ({children}) => {
         let index = aux.length 
         setLastIndex(index);
         setSelectedIndex(null);
+        Snackbar.show({
+            text: 'Tu borrador de observación se ha eliminado.',
+            duration: Snackbar.LENGTH_SHORT,
+            numberOfLines: 2,
+            textColor: "#fff",
+            backgroundColor: "#62a256",
+        });
         // navigation.navigate('Lista de Observaciones');
     }
 
@@ -121,10 +137,10 @@ export const ObservationProvider = ({children}) => {
         // setList();
     },[observations]);
 
-    useEffect(()=>{
-        console.log('editingObservation has been updated....');
-        //console.log(editingObservation);
-    },[editingObservation]);
+    // useEffect(()=>{
+    //     console.log('editingObservation has been updated....');
+    //     //console.log(editingObservation);
+    // },[editingObservation]);
 
     useEffect(()=>{  
         console.log('Loading user data...');  

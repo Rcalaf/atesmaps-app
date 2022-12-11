@@ -13,6 +13,7 @@ import {
 
  import { HeaderBackButton } from '@react-navigation/elements';
 //import { HeaderBackButton } from '@react-navigation/stack';
+import  Snackbar  from "react-native-snackbar";
 
 import MapView, {Marker} from 'react-native-maps';
 
@@ -46,6 +47,13 @@ const LocationPicker: () => Node = ({ route, navigation }) => {
               let index = route.params?.index;
               setEditingObservation({...editingObservation, location:pickedLocation});
               navigation.navigate('Observación', {index, update:true})
+              Snackbar.show({
+                text: 'Tu ubicación se ha guardado.',
+                duration: Snackbar.LENGTH_SHORT,
+                numberOfLines: 2,
+                textColor: "#fff",
+                backgroundColor: "#62a256",
+            });
             }}
             title="Guardar"
           />

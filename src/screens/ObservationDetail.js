@@ -13,6 +13,8 @@ import CustomInput from "../components/CustomInput";
 
 import { ObservationContext } from '../context/ObservationContext';
 import { AuthContext } from '../context/AuthContext';
+import  Snackbar  from "react-native-snackbar";
+
 
 export default function ObservationDetail({ route, navigation }) {
     const {editingObservation, selectedIndex, observations, deleteObservation, updateObservations } = useContext(ObservationContext);
@@ -37,7 +39,6 @@ export default function ObservationDetail({ route, navigation }) {
     }
 
     const sentData = async (id,data) => {
-    
       data.user = id;
       try {
         const response = await axios({
@@ -47,12 +48,19 @@ export default function ObservationDetail({ route, navigation }) {
           //headers: { "Content-Type": "multipart/form-data" },
           headers: {"Authorization": `Bearer ${userToken}`}
         });
-        //console.log(response.message);
-        //console.log(response.status);
+        // console.log(response.message);
+        // console.log(response.status);
         if (response.status === 201){
             console.log('cleaning local storage');
-            deleteObservation();
             navigation.navigate('Lista de Observaciones');
+            deleteObservation();
+            Snackbar.show({
+              text: 'Muchas gracias. Tu Observación se ha enviado a revisar pr el equipo de ATESMAPS.',
+              duration: Snackbar.LENGTH_SHORT,
+              numberOfLines: 2,
+              textColor: "#fff",
+              backgroundColor: "#62a256",
+            });
         }
       } catch (error) {
         console.log(error.response.status);
@@ -95,36 +103,49 @@ export default function ObservationDetail({ route, navigation }) {
 
     const onSave = (data) => {
       // console.log('Saving data...')
-      console.log(parseLocation(data.location));
-      console.log();
+      // console.log(parseLocation(data.location));
+      // console.log();
       let obj = data;
       obj.date = moment(rawDate).format();
-      
       obj.location = parseLocation(data.location);
       obj.status = 0;
       obj.observationTypes = editingObservation.observationTypes;
-      console.log(obj);
+   
       updateObservations(obj);
-
+      Snackbar.show({
+        text: 'Los datos de tu observación se han guardado.',
+        duration: Snackbar.LENGTH_SHORT,
+        numberOfLines: 2,
+        textColor: "#fff",
+        backgroundColor: "#62a256",
+      });
     }
 
 
     
     const onSubmit = (data) => {
-
+      //console.log(editingObservation.observationTypes.quick?.status);
+      //console.log(editingObservation.observationTypes.snowConditions?.status);
+      //console.log(editingObservation.observationTypes.avalancheConditions?.status);
       if(editingObservation.observationTypes.quick?.status ||
-         editingObservation.observationTypes.snowConditions?.status ||
-         editingObservation.observationTypes.avalancheConditions?.status){
-          console.log('at least one report...')
-          // let obj = data;
-          // //TODO: check if date updates properly
-          // obj.date = moment(rawDate).format();
-          // obj.location = location;
-          // obj.observationTypes = editingObservation.observationTypes;
+        editingObservation.observationTypes.snowConditions?.status ||
+        editingObservation.observationTypes.avalancheConditions?.status){
+        //console.log('at least one report...')
+        let obj = data;
+        //TODO: check if date updates properly
+        obj.date = moment(rawDate).format();
+        obj.location = location;
+        obj.observationTypes = editingObservation.observationTypes;
+        sentData(userDetails._id,obj); 
       }else{
-
-      }
-      //sentData(userDetails._id,obj);  
+        Snackbar.show({
+          text: 'Antes de subir una Observación, completa por lo menos uno de los típos de observaciones',
+          duration: Snackbar.LENGTH_SHORT,
+          numberOfLines: 2,
+          textColor: "#fff",
+          backgroundColor: "#B00020",
+        });
+      } 
     }; 
 
     const onChange = (event, selectedDate) => {

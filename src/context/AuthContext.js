@@ -49,10 +49,10 @@ export const AuthProvider = ({children}) => {
 
     const signUp = async (userName, password, email) => {
         try {
-            console.log(userName + ', '+email+', '+password);
+           // console.log(userName + ', '+email+', '+password);
             setIsLoading(true);
             let response = await axios.post(`${BASE_URL}/register`,{'userName':userName, 'email': email, 'pwd':password});
-            console.log(response.data);
+            //console.log(response.data);
             //let user = {userName, userEmail, userId} = response.data;
             let user = response.data.user;
             await AsyncStorage.setItem('userToken', response.data.accessToken);

@@ -13,8 +13,8 @@ import {
     Text,
     TextInput
 } from 'react-native';
-import Section from '../components/Section';
 
+import  Snackbar  from "react-native-snackbar";
 import CheckBox from '@react-native-community/checkbox';
 import CustomInput from "../components/CustomInput";
 import CustomRadioButton from "../components/CustomRadioButton";
@@ -90,8 +90,8 @@ const { control, handleSubmit, formState: { errors }, getValues, setValue } = us
 });
 
 const removeData = () => {
-    console.log('------Snowpack report---------');
-    console.log("Delete Snowpack report observation...");  
+    // console.log('------Snowpack report---------');
+    // console.log("Delete Snowpack report observation...");  
 
    
     let observation = editingObservation;
@@ -99,15 +99,22 @@ const removeData = () => {
     setEditingObservation({...editingObservation, observationTypes: observation.observationTypes['snowpack']});
     updateObservations(observation);
     
-    console.log(observation);
-    console.log('---------------------------');
+    // console.log(observation);
+    // console.log('---------------------------');
+    Snackbar.show({
+        text: 'Tu observación sobre el manto de nieve se ha eliminado.',
+        duration: Snackbar.LENGTH_SHORT,
+        numberOfLines: 2,
+        textColor: "#fff",
+        backgroundColor: "#B00020",
+    });
     navigation.navigate('Observación',{selectedIndex});
 }
 
 const updateData = () => {
-    console.log('------Quick report---------');
+    // console.log('------Quick report---------');
     const values = getValues();
-    console.log(values);
+    // console.log(values);
 
     let aux = {values: {}}
 
@@ -157,9 +164,16 @@ const updateData = () => {
     observation.observationTypes['snowpack'] = aux; 
     setEditingObservation({...editingObservation, observationTypes: observation.observationTypes['snowpack']});
     updateObservations(observation);
-    console.log("Value updated...");
-    console.log('---------------------------');
-
+    // console.log("Value updated...");
+    // console.log('---------------------------');
+    navigation.navigate('Observación',{selectedIndex});
+    Snackbar.show({
+        text: 'Tu observación sobre el manto de nieve se ha guardado.',
+        duration: Snackbar.LENGTH_SHORT,
+        numberOfLines: 2,
+        textColor: "#fff",
+        backgroundColor: "#62a256",
+    });
     navigation.navigate('Observación',{selectedIndex});
 }
 

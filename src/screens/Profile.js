@@ -22,7 +22,7 @@ import { AuthContext } from '../context/AuthContext';
 import UserForm from '../components/UserForm';
 import CustomButton from "../components/CustomButton";
 import { AccessControlTranslationFilterSensitiveLog } from '@aws-sdk/client-s3';
-
+import  Snackbar  from "react-native-snackbar";
 
 // const Stack = createNativeStackNavigator();
 
@@ -45,44 +45,32 @@ const sentData = async (id,data) => {
     });
     //let response = await axios.post(`${BASE_URL}/users/${id}`,data,{ "Content-Type": "multipart/form-data" });
     // console.log('-----Performed a user updat to the API-----')
-    // console.log(response.data);
+
     updateUser(response.data);
+    if (response.status === 200){
+      Snackbar.show({
+        text: 'Los datos se actualizaron correctamente.',
+        duration: Snackbar.LENGTH_SHORT,
+        numberOfLines: 2,
+        textColor: "#fff",
+        backgroundColor: "#62a256",
+      });
+    }
   } catch (error) {
     console.log('error triggered while sending data')
     console.log(error);
-  }
-};
-
-const getUserData = async (id) => {
-  try{
-    const response = await axios({
-      method: "get",
-      url: `${BASE_URL}/users/${id}`,
-      //headers: { "Content-Type": "multipart/form-data" },
-      headers: {"Authorization": `Bearer ${userToken}`}
+   
+    Snackbar.show({
+      text: 'Ooops, algo fue mal.',
+      duration: Snackbar.LENGTH_SHORT,
+      numberOfLines: 2,
+      textColor: "#fff",
+      backgroundColor: "#B00020",
     });
-    //console.log(response.data);
-    return response.data  
 
-  }catch (error) {
-    console.log('error fetching axios function');
-    console.log(userDetails);
-    console.log(error);
   }
-}
 
-useEffect(()=>{
-  const fetchUser = async () => {
-    setUser(await getUserData(userDetails._id))
-  }
-  fetchUser();
-  
-  console.log('fetching user....')
-  console.log(userDetails);
-  //console.log(user.status);
-  console.log('-----------');
-  //console.log(userDetails.accessToken);
-},[])
+};
 
 
 
@@ -101,9 +89,9 @@ return user ? (
   <SafeAreaView style={styles.safeContainer}>
     <ScrollView style={styles.container}>
       <UserForm preloadedValues={user} onSubmit={onSubmit}/>
-      {/* <View>
+      {/*<View>
         <CustomButton text="Logout" bgColor={"#f00"} fgColor='white' iconName={null} onPress={() => {logout()}} />
-      </View> */}
+      </View>*/}
       <View style={styles.space} />
     </ScrollView>
   </SafeAreaView>

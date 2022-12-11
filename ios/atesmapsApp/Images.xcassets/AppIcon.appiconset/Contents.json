@@ -1,43 +1,43 @@
 {
   "images" : [
     {
-      "filename" : "Pyrscope40_icon.png",
+      "filename" : "pyrscope-logo40.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
-      "filename" : "Pyrscope60_icon.png",
+      "filename" : "pyrscope-logo60.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "20x20"
     },
     {
-      "filename" : "Pyrscope58_icon.png",
+      "filename" : "pyrscope-logo58.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
-      "filename" : "Pyrscope87_icon.png",
+      "filename" : "pyrscope-logo87.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "29x29"
     },
     {
-      "filename" : "Pyrscope80_icon.png",
+      "filename" : "pyrscope-logo80.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
-      "filename" : "Pyrscope120_icon.png",
+      "filename" : "Pyrscope-logo120.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "40x40"
     },
     {
-      "filename" : "Pyrscope120@3x-1.png",
+      "filename" : "pyrscope120.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x60"
@@ -49,7 +49,7 @@
       "size" : "60x60"
     },
     {
-      "filename" : "Artboard 1.png",
+      "filename" : "Logo1024.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"
