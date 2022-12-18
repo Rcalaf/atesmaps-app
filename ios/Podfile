@@ -23,7 +23,6 @@ target 'atesmapsApp' do
   )
 
 
-  pod 'RNFS', :path => '../node_modules/react-native-fs'
 
   target 'atesmapsAppTests' do
     inherit! :complete

@@ -11,7 +11,6 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		276E849D2875B2E400854454 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 276E849C2875B2E400854454 /* MaterialIcons.ttf */; };
 		276E84AA2875B2F400854454 /* Roboto-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 276E849E2875B2F300854454 /* Roboto-MediumItalic.ttf */; };
 		276E84AB2875B2F400854454 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 276E849F2875B2F300854454 /* Roboto-ThinItalic.ttf */; };
 		276E84AC2875B2F400854454 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 276E84A02875B2F300854454 /* Roboto-Black.ttf */; };
@@ -24,7 +23,8 @@
 		276E84B32875B2F400854454 /* Roboto-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 276E84A72875B2F400854454 /* Roboto-LightItalic.ttf */; };
 		276E84B42875B2F400854454 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 276E84A82875B2F400854454 /* Roboto-Thin.ttf */; };
 		276E84B52875B2F400854454 /* Roboto-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 276E84A92875B2F400854454 /* Roboto-BlackItalic.ttf */; };
-		27DE009728D0F7C800F27BFB /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27DE009628D0F70800F27BFB /* MaterialCommunityIcons.ttf */; };
+		27BF07F12945A52F009B25AF /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27DE009628D0F70800F27BFB /* MaterialCommunityIcons.ttf */; };
+		27BF07F22945A52F009B25AF /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 276E849C2875B2E400854454 /* MaterialIcons.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8EEFA7B67F4673CD439979E5 /* libPods-atesmapsApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 622719B2D3D306913CC6A0F1 /* libPods-atesmapsApp.a */; };
 		F15A2B41A46A706C1A1AFDBC /* libPods-atesmapsApp-atesmapsAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD5646783852596AB5382048 /* libPods-atesmapsApp-atesmapsAppTests.a */; };
@@ -241,7 +241,7 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				C04252F3985653E295122E36 /* [CP] Embed Pods Frameworks */,
-				AB68D963EBB5417783BFA5F1 /* [CP] Copy Pods Resources */,
+				FC8048A5748ED66B10DFFD64 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -300,7 +300,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27DE009728D0F7C800F27BFB /* MaterialCommunityIcons.ttf in Resources */,
+				27BF07F12945A52F009B25AF /* MaterialCommunityIcons.ttf in Resources */,
+				27BF07F22945A52F009B25AF /* MaterialIcons.ttf in Resources */,
 				276E84B42875B2F400854454 /* Roboto-Thin.ttf in Resources */,
 				276E84AB2875B2F400854454 /* Roboto-ThinItalic.ttf in Resources */,
 				276E84AA2875B2F400854454 /* Roboto-MediumItalic.ttf in Resources */,
@@ -313,7 +314,6 @@
 				276E84B22875B2F400854454 /* Roboto-Regular.ttf in Resources */,
 				276E84AF2875B2F400854454 /* Roboto-Bold.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				276E849D2875B2E400854454 /* MaterialIcons.ttf in Resources */,
 				276E84B12875B2F400854454 /* Roboto-Italic.ttf in Resources */,
 				276E84AC2875B2F400854454 /* Roboto-Black.ttf in Resources */,
 			);
@@ -414,23 +414,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-atesmapsApp-atesmapsAppTests/Pods-atesmapsApp-atesmapsAppTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		AB68D963EBB5417783BFA5F1 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-atesmapsApp/Pods-atesmapsApp-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-atesmapsApp/Pods-atesmapsApp-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-atesmapsApp/Pods-atesmapsApp-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		C04252F3985653E295122E36 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -446,6 +429,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-atesmapsApp/Pods-atesmapsApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FC8048A5748ED66B10DFFD64 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-atesmapsApp/Pods-atesmapsApp-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-atesmapsApp/Pods-atesmapsApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-atesmapsApp/Pods-atesmapsApp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -563,7 +563,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -592,7 +592,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.1.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

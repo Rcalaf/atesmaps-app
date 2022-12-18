@@ -17,7 +17,7 @@ import  Snackbar  from "react-native-snackbar";
 
 
 export default function ObservationDetail({ route, navigation }) {
-    const {editingObservation, selectedIndex, observations, deleteObservation, updateObservations } = useContext(ObservationContext);
+    const {editingObservation, selectedIndex, observations, getData, deleteObservation, updateObservations } = useContext(ObservationContext);
     const {userDetails,userToken} = useContext(AuthContext);
 
     const [index, setIndex] = useState(route.params?.index);
@@ -40,6 +40,7 @@ export default function ObservationDetail({ route, navigation }) {
 
     const sentData = async (id,data) => {
       data.user = id;
+      console.log(data);
       try {
         const response = await axios({
           method: "post",
@@ -52,8 +53,24 @@ export default function ObservationDetail({ route, navigation }) {
         // console.log(response.status);
         if (response.status === 201){
             console.log('cleaning local storage');
+            // console.log(response.observationId);
+            // console.log(data);
+            getData();
+            setObservation({
+              title: 'Has no title',
+              date: Date.now(),
+              location: {
+                latitude: location.latitude,
+                longitude: location.longitude
+              },
+              directoryId: userDetails._id+moment().format('X'),
+              observationTypes:{},
+              status: 0,
+              submitted: false,
+            });
             navigation.navigate('Lista de Observaciones');
             deleteObservation();
+            
             Snackbar.show({
               text: 'Muchas gracias. Tu Observación se ha enviado a revisar pr el equipo de ATESMAPS.',
               duration: Snackbar.LENGTH_SHORT,
@@ -129,9 +146,11 @@ export default function ObservationDetail({ route, navigation }) {
       //console.log(editingObservation.observationTypes.avalancheConditions?.status);
       if(editingObservation.observationTypes.quick?.status ||
         editingObservation.observationTypes.snowConditions?.status ||
-        editingObservation.observationTypes.avalancheConditions?.status){
+        editingObservation.observationTypes.avalanche?.status){
         //console.log('at least one report...')
+        console.log(data);
         let obj = data;
+        obj.directoryId= editingObservation.directoryId;
         //TODO: check if date updates properly
         obj.date = moment(rawDate).format();
         obj.location = location;
@@ -169,10 +188,14 @@ export default function ObservationDetail({ route, navigation }) {
     },[editingObservation]);
 
     useEffect(()=>{
-      setLocation(editingObservation.location);
-      setValue('location', formatLocation(editingObservation.location));
-      route.params={index}
-    },[route.params?.update]);
+      console.log(editingObservation);
+    })
+
+    // useEffect(()=>{
+    //   setLocation(editingObservation.location);
+    //   setValue('location', formatLocation(editingObservation.location));
+    //   route.params={index}
+    // },[route.params?.update]);
 
     
   

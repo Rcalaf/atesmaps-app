@@ -46,7 +46,7 @@ const sentData = async (id,data) => {
     //let response = await axios.post(`${BASE_URL}/users/${id}`,data,{ "Content-Type": "multipart/form-data" });
     // console.log('-----Performed a user updat to the API-----')
 
-    updateUser(response.data);
+    await updateUser(response.data);
     if (response.status === 200){
       Snackbar.show({
         text: 'Los datos se actualizaron correctamente.',
@@ -67,11 +67,12 @@ const sentData = async (id,data) => {
       textColor: "#fff",
       backgroundColor: "#B00020",
     });
-
   }
-
 };
 
+useEffect(()=>{
+  console.log('userDetails updeted on profile component...');
+},[userDetails]);
 
 
 const onSubmit = (data) => {

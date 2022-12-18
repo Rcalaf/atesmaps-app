@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect,useLayoutEffect, useContext, useRef } from 'react';
 import type {Node} from 'react';
 
 import {
@@ -6,6 +6,7 @@ import {
     StyleSheet,
     Button,
     useColorScheme,
+    Pressable,
     View,
     Text,
     FlatList,
@@ -25,12 +26,15 @@ import Item from '../components/ImageItem';
 
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import { baseGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/gestureHandlerCommon';
 
 import { ListBucketsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { s3Client } from "../aws/s3";
+import { set } from 'react-hook-form';
 
-const ObservationImagesList: () => Node = () => {
+const ObservationImagesList: () => Node = ({ route, navigation }) => {
 
 const { editingObservation, setEditingObservation, updateObservations  } = useContext(ObservationContext);
 const [images, setImages] = useState([]);
@@ -41,8 +45,30 @@ const fall = new Animated.Value(1);
 
 useEffect(()=>{
   console.log('Image List updated:');
-  console.log(images);
+  setEditingObservation({...editingObservation, images})
+  // console.log(images);
+  // console.log({...editingObservation, images});
 },[images]);
+
+useLayoutEffect(() => {
+ 
+  navigation.setOptions({
+    // title: value === '' ? 'No title' : value,
+    headerRight:() => (
+            <Pressable
+              onPress={async ()  => {
+                console.log('mostrar imagepicker....');
+                sheetRef.current.snapTo(0); 
+                }}
+            >
+              <MaterialCommunityIcons size={25} 
+                                    color={'#307df6'} 
+                                    name="camera-plus"/>
+            </Pressable>)
+  });
+  //TODO: Here we can dynamically change the header of the screen....
+  //check documentation here: https://reactnavigation.org/docs/navigation-prop/#setparams
+}, [navigation]);
 
 
 const uploadFile = async (image) => {
@@ -53,9 +79,11 @@ const uploadFile = async (image) => {
 
   let bucketParams = {
     Bucket: "atesmaps",
-    Key: image.filename,
+    ACL: 'public-read',
+    Key: editingObservation.directoryId + "/" + image.filename,
     Body: arrayBuffer
   };
+  
   try {
     const data = await s3Client.send(new PutObjectCommand(bucketParams));
     console.log(
@@ -64,6 +92,7 @@ const uploadFile = async (image) => {
         "/" +
         bucketParams.Key
     );
+    setImages( (arr) => { return [...arr, image.filename]});
     return data;
   } catch (err) {
     console.log("Error", err);
@@ -78,14 +107,17 @@ const takePhotoFromCamera = () => {
     compressImageQuality: 0.7
   }).then(chosenImage => {
     // setImage(image.filename);
+    
     setImages( (arr) => { return [...arr, chosenImage.filename]});
+    
+    
     //uploadFile(chosenImage);
     sheetRef.current.snapTo(1);
   });
 }
 
 
-const choosePhotoFromLibrary = () => {
+const choosePhotoFromLibrary = async () => {
   ImagePicker.openPicker({
     width: 300,
     height: 300,
@@ -93,8 +125,10 @@ const choosePhotoFromLibrary = () => {
     compressImageQuality: 0.7
   }).then(chosenImage => {
     //console.log(sheetRef);
-    setImages( (arr) => { return [...arr, chosenImage.filename]});
-    //uploadFile(chosenImage);
+    
+    
+    // setEditingObservation()
+    uploadFile(chosenImage);
     sheetRef.current.snapTo(1);
   });
 }

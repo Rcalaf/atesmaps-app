@@ -11,9 +11,15 @@ const uploadImageOnS3 = async (file: any) => {
         const s3bucket = new AWS.S3({
             accessKeyId: ACCESS_KEY,
             secretAccessKey: ACCESS_SECRET,
-            Bucket: ENDPOINT,
+            ACL: 'public-read-write',
+            endpoint: new aws.Endpoint(ENDPOINT),
             signatureVersion: 'v4',
         });
+
+        // s3bucket.getBucketAcl({ Bucket: ENDPOINT}, function(err, data) {
+        //     if (err) console.log(err, err.stack); // an error occurred
+        //     else     console.log(data);           // successful response
+        // });
 
         const base64 = await fs.readFile(file.path, 'base64');
         const contentType = file.mime;
@@ -23,9 +29,10 @@ const uploadImageOnS3 = async (file: any) => {
         const arrayBuffer = Base64Binary.decode(base64);
         s3bucket.createBucket(()=>{
             const params = {
-                Bucket: ENDPOINT,
+                bucket: ENDPOINT,
                 Key: fileName,
                 Body: arrayBuffer,
+                ACL: 'public-read-write',
                 ContentDisposition: contentDeposition,
                 ContentType: contentType
             };

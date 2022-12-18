@@ -9,12 +9,15 @@ import {
   Image, 
   Button,
   TouchableOpacity } from 'react-native';
+
+import uuid from 'react-native-uuid';
+import moment from 'moment';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { AuthContext } from '../context/AuthContext';
 import { ObservationContext } from '../context/ObservationContext';
-import {LocationContext } from '../context/LocationContext';
+import { LocationContext } from '../context/LocationContext';
 
 import Item from '../components/ObservationItem';
 
@@ -23,8 +26,13 @@ export default function ObservationDetail({ navigation }) {
     const {lastIndex, observations, historicObservations, newObservation} = useContext(ObservationContext);
     const {isLoading, logout, userDetails, userToken} = useContext(AuthContext);
 
-    console.log(observations);
-    console.log(historicObservations);
+    const [user, setUser] = useState(userDetails);
+    const [drafts, setDrafts] = useState(observations);
+    const [uploaded, setUplodaded] = useState(historicObservations);
+  //  console.log(observations);
+  //  console.log(historicObservations);
+  //  console.log(moment().format('X').toString());
+  //  console.log(userDetails._id+moment().format('X'));
 
     let observation = {
       title: 'Has no title',
@@ -33,6 +41,7 @@ export default function ObservationDetail({ navigation }) {
         latitude: location.latitude,
         longitude: location.longitude
       },
+      directoryId: userDetails._id+moment().format('X'),
       observationTypes:{},
       status: 0,
       submitted: false,
@@ -62,9 +71,19 @@ export default function ObservationDetail({ navigation }) {
     
     //const [numOfItems, setNumOfItems] = useState(setNumOfItems)
 
-    // console.log(observations);
+    useEffect(()=>{
+      setUser(userDetails);
+    },[userDetails])
 
-    if (!userDetails.status) {
+    useEffect(()=>{
+      setDrafts(observations);
+    },[observations])
+
+    useEffect(()=>{
+      setUplodaded(historicObservations);
+    },[historicObservations])
+
+    if (!user.status) {
       
       return ( 
         <View style={styles.container}>
@@ -77,6 +96,7 @@ export default function ObservationDetail({ navigation }) {
           style={{marginBottom: 20}}/>
         <Text>Por favor, antes de realizar observaciones,</Text>
         <Text>complete su perfil de usuario.</Text>
+       
         <Text>Gracias.</Text>
         
         <Button style={styles.button} title="Volver al perfil"  onPress={async () => {
@@ -85,7 +105,9 @@ export default function ObservationDetail({ navigation }) {
       </View>
     )};
 
-    if( observations.length < 1 && historicObservations.lenght < 1) {
+   // console.log(observations.length);
+   // console.log(historicObservations.length);
+    if( drafts.length < 1 && uploaded.length < 1) {
       return(
         <View style={styles.container}>
           <MaterialIcons 
@@ -103,12 +125,50 @@ export default function ObservationDetail({ navigation }) {
         </View>
       )
     }
-  
+
+    let draftList;
+    if (observations.length < 1) {
+      draftList = <View style={styles.empty}>
+          <MaterialIcons 
+            // name='add-a-photo'
+            name='my-library-books'
+            size={50} 
+            color={'gray'}
+            style={{marginBottom: 20}}/>
+          <Text>No hay ningún borrador de observaciones.</Text>
+        </View>
+    }else{ 
+      draftList = <FlatList
+        style={styles.list}
+        data={drafts}
+        renderItem={({ item, index }) => <Item item={item} index={index} navigation={navigation}/>}
+        keyExtractor={(item,index) => index}
+        />
+    }
+ 
+    let uploadedList; 
+    if (uploaded.length < 1) {
+      uploadedList = <View style={styles.empty}>
+          <MaterialIcons 
+            // name='add-a-photo'
+            name='my-library-books'
+            size={50} 
+            color={'gray'}
+            style={{marginBottom: 20}}/>
+          <Text>No se envió ninguna observación.</Text>
+        </View>
+    }else{
+      uploadedList = <FlatList
+      style={styles.list}
+        data={uploaded}
+        renderItem={({ item, index }) => <Item item={item} index={index} navigation={navigation}/>}
+        keyExtractor={(item,index) => index}
+        />
+    }
 
     return (
-
         <View style={styles.listContainer}>
-           <SectionList
+           {/* <SectionList
               
               sections={[{index: 1, title:'Borradores', data: observations},{index: 2, title:'Historial', data: historicObservations}]}
               renderItem={({ item, index }) => <Item item={item} index={index} navigation={navigation}/>}
@@ -124,12 +184,23 @@ export default function ObservationDetail({ navigation }) {
               // )}
               keyExtractor={(item,index) => index}
               stickySectionHeadersEnabled
-            />
+            /> */}
            {/* <FlatList
             data={observations}
             renderItem={({ item, index }) => <Item item={item} index={index} navigation={navigation}/>}
             keyExtractor={(item,index) => index}
             /> */}
+            <View style={styles.formContainer}>
+              <Text style={styles.sectionTitle}>Borradores</Text>
+              <View style={styles.spacer}/>
+            </View>
+            {draftList}
+            <View style={[styles.formContainer,{marginTop: 15}]}>
+              <Text style={styles.sectionTitle}>Observaciones realizadas</Text>
+              <View style={styles.spacer}/>
+            </View>
+            {uploadedList}
+            
         </View>
     );r
 
@@ -138,11 +209,37 @@ export default function ObservationDetail({ navigation }) {
 const styles = StyleSheet.create({
     listContainer: {
       flex: 1,
-      //padding: 36
+      paddingTop: 15
+    },
+    sectionTitle: {
+        fontSize: 20,
+        fontWeight: '600',
+    },
+    formContainer:{
+      paddingLeft: 20,
+      paddingRight: 20
+    },
+    spacer: {
+      width: '100%',
+      marginTop: 10,
+      marginBottom: 10,
+      backgroundColor: 'gray',
+      height: 1,
     },
     container: {
       paddingTop: 100,
       flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+    },
+    list: {
+      height: '45%',
+      flexGrow: 0
+    },
+    empty: {
+      flex: 1,
+      paddingTop: 50,
       flexDirection: 'column',
       justifyContent: 'flex-start',
       alignItems: 'center',

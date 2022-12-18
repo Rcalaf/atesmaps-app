@@ -1,6 +1,6 @@
 import React, {createContext, useState, useEffect} from 'react';
-import RNLocation from 'react-native-location';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+import Geolocation from '@react-native-community/geolocation';
 
 export const LocationContext = createContext();
 
@@ -8,83 +8,132 @@ export const LocationProvider = ({children}) => {
     const LATITUDE_DELTA = 0.0922;
     const LONGITUDE_DELTA = 0.0421;
 
-    const [permission, setPermission] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [
+      currentLongitude,
+      setCurrentLongitude
+    ] = useState('...');
+    const [
+      currentLatitude,
+      setCurrentLatitude
+    ] = useState('...');
+    const [
+      locationStatus,
+      setLocationStatus
+    ] = useState('');
+
+
     const [location, setLocation] = useState({latitude: 42.677973,
         longitude: 1.218886,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,});
     
-    useEffect(() => {
-        RNLocation.configure({
-          distanceFilter: 0.0
-        })
-    
-        RNLocation.checkPermission({
-          ios: 'whenInUse', // or 'always'
-          android: {
-            detail: 'coarse' // or 'fine'
-          }
-        }).then( granted => {
-          if (!granted){
-            RNLocation.requestPermission({
-              ios: "whenInUse",
-              android: {
-                detail: "coarse",
-                rationale: {
-                  title: "We need to access your location",
-                  message: "We use your location to show where you are on the map",
-                  buttonPositive: "OK",
-                  buttonNegative: "Cancel"
+    let watchID;
+
+        useEffect(() => {
+          const requestLocationPermission = async () => {
+            if (Platform.OS === 'ios') {
+              getOneTimeLocation();
+             // subscribeLocationLocation();
+            } else {
+              try {
+                const granted = await PermissionsAndroid.request(
+                  PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                  {
+                    title: 'Location Access Required',
+                    message: 'This App needs to Access your location',
+                  },
+                );
+                if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                  //To Check, If Permission is granted
+                  getOneTimeLocation();
+                  //subscribeLocationLocation();
+                } else {
+                  setLocationStatus('Permission Denied');
                 }
-              }
-            }).then( granted => {
-              console.log('useEffect hook Request permission.')
-              setPermission(granted);
-              console.log(granted)
-              permissionHandle();
-            })
-          }
-            console.log('useEffect hook check permission.')
-            setPermission(granted);
-            permissionHandle();
-        });
-    },[])
-      
-    const permissionHandle = async () => {
-        if(!permission){
-          let granted = await RNLocation.requestPermission({
-            ios: "whenInUse",
-            android: {
-              detail: "coarse",
-              rationale: {
-                title: "We need to access your location",
-                message: "We use your location to show where you are on the map",
-                buttonPositive: "OK",
-                buttonNegative: "Cancel"
+              } catch (err) {
+                console.warn(err);
               }
             }
-          })
-          console.log(granted);
-          RNLocation.getLatestLocation({timeout: 100}).then( location => {
-            location = { ...location, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA }
-            setLocation(location);
-             console.log('this is after asking permission');
-             console.log(location);
-          })
-          //console.log(location, location.longitude, location.latitude,location.timestamp)
-        } else {
-          RNLocation.getLatestLocation({timeout: 100}).then( newLocation => {
-         //   console.log(location)
-            newLocation = { ...newLocation, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA }
-            setLocation(newLocation);
-             console.log('this is the location: ');
-            // console.log(newLocation);
-             console.log(location);
-          })
-          console.log(location, location.longitude, location.latitude,location.timestamp);
-        }
-    }
+          };
+          requestLocationPermission();
+          return () => {
+            Geolocation.clearWatch(watchID);
+          };
+        }, []);
+      
+        const getOneTimeLocation = () => {
+          setLocationStatus('Getting Location ...');
+          Geolocation.getCurrentPosition(
+            //Will give you the current location
+            (position) => {
+              setLocationStatus('You are Here');
+              console.log('You are Here One time:')
+              //getting the Longitude from the location json
+              const currentLongitude = 
+                JSON.stringify(position.coords.longitude);
+      
+              //getting the Latitude from the location json
+              const currentLatitude = 
+                JSON.stringify(position.coords.latitude);
+
+
+              const currentLocation = { ...position.coords, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA }
+              console.log('----')
+              console.log(currentLocation);
+              setLocation(currentLocation);
+      
+              //Setting Longitude state
+              setCurrentLongitude(currentLongitude);
+              
+              //Setting Longitude state
+              setCurrentLatitude(currentLatitude);
+            },
+            (error) => {
+              setLocationStatus(error.message);
+            },
+            {
+              enableHighAccuracy: false,
+              timeout: 30000,
+              maximumAge: 1000
+            },
+          );
+        };
+      
+        const subscribeLocationLocation = () => {
+          watchID = Geolocation.watchPosition(
+            (position) => {
+              //Will give you the location on location change
+              
+              setLocationStatus('You are Here');
+              console.log('You are Here:')
+              console.log(position);
+      
+              //getting the Longitude from the location json        
+              const currentLongitude =
+                JSON.stringify(position.coords.longitude);
+      
+              //getting the Latitude from the location json
+              const currentLatitude = 
+                JSON.stringify(position.coords.latitude);
+      
+              //Setting Longitude state
+              setCurrentLongitude(currentLongitude);
+      
+              //Setting Latitude state
+              setCurrentLatitude(currentLatitude);
+            },
+            (error) => {
+              setLocationStatus(error.message);
+            },
+            {
+              enableHighAccuracy: false,
+              maximumAge: 1000
+            },
+          );
+        };
+      
+    
+    
 
 
     return(

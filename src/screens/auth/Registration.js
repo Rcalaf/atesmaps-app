@@ -91,7 +91,7 @@ const Registration: () => Node = () => {
 
           <CustomInput
             name="userName"
-            placeholder="Nombre de rccusuario"
+            placeholder="Nombre de usuario"
             control={control}
             // customStyles={{width:"100%"}}
             rules={{required: 'Introduce el nombre de usuario, no usar characteres especials.'}}
@@ -101,6 +101,7 @@ const Registration: () => Node = () => {
           <CustomInput
             name="email"
             placeholder="Email"
+            keyboardType='email-address'
             control={control}
             // customStyles={{width:"100%"}}
             rules={{required: 'Introduce el Email'}}

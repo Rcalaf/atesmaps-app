@@ -1,5 +1,4 @@
 import Profile from '../screens/Profile';
-import MapExplorer from '../screens/MapExplorer';
 import LocationPicker from '../screens/LocationPicker';
 import ObservationStack from './ObservationStack';
 import ProfileStack from './ProfileStack';
@@ -19,11 +18,7 @@ const bottomMenuData = [
     component: ProfileStack,
     icon: 'account',
   },
-  // {
-  //   name: 'Map',
-  //   component: MapExplorer,
-  //   icon: iconCalendar,
-  // },
+
   {
     name: 'Observaciones',
     component: ObservationStack,

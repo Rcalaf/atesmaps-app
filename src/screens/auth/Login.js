@@ -63,7 +63,7 @@ const Login: () => Node = ({navigation}) => {
             placeholder="Email"
             control={control}
             // customStyles={{width:"100%"}}
-           
+            keyboardType='email-address'
             rules={{required: 'Introduce el Email'}}
 
             // onPress={showDatepicker}
@@ -108,7 +108,7 @@ const Login: () => Node = ({navigation}) => {
               </TouchableOpacity>
           </View> */}
           <TouchableOpacity style={{alignItems: 'flex-end', marginBottom: 25}} onPress={() => {navigation.navigate('Forgot');}}>
-                 <Text style={{color: '#3098CF', fontWeight: '700'  }}>Forgot?</Text>
+                 <Text style={{color: '#3098CF', fontWeight: '700'  }}>Olvidaste el password?</Text>
           </TouchableOpacity>
           <View style={{marginTop: 0}}>
                 <CustomButton text="Login" bgColor={"#3098CF"} fgColor='white' iconName={null} onPress={handleSubmit(submit)} />
@@ -120,12 +120,12 @@ const Login: () => Node = ({navigation}) => {
           </TouchableOpacity> */}
 
           <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom: 30}}>
-            <Text>New to AtesMaps?</Text>
+            <Text> Crear una cuenta:</Text>
             <TouchableOpacity onPress={() => {
               //navigation.popToTop();
               navigation.navigate('Register');
             }}>
-                <Text style={{color: '#3098CF', fontWeight: '700'  }}>  Register</Text>
+                <Text style={{color: '#3098CF', fontWeight: '700'  }}>  Registrarse</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -50,6 +50,7 @@ export const ObservationProvider = ({children}) => {
             
         } catch (err){
             console.log(err);
+            setHistoricObservations([]);
         }
         let list = JSON.parse(await AsyncStorage.getItem('list'));
         if(list) setObservations(list);
@@ -57,9 +58,9 @@ export const ObservationProvider = ({children}) => {
     
     const newObservation = async (observation) => {
         setIsLoading(true);
-            observation.user = userDetails.userId;
-            let response = await sentRequest('/observations', "post", observation)
-            if (response.data) observation._id = response.data._id
+            // observation.user = userDetails.userId;
+            // let response = await sentRequest('/observations', "post", observation)
+            // if (response.data) observation._id = response.data._id
 
             let aux = observations;
             aux.push(observation);
@@ -157,6 +158,7 @@ export const ObservationProvider = ({children}) => {
                 setEditingObservation,
                 updateSelectedIndex,
                 sentRequest,
+                getData,
                 isLoading, 
                 observations,
                 historicObservations,

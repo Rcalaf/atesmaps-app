@@ -128,7 +128,6 @@ def nativeArchitectures = project.getProperties().get("reactNativeDebugArchitect
 android {
     //react-native-image-crop-picker required config
         compileSdkVersion 31
-        buildToolsVersion "27.0.3"
 
     //ndkVersion rootProject.ext.ndkVersion
 

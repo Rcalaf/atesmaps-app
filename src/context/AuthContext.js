@@ -14,6 +14,7 @@ export const AuthProvider = ({children}) => {
     const [userDetails, setUserDetails] = useState(null);
 
     const updateUser = async (data) => {
+        console.log('user local storage updated...')
         await AsyncStorage.setItem('userDetails', JSON.stringify(data));
         setUserDetails(data);
     }
@@ -21,6 +22,9 @@ export const AuthProvider = ({children}) => {
     const login = async (email, password) => {
         try {
             setIsLoading(true);
+            console.log('---------');
+            console.log(BASE_URL);
+            console.log('---------');
             let response = await axios.post(`${BASE_URL}/auth/login`,{'email': email, 'pwd':password});
             console.log(response.data.status);
             //console.log(response.data.accessToken);

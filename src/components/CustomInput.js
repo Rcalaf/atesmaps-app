@@ -10,6 +10,7 @@ const CustomInput = ({
   secureTextEntry,
   multiline=false,
   numberOfLines=1,
+  keyboardType='default',
   onPress,
   customStyles={}
 }) => {
@@ -30,6 +31,7 @@ const CustomInput = ({
           >
             <TextInput
               value={value}
+              keyboardType={keyboardType}
               onChangeText={onChange}
               onBlur={onBlur}
               onFocus={onPress}

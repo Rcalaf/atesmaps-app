@@ -19,8 +19,8 @@ export default function Item({ item, index,  navigation  }) {
       }
       if (item.status == 1) {
         return (
-          <View style={[styles.itemStatus,{backgroundColor:"orange"}]}>
-            <Text style={{fontSize:10, textAlign: 'center', color: 'white'}}>{ 'En revisión'}</Text>
+          <View style={[styles.itemStatus,{backgroundColor:"#62a256"}]}>
+            <Text style={{fontSize:10, textAlign: 'center', color: 'white'}}>{ 'Enviadas'}</Text>
           </View>
         )
       }
