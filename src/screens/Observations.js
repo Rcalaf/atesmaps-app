@@ -34,20 +34,23 @@ export default function ObservationDetail({ navigation }) {
   //  console.log(moment().format('X').toString());
   //  console.log(userDetails._id+moment().format('X'));
 
-    let observation = {
-      title: 'Has no title',
-      date: Date.now(),
-      location: {
-        latitude: location.latitude,
-        longitude: location.longitude
-      },
-      directoryId: userDetails._id+moment().format('X'),
-      observationTypes:{},
-      status: 0,
-      submitted: false,
-    }
+    
 
     useLayoutEffect(() => {
+      let observation = {
+        title: 'Has no title',
+        date: Date.now(),
+        location: {
+          latitude: location.latitude,
+          longitude: location.longitude
+        },
+        directoryId: userDetails._id+moment().format('X'),
+        observationTypes:{},
+        images: [],
+        status: 0,
+        submitted: false,
+      }
+      
       navigation.setOptions({
         // title: value === '' ? 'No title' : value,
         headerRight: userDetails.status ? () => (

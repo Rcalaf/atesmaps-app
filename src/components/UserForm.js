@@ -123,7 +123,7 @@ const UserForm = ({preloadedValues, onSubmit}) => {
                   // onPress={showDatepicker}
                 />
     
-                <CustomInput
+                {/* <CustomInput
                   name="password"
                   placeholder="Password"
                   secureTextEntry={true}
@@ -139,7 +139,7 @@ const UserForm = ({preloadedValues, onSubmit}) => {
                   control={control}
                   //rules={{required: 'password is required'}}
                   // onPress={showDatepicker}
-                />
+                /> */}
               </View>
               <Text style={[styles.sectionTitle,{marginTop: 40}]}>Datos personales</Text>
               <View style={styles.spacer}/>

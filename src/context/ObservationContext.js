@@ -87,7 +87,7 @@ export const ObservationProvider = ({children}) => {
     }
 
     const updateObservations = async (obj) => {
-       // console.log('calling update observations');
+       console.log('calling update observations');
         
         // setIsLoading(true);
         let aux = observations;
@@ -107,7 +107,7 @@ export const ObservationProvider = ({children}) => {
         let aux = observations;
         aux.splice(selectedIndex,1);
         setEditingObservation({});
-        setObservations(aux);
+        setObservations([...aux]);
         // setObservations( (arr) => {
         //     observations.splice(selectedIndex,1)
         //     return observations});

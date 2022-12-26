@@ -30,24 +30,29 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import { baseGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/gestureHandlerCommon';
 
+import {PULIC_BUCKET_URL} from '../config'
 import { ListBucketsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { s3Client } from "../aws/s3";
-import { set } from 'react-hook-form';
+// import { set } from 'react-hook-form';
 
 const ObservationImagesList: () => Node = ({ route, navigation }) => {
 
 const { editingObservation, setEditingObservation, updateObservations  } = useContext(ObservationContext);
-const [images, setImages] = useState([]);
+const [images, setImages] = useState(editingObservation.images ? editingObservation.images : []);
 const [image, setImage] = useState(null);
+const [isLoading, setIsLoading] = useState(false);
+
+console.log(editingObservation);
 
 const sheetRef = useRef();
 const fall = new Animated.Value(1);
 
 useEffect(()=>{
-  console.log('Image List updated:');
-  setEditingObservation({...editingObservation, images})
-  // console.log(images);
-  // console.log({...editingObservation, images});
+  console.log('updating images tigger...')
+  let aux = editingObservation;
+  aux.images = images;
+
+  updateObservations(aux);
 },[images]);
 
 useLayoutEffect(() => {
@@ -70,34 +75,12 @@ useLayoutEffect(() => {
   //check documentation here: https://reactnavigation.org/docs/navigation-prop/#setparams
 }, [navigation]);
 
-
-const uploadFile = async (image) => {
-  
-  const file = image.path; // Path to and name of object. For example '../myFiles/index.js'.
-  const fileStream = await fs.readFile(file,'base64');
-  const arrayBuffer = Base64Binary.decode(fileStream);
-
-  let bucketParams = {
-    Bucket: "atesmaps",
-    ACL: 'public-read',
-    Key: editingObservation.directoryId + "/" + image.filename,
-    Body: arrayBuffer
-  };
-  
-  try {
-    const data = await s3Client.send(new PutObjectCommand(bucketParams));
-    console.log(
-      "Successfully uploaded object: " +
-        bucketParams.Bucket +
-        "/" +
-        bucketParams.Key
-    );
-    setImages( (arr) => { return [...arr, image.filename]});
-    return data;
-  } catch (err) {
-    console.log("Error", err);
-  }
-}
+// useEffect(()=>{
+//   console.log('Observation has been updated');
+//   // editingObservation.user = userDetails.userId;
+//   setObservation(editingObservation);
+//  // console.log(observation);
+// },[editingObservation]);
 
 const takePhotoFromCamera = () => {
   ImagePicker.openCamera({
@@ -107,15 +90,17 @@ const takePhotoFromCamera = () => {
     compressImageQuality: 0.7
   }).then(chosenImage => {
     // setImage(image.filename);
-    
-    setImages( (arr) => { return [...arr, chosenImage.filename]});
-    
-    
+    setImages( (arr) => { return [...arr, {path: chosenImage.path, filename: chosenImage.filename}]});
     //uploadFile(chosenImage);
     sheetRef.current.snapTo(1);
   });
 }
 
+const deleteImage = (index) => {
+  let aux = images;
+  aux.splice(index, 1);
+  setImages([...aux]);
+}
 
 const choosePhotoFromLibrary = async () => {
   ImagePicker.openPicker({
@@ -124,11 +109,10 @@ const choosePhotoFromLibrary = async () => {
     cropping: true,
     compressImageQuality: 0.7
   }).then(chosenImage => {
-    //console.log(sheetRef);
-    
-    
-    // setEditingObservation()
-    uploadFile(chosenImage);
+    // console.log(chosenImage);
+    setImages( (arr) => { return [...arr, {path: chosenImage.path, filename: chosenImage.filename}]});
+    //setEditingObservation()
+    //uploadFile(chosenImage);
     sheetRef.current.snapTo(1);
   });
 }
@@ -174,13 +158,13 @@ const renderHeader = () => (
   </View>
 );
 
-if(images.length > 0){
+if(images?.length > 0){
   return(
     <>
-    <Animated.View style={[styles.container, {opacity: Animated.add(0.1, Animated.multiply(fall,1.0))}]}>
+    <Animated.View style={[styles.listContainer, {opacity: Animated.add(0.1, Animated.multiply(fall,1.0))}]}>
       <FlatList
           data={images}
-          renderItem={({ item, index }) => <Item item={item} index={index} navigation={navigation}/>}
+          renderItem={({ item, index, path, directory }) => <Item item={item} index={index} deleteItem={deleteImage} navigation={navigation}/>}
           keyExtractor={(item,index) => index}
           />
     </Animated.View>
@@ -201,6 +185,7 @@ if(images.length > 0){
 
 return(
   <>
+ 
     <Animated.View style={[styles.container, {opacity: Animated.add(0.1, Animated.multiply(fall,1.0))}]}>
          <MaterialIcons 
             // name='add-a-photo'
@@ -241,6 +226,10 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
     },
+    listContainer: {
+      flex: 1,
+      paddingTop: 15
+    },
     header: {
       backgroundColor: '#FFFFFF',
       shadowColor: '#333333',
@@ -256,12 +245,6 @@ const styles = StyleSheet.create({
       padding: 20,
       backgroundColor: '#FFFFFF',
       paddingTop: 20,
-      // borderTopLeftRadius: 20,
-      // borderTopRightRadius: 20,
-      // shadowColor: '#000000',
-      // shadowOffset: {width: 0, height: 0},
-      // shadowRadius: 5,
-      // shadowOpacity: 0.4,
     },
     panelHeader: {
       alignItems: 'center',

@@ -30,11 +30,13 @@ import  Snackbar  from "react-native-snackbar";
 
 const Profile: () => Node = () => {
 
-const {isLoading, logout, updateUser, userDetails, userToken} = useContext(AuthContext);
+const {logout, updateUser, userDetails, userToken} = useContext(AuthContext);
 
 const [user, setUser] = useState(userDetails);
+const [isLoading, setIsLoading] = useState(false);
 
 const sentData = async (id,data) => {
+  setIsLoading(true);
   try {
     const response = await axios({
       method: "put",
@@ -48,6 +50,7 @@ const sentData = async (id,data) => {
 
     await updateUser(response.data);
     if (response.status === 200){
+      setIsLoading(false);
       Snackbar.show({
         text: 'Los datos se actualizaron correctamente.',
         duration: Snackbar.LENGTH_SHORT,
@@ -59,7 +62,7 @@ const sentData = async (id,data) => {
   } catch (error) {
     console.log('error triggered while sending data')
     console.log(error);
-   
+    setIsLoading(false);
     Snackbar.show({
       text: 'Ooops, algo fue mal.',
       duration: Snackbar.LENGTH_SHORT,
@@ -68,6 +71,7 @@ const sentData = async (id,data) => {
       backgroundColor: "#B00020",
     });
   }
+  
 };
 
 useEffect(()=>{
@@ -84,6 +88,15 @@ const onSubmit = (data) => {
   //console.log(formData);
   //console.log(data);
 };
+
+
+if( isLoading ) {
+  return(
+      <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>
+          <ActivityIndicator size={'large'}/> 
+      </View>
+  )
+}
 
 
 return user ? (

@@ -22,6 +22,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import CustomButton from "../../components/CustomButton";
 import CustomInput from "../../components/CustomInput";
+import  Snackbar  from "react-native-snackbar";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,10 +40,24 @@ const ForgotPassword: () => Node = ({navigation}) => {
   const resetPassword = async (data) => {
     //  console.log('Email sent: '+data.email);
     try{
-      let response = await axios.post(`${BASE_URL}/auth/resetpassword`,{'email': data.email});
+      let response = await axios.post(`${BASE_URL}/auth/request-new-password`,{'email': data.email});
+      Snackbar.show({
+        text: 'Tu observación rápida se ha guardado.',
+        duration: Snackbar.LENGTH_SHORT,
+        numberOfLines: 2,
+        textColor: "#fff",
+        backgroundColor: "#62a256",
+      });
       // console.log(response);
     }catch (err){
       console.log(err);
+      Snackbar.show({
+        text: 'Ooops, algo fue mal.',
+        duration: Snackbar.LENGTH_SHORT,
+        numberOfLines: 2,
+        textColor: "#fff",
+        backgroundColor: "#B00020",
+      });
     }
     
   }

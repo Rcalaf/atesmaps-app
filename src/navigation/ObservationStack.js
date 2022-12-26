@@ -47,16 +47,16 @@ useEffect(()=>{
 
 const {location} = useContext(LocationContext);
 
-const observation = {
-  title: 'Has no title',
-  date: Date.now(),
-  location: {
-    latitude: location.latitude,
-    longitude: location.longitude
-  },
-  observationTypes:{},
-  status: 0,
-}
+// const observation = {
+//   title: 'Has no title',
+//   date: Date.now(),
+//   location: {
+//     latitude: location.latitude,
+//     longitude: location.longitude
+//   },
+//   observationTypes:{},
+//   status: 0,
+// }
 
 return(
     <Stack.Navigator> 

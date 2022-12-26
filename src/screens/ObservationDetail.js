@@ -1,12 +1,16 @@
 import React, {useState, useEffect, useLayoutEffect, useContext} from "react";
-import { Text, View, TextInput, Button, Alert, StyleSheet, SafeAreaView, Keyboard } from "react-native";
+import { Text, View, ActivityIndicator, Button, Alert, StyleSheet, SafeAreaView, Keyboard } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import moment from 'moment';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import axios from 'axios';
-import { BASE_URL } from '../config';
+import fs from "react-native-fs";
+const Base64Binary = require('base64-arraybuffer');
+import { BASE_URL, PULIC_BUCKET_URL } from '../config';
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { s3Client } from "../aws/s3";
 
 import CustomButton from "../components/CustomButton";
 import CustomInput from "../components/CustomInput";
@@ -20,8 +24,12 @@ export default function ObservationDetail({ route, navigation }) {
     const {editingObservation, selectedIndex, observations, getData, deleteObservation, updateObservations } = useContext(ObservationContext);
     const {userDetails,userToken} = useContext(AuthContext);
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const [index, setIndex] = useState(route.params?.index);
     const [update, setUpdate] = useState(route.params?.update);
+
+    
 
     const [ observation, setObservation ] = useState(editingObservation);
     const [ location, setLocation] = useState(editingObservation.location);
@@ -38,9 +46,42 @@ export default function ObservationDetail({ route, navigation }) {
       return {latitude:Number(locationString.split(',')[0]), longitude: Number(locationString.split(',')[1])}
     }
 
-    const sentData = async (id,data) => {
+    const uploadFile = async (image) => {
+      const file = image.path; // Path to and name of object. For example '../myFiles/index.js'.
+      const fileStream = await fs.readFile(file,'base64');
+      const arrayBuffer = Base64Binary.decode(fileStream);
+      
+      let bucketParams = {
+        Bucket: "atesmaps",
+        ACL: 'public-read',
+        Key: editingObservation.directoryId + "/" + image.filename,
+        Body: arrayBuffer
+      };
+      try {
+        const data = await s3Client.send(new PutObjectCommand(bucketParams));
+        //console.log(data);
+        console.log(
+          "Successfully uploaded object: " +
+            bucketParams.Bucket +
+            "/" +
+            bucketParams.Key
+        );
+        return data;
+      } catch (err) {
+        console.log("Error", err);
+      }
+      //setIsLoading(false);
+    }
+
+    const sendData = async (id,data) => {
+      setIsLoading(true);
       data.user = id;
-      console.log(data);
+      const aux_images = data.images;
+      data.images = []
+      aux_images.forEach(image => {
+        data.images.push(image.filename);
+      });
+      //console.log(data);
       try {
         const response = await axios({
           method: "post",
@@ -50,11 +91,14 @@ export default function ObservationDetail({ route, navigation }) {
           headers: {"Authorization": `Bearer ${userToken}`}
         });
         // console.log(response.message);
-        // console.log(response.status);
+        console.log(response.data);
         if (response.status === 201){
+            console.log('uploading images...');
+            aux_images.forEach(image => {
+              console.log(uploadFile(image));
+            });
+            
             console.log('cleaning local storage');
-            // console.log(response.observationId);
-            // console.log(data);
             getData();
             setObservation({
               title: 'Has no title',
@@ -66,8 +110,10 @@ export default function ObservationDetail({ route, navigation }) {
               directoryId: userDetails._id+moment().format('X'),
               observationTypes:{},
               status: 0,
+              images: [],
               submitted: false,
             });
+            
             navigation.navigate('Lista de Observaciones');
             deleteObservation();
             
@@ -82,6 +128,7 @@ export default function ObservationDetail({ route, navigation }) {
       } catch (error) {
         console.log(error.response.status);
       }
+      setIsLoading(false);
     };
     
 
@@ -120,15 +167,17 @@ export default function ObservationDetail({ route, navigation }) {
 
     const onSave = (data) => {
       // console.log('Saving data...')
-      // console.log(parseLocation(data.location));
+    // console.log(parseLocation(data.location));
       // console.log();
+     
       let obj = data;
       obj.date = moment(rawDate).format();
       obj.location = parseLocation(data.location);
+      obj.images = editingObservation.images;
       obj.status = 0;
       obj.observationTypes = editingObservation.observationTypes;
-   
       updateObservations(obj);
+      
       Snackbar.show({
         text: 'Los datos de tu observación se han guardado.',
         duration: Snackbar.LENGTH_SHORT,
@@ -148,14 +197,17 @@ export default function ObservationDetail({ route, navigation }) {
         editingObservation.observationTypes.snowConditions?.status ||
         editingObservation.observationTypes.avalanche?.status){
         //console.log('at least one report...')
-        console.log(data);
+       
         let obj = data;
         obj.directoryId= editingObservation.directoryId;
+        obj.images = editingObservation.images;
         //TODO: check if date updates properly
         obj.date = moment(rawDate).format();
         obj.location = location;
         obj.observationTypes = editingObservation.observationTypes;
-        sentData(userDetails._id,obj); 
+       // console.log(data);
+        sendData(userDetails._id,obj); 
+  
       }else{
         Snackbar.show({
           text: 'Antes de subir una Observación, completa por lo menos uno de los típos de observaciones',
@@ -183,13 +235,14 @@ export default function ObservationDetail({ route, navigation }) {
     useEffect(()=>{
       console.log('Observation has been updated');
       // editingObservation.user = userDetails.userId;
+
       setObservation(editingObservation);
      // console.log(observation);
     },[editingObservation]);
 
-    useEffect(()=>{
-      console.log(editingObservation);
-    })
+    // useEffect(()=>{
+    //   console.log(editingObservation);
+    // })
 
     // useEffect(()=>{
     //   setLocation(editingObservation.location);
@@ -198,7 +251,13 @@ export default function ObservationDetail({ route, navigation }) {
     // },[route.params?.update]);
 
     
-  
+    if( isLoading ) {
+      return(
+          <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>
+              <ActivityIndicator size={'large'}/> 
+          </View>
+      )
+    }
 
     return (
       <SafeAreaView style={styles.safeContainer}>
@@ -264,7 +323,7 @@ export default function ObservationDetail({ route, navigation }) {
           />
 
           <CustomButton 
-            text="Fotos" 
+            text={`Fotos (${observation.images ? observation.images?.length : 0})`}
             type="custom"
             fColor="gray"
             onPress={() => {
