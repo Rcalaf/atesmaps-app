@@ -56,7 +56,7 @@ const sentData = async (id,data) => {
       // updateUser(response.data);
       await AsyncStorage.setItem('userDetails', JSON.stringify(response.data));
       setUserDetails(response.data);
-      console.log(response.data.status);
+      // console.log(response.data.status);
       setIsLoading(false);
       Snackbar.show({
         text: 'Los datos se actualizaron correctamente.',
