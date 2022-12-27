@@ -90,8 +90,9 @@ export default function ObservationDetail({ route, navigation }) {
           //headers: { "Content-Type": "multipart/form-data" },
           headers: {"Authorization": `Bearer ${userToken}`}
         });
-        // console.log(response.message);
-        // console.log(response.data);
+         console.log(response.status);
+         console.log(response.data);
+
         if (response.status === 201){
             console.log('uploading images...');
             aux_images.forEach(image => {
@@ -100,7 +101,6 @@ export default function ObservationDetail({ route, navigation }) {
             
             // console.log('cleaning local storage');
             getData();
-
             setObservation({
               title: 'Has no title',
               date: Date.now(),
@@ -125,6 +125,8 @@ export default function ObservationDetail({ route, navigation }) {
               textColor: "#fff",
               backgroundColor: "#62a256",
             });
+        }else{
+          setIsLoading(false);
         }
       } catch (error) {
         console.log(error.response.status);
