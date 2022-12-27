@@ -33,10 +33,10 @@ const LocationPicker: () => Node = ({ route, navigation }) => {
       color: '#ff0000'
   });
 
-    useEffect(()=>{
-      console.log('Location picked updated...');
-      console.log(pickedLocation);
-    },[pickedLocation]);
+    // useEffect(()=>{
+    //   console.log('Location picked updated...');
+    //   console.log(pickedLocation);
+    // },[pickedLocation]);
 
     useLayoutEffect( () => {
       navigation.setOptions({

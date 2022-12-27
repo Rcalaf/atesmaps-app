@@ -138,23 +138,23 @@ export const ObservationProvider = ({children}) => {
     },[observations]);
 
 
-    useEffect(()=>{
-        console.log('-----Last index updated -----')
-        console.log(lastIndex);
-        console.log('-----------------------------')
-    },[lastIndex]);
+    // useEffect(()=>{
+    //     console.log('-----Last index updated -----')
+    //     console.log(lastIndex);
+    //     console.log('-----------------------------')
+    // },[lastIndex]);
 
-    useEffect(()=>{
-        console.log('-----Selected index updated -----')
-        console.log(selectedIndex);
-        console.log('-----------------------------')
-    },[selectedIndex]);
+    // useEffect(()=>{
+    //     console.log('-----Selected index updated -----')
+    //     console.log(selectedIndex);
+    //     console.log('-----------------------------')
+    // },[selectedIndex]);
 
-    useEffect(()=>{
-        console.log('-----Update Editing observation -----')
-        console.log(editingObservation.images?.length);
-        console.log('-----------------------------')
-    },[editingObservation]);
+    // useEffect(()=>{
+    //     console.log('-----Update Editing observation -----')
+    //     console.log(editingObservation.images?.length);
+    //     console.log('-----------------------------')
+    // },[editingObservation]);
 
     useEffect(()=>{  
         console.log('Loading user oservations data...');  
