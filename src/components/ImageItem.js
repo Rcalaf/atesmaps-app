@@ -5,7 +5,7 @@ import moment from 'moment';
 
 export default function ImageItem({ item, index, deleteItem, navigation  }) {
     //const {setSelectedIndex, updateSelectedIndex} = useContext(ObservationContext);
-    console.log(item);
+    // console.log(item);
     return (
       <View style={styles.imageListItem}>
         {/* <Image source={{uri:`${path}/${directory}/${item}`}} style={{height:250,borderRadius:5, marginRight: 10,alignItems:"flex-start",flex:1}} />  */}

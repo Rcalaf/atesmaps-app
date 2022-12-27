@@ -34,72 +34,20 @@ const Stack = createNativeStackNavigator();
 
 const ObservationStack: () => Node = ({ navigation, route }) => {
 
-const {lastIndex, selectedIndex, setSelectedIndex, observations, newObservation, deleteObservation} = useContext(ObservationContext);
+const {lastIndex, selectedIndex} = useContext(ObservationContext);
 // let index = observations.length > 0 ? observations.length-1 : 0;
-
-useEffect(()=>{
-  console.log('new index recieved...');
-},[lastIndex]);
-
-useEffect(()=>{
-  console.log('new selected index recieved...');
-},[selectedIndex]);
-
-const {location} = useContext(LocationContext);
-
-// const observation = {
-//   title: 'Has no title',
-//   date: Date.now(),
-//   location: {
-//     latitude: location.latitude,
-//     longitude: location.longitude
-//   },
-//   observationTypes:{},
-//   status: 0,
-// }
 
 return(
     <Stack.Navigator> 
       <Stack.Screen 
         name="Lista de Observaciones" 
         component={Observations} 
-      //   options={{
-      //     headerShown: true ,
-      //   //headerTitle: () => <Text>Title...</Text>,
-      //     headerRight: () => (
-           
-      //       <Pressable
-      //         onPress={async ()  => {
-      //           await newObservation(observation);
-      //           let index = lastIndex;      
-      //           navigation.navigate('Observación', {index})
-      //           }}
-      //       >
-      //           <MaterialCommunityIcons size={25} 
-      //       color={'#307df6'} name="eye-plus"/>
-      //       </Pressable>
-      //   )
-      // }}
       />
       <Stack.Screen 
         name="Observación" 
         component={ObservationDetail}
         options={{
           headerShown: true,
-        //headerTitle: () => <Text>Title...</Text>,
-        //   headerRight: () => (
-        //     <Button
-        //       onPress={() => {
-        //         let index = selectedIndex;
-        //         console.log(index);
-        //         deleteObservation();
-        //         navigation.navigate('Lista de Observaciones');
-        //       }
-        //       }
-        //       title="Remove"
-        //       color="#f00"
-        //     />
-        // )
       }} />
       <Stack.Screen name="Detalles" component={ShowObservation} />
       <Stack.Screen name="Imagenes" component={ObservationImageList} />

@@ -35,7 +35,7 @@ export default function Item({ item, index,  navigation  }) {
               if(item.status > 0){
                 navigation.navigate('Detalles',{item});
               }else{
-                updateSelectedIndex(index);
+                 updateSelectedIndex(index);
                 // setSelectedIndex(index);
                  navigation.navigate('Observación',{item, index});
               }

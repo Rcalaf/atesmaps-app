@@ -11,19 +11,18 @@ export const ObservationContext = createContext();
 
 export const ObservationProvider = ({children}) => {
     const {userDetails,userToken} = useContext(AuthContext);
-
     const [isLoading, setIsLoading] = useState(false);
+
     const [observations, setObservations] = useState([]);
     const [historicObservations, setHistoricObservations] = useState([]);
-    // const [snowType, setSnowType] = useState({});
+    
     const [editingObservation, setEditingObservation] = useState({});
+
     const [lastIndex, setLastIndex] = useState(null);
     const [selectedIndex, setSelectedIndex] = useState(null);
+    
 
     const sentRequest = async (url, method, data) => {
-        /*console.log(url);
-        console.log(method);
-        console.log(data);*/
         try {
           const response = await axios({
             method: method,
@@ -34,7 +33,6 @@ export const ObservationProvider = ({children}) => {
           });
           return response;
         } catch (error) {
-          //console.log('error triggered while sending data')
           console.log(error);
           return error;
         }
@@ -57,18 +55,16 @@ export const ObservationProvider = ({children}) => {
     }
     
     const newObservation = async (observation) => {
-        setIsLoading(true);
-            // observation.user = userDetails.userId;
-            // let response = await sentRequest('/observations', "post", observation)
-            // if (response.data) observation._id = response.data._id
-
+        // setIsLoading(true);
+            // console.log('------ New Observation data received----')
+            // console.log(observation);
+            // console.log('----------------------------------------')
             let aux = observations;
             aux.push(observation);
-
             // setObservations( (arr) => { return [...arr, observation]});
             setObservations(aux);
+            updateSelectedIndex(aux.length-1)
             await AsyncStorage.setItem('list', JSON.stringify(aux)); 
-            //TODO: update asyncStorage List property
             setEditingObservation(observation);
             Snackbar.show({
                 text: 'Tu borrador de observación se ha creado.',
@@ -77,7 +73,7 @@ export const ObservationProvider = ({children}) => {
                 textColor: "#fff",
                 backgroundColor: "#62a256",
             });
-        setIsLoading(false);
+        // setIsLoading(false);
     }
 
   
@@ -87,13 +83,12 @@ export const ObservationProvider = ({children}) => {
     }
 
     const updateObservations = async (obj) => {
-       console.log('calling update observations');
-        
+        console.log('calling update observations');
         // setIsLoading(true);
         let aux = observations;
         aux[selectedIndex] = obj;
-        setEditingObservation(obj); 
         setObservations(aux);
+        setEditingObservation({...obj}); 
         await AsyncStorage.setItem('list', JSON.stringify(aux));
        // console.log('------------------');  
         // setIsLoading(false);
@@ -107,14 +102,12 @@ export const ObservationProvider = ({children}) => {
         let aux = observations;
         aux.splice(selectedIndex,1);
         setEditingObservation({});
-        setObservations([...aux]);
+        setObservations(aux);
         // setObservations( (arr) => {
         //     observations.splice(selectedIndex,1)
         //     return observations});
         // console.log(aux);
-        // console.log('---');
-        // console.log(observations);
-        // console.log('---END REmoving observation---');
+       
 
         await AsyncStorage.setItem('list', JSON.stringify(aux));
         let index = aux.length 
@@ -127,24 +120,44 @@ export const ObservationProvider = ({children}) => {
             textColor: "#fff",
             backgroundColor: "#62a256",
         });
+        // console.log('---');
+        // console.log(observations);
+        // console.log('---END REmoving observation---');
         // navigation.navigate('Lista de Observaciones');
     }
 
     useEffect(()=>{
+        // console.log('-----Observations updated-----')
+        // console.log(observations);
         let index = observations.length 
        // console.log(index);
         setLastIndex(index);
-        setSelectedIndex(index-1);
+       // setSelectedIndex(index-1);
+      //  console.log('-----------------------------')
         // setList();
     },[observations]);
 
-    // useEffect(()=>{
-    //     console.log('editingObservation has been updated....');
-    //     //console.log(editingObservation);
-    // },[editingObservation]);
+
+    useEffect(()=>{
+        console.log('-----Last index updated -----')
+        console.log(lastIndex);
+        console.log('-----------------------------')
+    },[lastIndex]);
+
+    useEffect(()=>{
+        console.log('-----Selected index updated -----')
+        console.log(selectedIndex);
+        console.log('-----------------------------')
+    },[selectedIndex]);
+
+    useEffect(()=>{
+        console.log('-----Update Editing observation -----')
+        console.log(editingObservation.images?.length);
+        console.log('-----------------------------')
+    },[editingObservation]);
 
     useEffect(()=>{  
-        console.log('Loading user data...');  
+        console.log('Loading user oservations data...');  
         getData();
     },[userDetails]);
 
@@ -153,6 +166,7 @@ export const ObservationProvider = ({children}) => {
             value={{
                 newObservation, 
                 updateObservations, 
+                setObservations,
                 deleteObservation,
                 setSelectedIndex,
                 setEditingObservation,

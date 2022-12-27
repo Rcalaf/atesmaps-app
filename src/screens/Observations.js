@@ -4,13 +4,10 @@ import {
   Text, 
   View, 
   FlatList, 
-  SectionList,
   Pressable,
-  Image, 
   Button,
-  TouchableOpacity } from 'react-native';
+   } from 'react-native';
 
-import uuid from 'react-native-uuid';
 import moment from 'moment';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -24,39 +21,31 @@ import Item from '../components/ObservationItem';
 export default function ObservationDetail({ navigation }) {
     const {location} = useContext(LocationContext);
     const {lastIndex, observations, historicObservations, newObservation} = useContext(ObservationContext);
-    const {isLoading, logout, userDetails, userToken} = useContext(AuthContext);
+    const {userDetails} = useContext(AuthContext);
 
-    const [user, setUser] = useState(userDetails);
+    // const [user, setUser] = useState(userDetails);
     const [drafts, setDrafts] = useState(observations);
     const [uploaded, setUplodaded] = useState(historicObservations);
-  //  console.log(observations);
-  //  console.log(historicObservations);
-  //  console.log(moment().format('X').toString());
-  //  console.log(userDetails._id+moment().format('X'));
-
-    
 
     useLayoutEffect(() => {
-      let observation = {
-        title: 'Has no title',
-        date: Date.now(),
-        location: {
-          latitude: location.latitude,
-          longitude: location.longitude
-        },
-        directoryId: userDetails._id+moment().format('X'),
-        observationTypes:{},
-        images: [],
-        status: 0,
-        submitted: false,
-      }
-      
       navigation.setOptions({
         // title: value === '' ? 'No title' : value,
         headerRight: userDetails.status ? () => (
                 <Pressable
                   onPress={async ()  => {
-                    await newObservation(observation);
+                    await newObservation({
+                      title: 'New observation',
+                      date: Date.now(),
+                      location: {
+                        latitude: location.latitude,
+                        longitude: location.longitude
+                      },
+                      directoryId: userDetails._id+moment().format('X'),
+                      observationTypes:{},
+                      images: [],
+                      status: 0,
+                      submitted: false,
+                    });
                     let index = lastIndex;      
                     navigation.navigate('Observación', {index})
                     }}
@@ -69,14 +58,16 @@ export default function ObservationDetail({ navigation }) {
       });
       //TODO: Here we can dynamically change the header of the screen....
       //check documentation here: https://reactnavigation.org/docs/navigation-prop/#setparams
-    }, [navigation]);
+    }, [navigation, userDetails]);
 
     
     //const [numOfItems, setNumOfItems] = useState(setNumOfItems)
 
-    useEffect(()=>{
-      setUser(userDetails);
-    },[userDetails])
+    // useEffect(()=>{
+    //   console.log('updateing user data on oservations view');
+    //   console.log(userDetails.status);
+    //   // setUser(userDetails);
+    // },[userDetails])
 
     useEffect(()=>{
       setDrafts(observations);
@@ -86,7 +77,7 @@ export default function ObservationDetail({ navigation }) {
       setUplodaded(historicObservations);
     },[historicObservations])
 
-    if (!user.status) {
+    if (!userDetails.status) {
       
       return ( 
         <View style={styles.container}>
@@ -121,7 +112,19 @@ export default function ObservationDetail({ navigation }) {
             style={{marginBottom: 20}}/>
           <Text>No se ha creado ninguna observación.</Text>
           <Button style={styles.button} title="Añadir observación"  onPress={async () => {
-                  await newObservation(observation);
+                  await newObservation({
+                    title: 'New observation',
+                    date: Date.now(),
+                    location: {
+                      latitude: location.latitude,
+                      longitude: location.longitude
+                    },
+                    directoryId: userDetails._id+moment().format('X'),
+                    observationTypes:{},
+                    images: [],
+                    status: 0,
+                    submitted: false,
+                  });
                   let index = lastIndex;      
                   navigation.navigate('Observación', {index})
                   }} />

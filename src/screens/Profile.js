@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useContext } from 'react';
 import type {Node} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 import {
-    StatusBar,
     StyleSheet,
-    useColorScheme,
     View,
     ScrollView,
     Text,
@@ -20,9 +19,9 @@ import { BASE_URL } from '../config';
 import { AuthContext } from '../context/AuthContext';
 
 import UserForm from '../components/UserForm';
-import CustomButton from "../components/CustomButton";
-import { AccessControlTranslationFilterSensitiveLog } from '@aws-sdk/client-s3';
+// import { AccessControlTranslationFilterSensitiveLog } from '@aws-sdk/client-s3';
 import  Snackbar  from "react-native-snackbar";
+import { Layout } from 'react-native-reanimated';
 
 // const Stack = createNativeStackNavigator();
 
@@ -30,10 +29,15 @@ import  Snackbar  from "react-native-snackbar";
 
 const Profile: () => Node = () => {
 
-const {logout, updateUser, userDetails, userToken} = useContext(AuthContext);
+const {logout, userDetails, setUserDetails,updateUser, userToken} = useContext(AuthContext);
 
 const [user, setUser] = useState(userDetails);
 const [isLoading, setIsLoading] = useState(false);
+
+// useLayoutEffect(() => {
+//   console.log('refershing Layout...');
+//   // setUser(userDetails);
+// },[user]);
 
 const sentData = async (id,data) => {
   setIsLoading(true);
@@ -47,9 +51,12 @@ const sentData = async (id,data) => {
     });
     //let response = await axios.post(`${BASE_URL}/users/${id}`,data,{ "Content-Type": "multipart/form-data" });
     // console.log('-----Performed a user updat to the API-----')
-
-    await updateUser(response.data);
+   
     if (response.status === 200){
+      // updateUser(response.data);
+      await AsyncStorage.setItem('userDetails', JSON.stringify(response.data));
+      setUserDetails(response.data);
+      console.log(response.data.status);
       setIsLoading(false);
       Snackbar.show({
         text: 'Los datos se actualizaron correctamente.',
@@ -71,22 +78,20 @@ const sentData = async (id,data) => {
       backgroundColor: "#B00020",
     });
   }
-  
 };
 
-useEffect(()=>{
-  console.log('userDetails updeted on profile component...');
-},[userDetails]);
+// useEffect(()=>{
+//   console.log('user data updeted...');
+// },[user]);
 
 
 const onSubmit = (data) => {
-  //console.log(getValues('password'));
-  //console.log(getValues('password') != '')
-  //console.log(user);
-  let formData = new FormData(data);
+  // console.log('submit data:')
+  // console.log(data);
+  setUser({...data});
+  // let formData = new FormData(data);
   sentData(userDetails._id, data);
-  //console.log(formData);
-  //console.log(data);
+
 };
 
 
@@ -99,7 +104,7 @@ if( isLoading ) {
 }
 
 
-return user ? (
+return userDetails ? (
   <SafeAreaView style={styles.safeContainer}>
     <ScrollView style={styles.container}>
       <UserForm preloadedValues={user} onSubmit={onSubmit}/>

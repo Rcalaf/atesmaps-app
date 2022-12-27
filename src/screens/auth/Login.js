@@ -39,7 +39,7 @@ const Login: () => Node = ({navigation}) => {
 
   const submit = (data) => {
     console.log('performing login...');
-    console.log(data);
+    // console.log(data);
     login(data.email, data.password);
   }
 

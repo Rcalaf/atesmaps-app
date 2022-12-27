@@ -33,32 +33,34 @@ import { baseGestureHandlerProps } from 'react-native-gesture-handler/lib/typesc
 import {PULIC_BUCKET_URL} from '../config'
 import { ListBucketsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { s3Client } from "../aws/s3";
+import { createIconSetFromFontello } from 'react-native-vector-icons';
 // import { set } from 'react-hook-form';
 
-const ObservationImagesList: () => Node = ({ route, navigation }) => {
+const ObservationImagesList: () => Node = ({ route, params, navigation }) => {
 
-const { editingObservation, setEditingObservation, updateObservations  } = useContext(ObservationContext);
+const { editingObservation,setEditingObservation,observations, selectedIndex, updateObservations  } = useContext(ObservationContext);
 const [images, setImages] = useState(editingObservation.images ? editingObservation.images : []);
 const [image, setImage] = useState(null);
 const [isLoading, setIsLoading] = useState(false);
 
-console.log(editingObservation);
+// console.log(editingObservation);
 
 const sheetRef = useRef();
 const fall = new Animated.Value(1);
 
-useEffect(()=>{
-  console.log('updating images tigger...')
-  let aux = editingObservation;
-  aux.images = images;
-
-  updateObservations(aux);
-},[images]);
+// useEffect(()=>{
+//   console.log('updating images list for observation')
+//   // let aux = editingObservation;
+//   // aux.images = images;
+//   // setEditingObservation(aux);
+//   // updateObservations(aux);
+// },[images]);
 
 useLayoutEffect(() => {
  
   navigation.setOptions({
     // title: value === '' ? 'No title' : value,
+   
     headerRight:() => (
             <Pressable
               onPress={async ()  => {
@@ -69,18 +71,28 @@ useLayoutEffect(() => {
               <MaterialCommunityIcons size={25} 
                                     color={'#307df6'} 
                                     name="camera-plus"/>
-            </Pressable>)
+            </Pressable>),
+    headerLeft:()=>(
+      <Button
+            onPress={() => {
+              console.log('updating images list for observation')
+              let aux = editingObservation;
+              aux.images = images;
+          
+              
+              setEditingObservation({...aux});
+              updateObservations({...aux});
+              //navigation.navigate('Observación', {selectedIndex, update:true})
+              navigation.goBack();
+            }}
+            title="Guardar"
+          />
+    )
   });
+  
   //TODO: Here we can dynamically change the header of the screen....
   //check documentation here: https://reactnavigation.org/docs/navigation-prop/#setparams
-}, [navigation]);
-
-// useEffect(()=>{
-//   console.log('Observation has been updated');
-//   // editingObservation.user = userDetails.userId;
-//   setObservation(editingObservation);
-//  // console.log(observation);
-// },[editingObservation]);
+}, [navigation, images]);
 
 const takePhotoFromCamera = () => {
   ImagePicker.openCamera({
@@ -89,9 +101,9 @@ const takePhotoFromCamera = () => {
     cropping: true,
     compressImageQuality: 0.7
   }).then(chosenImage => {
-    // setImage(image.filename);
+
     setImages( (arr) => { return [...arr, {path: chosenImage.path, filename: chosenImage.filename}]});
-    //uploadFile(chosenImage);
+ 
     sheetRef.current.snapTo(1);
   });
 }
@@ -109,10 +121,8 @@ const choosePhotoFromLibrary = async () => {
     cropping: true,
     compressImageQuality: 0.7
   }).then(chosenImage => {
-    // console.log(chosenImage);
+
     setImages( (arr) => { return [...arr, {path: chosenImage.path, filename: chosenImage.filename}]});
-    //setEditingObservation()
-    //uploadFile(chosenImage);
     sheetRef.current.snapTo(1);
   });
 }
@@ -228,7 +238,7 @@ const styles = StyleSheet.create({
     },
     listContainer: {
       flex: 1,
-      paddingTop: 15
+     // paddingTop: 15
     },
     header: {
       backgroundColor: '#FFFFFF',

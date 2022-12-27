@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useLayoutEffect, useContext} from "react";
-import { Text, View, ActivityIndicator, Button, Alert, StyleSheet, SafeAreaView, Keyboard } from "react-native";
+import { Text, View, ActivityIndicator, Button, Alert, ScrollView, StyleSheet, SafeAreaView, Keyboard } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import moment from 'moment';
 
@@ -18,10 +18,11 @@ import CustomInput from "../components/CustomInput";
 import { ObservationContext } from '../context/ObservationContext';
 import { AuthContext } from '../context/AuthContext';
 import  Snackbar  from "react-native-snackbar";
+import { UpdateIdentityPoolCommand } from "@aws-sdk/client-cognito-identity";
 
 
 export default function ObservationDetail({ route, navigation }) {
-    const {editingObservation, selectedIndex, observations, getData, deleteObservation, updateObservations } = useContext(ObservationContext);
+    const {editingObservation,setEditingObservation, selectedIndex, observations, getData, deleteObservation, updateObservations } = useContext(ObservationContext);
     const {userDetails,userToken} = useContext(AuthContext);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -29,10 +30,10 @@ export default function ObservationDetail({ route, navigation }) {
     const [index, setIndex] = useState(route.params?.index);
     const [update, setUpdate] = useState(route.params?.update);
 
-    
-
     const [ observation, setObservation ] = useState(editingObservation);
     const [ location, setLocation] = useState(editingObservation.location);
+
+    // const [images, setImages] = useState(editingObservation.images);
 
     const [rawDate, setRawDate] = useState(moment(observation.date).toDate());
     const [show, setShow] = useState(false);
@@ -54,7 +55,7 @@ export default function ObservationDetail({ route, navigation }) {
       let bucketParams = {
         Bucket: "atesmaps",
         ACL: 'public-read',
-        Key: editingObservation.directoryId + "/" + image.filename,
+        Key: observation.directoryId + "/" + image.filename,
         Body: arrayBuffer
       };
       try {
@@ -81,7 +82,6 @@ export default function ObservationDetail({ route, navigation }) {
       aux_images.forEach(image => {
         data.images.push(image.filename);
       });
-      //console.log(data);
       try {
         const response = await axios({
           method: "post",
@@ -91,15 +91,16 @@ export default function ObservationDetail({ route, navigation }) {
           headers: {"Authorization": `Bearer ${userToken}`}
         });
         // console.log(response.message);
-        console.log(response.data);
+        // console.log(response.data);
         if (response.status === 201){
             console.log('uploading images...');
             aux_images.forEach(image => {
-              console.log(uploadFile(image));
+              uploadFile(image);
             });
             
-            console.log('cleaning local storage');
+            // console.log('cleaning local storage');
             getData();
+
             setObservation({
               title: 'Has no title',
               date: Date.now(),
@@ -113,7 +114,7 @@ export default function ObservationDetail({ route, navigation }) {
               images: [],
               submitted: false,
             });
-            
+            setIsLoading(false);
             navigation.navigate('Lista de Observaciones');
             deleteObservation();
             
@@ -127,16 +128,17 @@ export default function ObservationDetail({ route, navigation }) {
         }
       } catch (error) {
         console.log(error.response.status);
+        setIsLoading(false);
       }
-      setIsLoading(false);
+      
     };
     
 
     const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
       defaultValues: {
-        title: observation.title,
-        date: moment(observation.date).format('MMMM Do YYYY, hh:mm:ss'),
-        location: formatLocation(location),
+        title: editingObservation.title,
+        date: moment(editingObservation.date).format('MMMM Do YYYY, hh:mm:ss'),
+        location: formatLocation(editingObservation.location),
       }
     });
 
@@ -155,29 +157,23 @@ export default function ObservationDetail({ route, navigation }) {
             title="Guardar"
           />
         )
-        
-        // headerRight: (props) => (
-        //   <HeaderBackButton labelVisible={true} onPress={()=>{}}></HeaderBackButton>
-        // )
       });
-      //TODO: Here we can dynamically change the header of the screen....
-      //check documentation here: https://reactnavigation.org/docs/navigation-prop/#setparams
-    }, [navigation]);
+    }, [navigation,editingObservation,rawDate]);
 
 
     const onSave = (data) => {
-      // console.log('Saving data...')
-    // console.log(parseLocation(data.location));
-      // console.log();
-     
+
       let obj = data;
+      
       obj.date = moment(rawDate).format();
       obj.location = parseLocation(data.location);
       obj.images = editingObservation.images;
+      obj.directoryId= editingObservation.directoryId;
       obj.status = 0;
       obj.observationTypes = editingObservation.observationTypes;
+      setEditingObservation(obj);
       updateObservations(obj);
-      
+ 
       Snackbar.show({
         text: 'Los datos de tu observación se han guardado.',
         duration: Snackbar.LENGTH_SHORT,
@@ -190,22 +186,21 @@ export default function ObservationDetail({ route, navigation }) {
 
     
     const onSubmit = (data) => {
-      //console.log(editingObservation.observationTypes.quick?.status);
-      //console.log(editingObservation.observationTypes.snowConditions?.status);
-      //console.log(editingObservation.observationTypes.avalancheConditions?.status);
       if(editingObservation.observationTypes.quick?.status ||
         editingObservation.observationTypes.snowConditions?.status ||
         editingObservation.observationTypes.avalanche?.status){
         //console.log('at least one report...')
        
         let obj = data;
+   
         obj.directoryId= editingObservation.directoryId;
         obj.images = editingObservation.images;
         //TODO: check if date updates properly
         obj.date = moment(rawDate).format();
+        
         obj.location = location;
         obj.observationTypes = editingObservation.observationTypes;
-       // console.log(data);
+    
         sendData(userDetails._id,obj); 
   
       }else{
@@ -232,17 +227,34 @@ export default function ObservationDetail({ route, navigation }) {
       setShow(!show);
     };
 
-    useEffect(()=>{
-      console.log('Observation has been updated');
-      // editingObservation.user = userDetails.userId;
+    // useEffect(()=>{
+    //   console.log('Observation has been updated');
+    //   // editingObservation.user = userDetails.userId;
+    //   setObservation(observations[selectedIndex]);
+    //  // console.log(observation);
+    // },[observations]);
 
+    useEffect(()=>{
+      console.log('Updating editing observation on Observation details');
+      // editingObservation.user = userDetails.userId;
+      
       setObservation(editingObservation);
-     // console.log(observation);
+      setLocation(editingObservation.location)
+      setValue('location',formatLocation(editingObservation.location))
+      // setImages(editingObservation.images)
+      // console.log(editingObservation.images.length)
+      
     },[editingObservation]);
 
     // useEffect(()=>{
-    //   console.log(editingObservation);
+    //   setImages(editingObservation.images)
     // })
+
+
+    // useEffect(()=>{
+    //    console.log('observations has been Updated...')
+    //    console.log(observation);
+    // },[observation])
 
     // useEffect(()=>{
     //   setLocation(editingObservation.location);
@@ -261,7 +273,7 @@ export default function ObservationDetail({ route, navigation }) {
 
     return (
       <SafeAreaView style={styles.safeContainer}>
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           <CustomInput
             name="title"
             placeholder="Titulo"
@@ -323,7 +335,7 @@ export default function ObservationDetail({ route, navigation }) {
           />
 
           <CustomButton 
-            text={`Fotos (${observation.images ? observation.images?.length : 0})`}
+            text={`Fotos (${editingObservation.images ? editingObservation.images.length : 0})`}
             type="custom"
             fColor="gray"
             onPress={() => {
@@ -352,13 +364,26 @@ export default function ObservationDetail({ route, navigation }) {
                 onPress={() => {
                   //let index = selectedIndex;
                   deleteObservation();
+                  setObservation({
+                    title: 'Has no title',
+                    date: Date.now(),
+                    location: {
+                      latitude: location.latitude,
+                      longitude: location.longitude
+                    },
+                    directoryId: userDetails._id+moment().format('X'),
+                    observationTypes:{},
+                    status: 0,
+                    images: [],
+                    submitted: false,
+                  });
                   navigation.navigate('Lista de Observaciones');
                 }} />
           </View>
        
        
           {/* <Text style={styles.status}> {keyboardStatus}</Text> */}
-        </View>
+        </ScrollView>
       </SafeAreaView>
     );
 }

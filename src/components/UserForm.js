@@ -22,17 +22,18 @@ import RadioButtonRN from 'radio-buttons-react-native';
 import { useForm, Controller } from "react-hook-form";
 
 const UserForm = ({preloadedValues, onSubmit}) => {
-    const [user, setUser] = useState(null);
+    // const [user, setUser] = useState(null);
 
     const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
       //defaultValues: preloadedValues
+      
       defaultValues: {
-        userName: preloadedValues?.username,
+        username: preloadedValues?.username,
         name: preloadedValues?.name,
         lastName: preloadedValues?.lastName,
         email: preloadedValues?.email,
-        password: "",
-        passwordConfirmation: "",
+        // password: "",
+        // passwordConfirmation: "",
         gender: Number(preloadedValues?.gender),
         professionalOrientation: Number(preloadedValues?.professionalOrientation),
         snowEducationLevel: Number(preloadedValues?.snowEducationLevel),
@@ -42,6 +43,9 @@ const UserForm = ({preloadedValues, onSubmit}) => {
         conditionsType:Number(preloadedValues?.conditionsType),
       }
     });
+
+    // console.log('---- Preloading values on the form ----');
+    // console.log(preloadedValues);
 
     //Activity type:
     const genderOptions = [
@@ -108,7 +112,7 @@ const UserForm = ({preloadedValues, onSubmit}) => {
             <View style={{marginTop: 10}}>
                 
                 <CustomInput
-                  name="userName"
+                  name="username"
                   placeholder= "Nombre de usuario"
                   control={control}
                   rules={{required: 'El Nombre de usuario es obligatorio.'}}

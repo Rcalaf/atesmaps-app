@@ -23,12 +23,12 @@ import { LocationContext } from '../context/LocationContext';
 
 const LocationPicker: () => Node = ({ route, navigation }) => {
     const { location } = useContext(LocationContext);
-    const { editingObservation, setEditingObservation, updateObservations, selectedIndex} = useContext(ObservationContext);
+    const { editingObservation, setEditingObservation, observations, updateObservations, setObservations,selectedIndex} = useContext(ObservationContext);
     const [pickedLocation, setPickedLocation]= useState({latitude:Number(editingObservation.location.latitude),longitude:Number(editingObservation.location.longitude)}); 
     // const [ observation, setObservation ] = useState(observations[route.params?.index]);
     const [marker, setMarker] = useState({
       // coordinate: editingObservation.location,
-      coordinate: {latitude:Number(editingObservation.location.latitude),longitude:Number(editingObservation.location.longitude)},
+      coordinate: {latitude:Number(editingObservation.location.latitude),longitude:Number(observations[selectedIndex].location.longitude)},
       key: 1,
       color: '#ff0000'
   });
@@ -38,14 +38,28 @@ const LocationPicker: () => Node = ({ route, navigation }) => {
       console.log(pickedLocation);
     },[pickedLocation]);
 
-    useLayoutEffect(() => {
+    useLayoutEffect( () => {
       navigation.setOptions({
         // title: value === '' ? 'No title' : value,
         headerRight: () => (
           <Button
-            onPress={() => {
+            onPress={async () => {
               let index = route.params?.index;
-              setEditingObservation({...editingObservation, location:pickedLocation});
+
+              let observation = editingObservation;
+              observation.location = pickedLocation; 
+              setEditingObservation(observation);
+              updateObservations(observation);
+
+             // const observation = {...editingObservation, location:pickedLocation}
+             // updateObservations(observation);
+              // let aux = observations;
+              // aux[selectedIndex] = observation;
+              // console.log('----Location picker-----')
+              // console.log([...aux]);
+              // console.log('------------')
+              // setObservations([...aux]);
+              // setEditingObservation({...observations[selectedIndex], location:pickedLocation});
               navigation.navigate('Observación', {index, update:true})
               Snackbar.show({
                 text: 'Tu ubicación se ha guardado.',
@@ -86,22 +100,6 @@ const LocationPicker: () => Node = ({ route, navigation }) => {
             color: '#ff0000'
         })
         setPickedLocation(e.nativeEvent.coordinate);
-        // updateLocation(pickedLocation);
-        // let newObservation = {...observation, location:{latitude: e.nativeEvent.coordinate.latitude , longitude:e.nativeEvent.coordinate.longitude}}
-        // setObservation(newObservation);
-        //console.log(observation);
-        //  updateObervations(observation, index);
-        //  console.log(observations[index]);
-        // this.setState({
-        //     markers: [
-        //     ...this.state.markers,
-        //     {
-        //         coordinate: e.nativeEvent.coordinate,
-        //         key: id++,
-        //         color: randomColor(),
-        //     },
-        //     ],
-        // });
     }
 
 return(

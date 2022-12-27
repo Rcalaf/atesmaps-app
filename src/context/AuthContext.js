@@ -14,9 +14,11 @@ export const AuthProvider = ({children}) => {
     const [userDetails, setUserDetails] = useState(null);
 
     const updateUser = async (data) => {
-        console.log('user local storage updated...')
-        await AsyncStorage.setItem('userDetails', JSON.stringify(data));
-        setUserDetails(data);
+       // console.log('user local storage updated...')
+       // let user = data;
+       // await AsyncStorage.setItem('userDetails', JSON.stringify(user));
+        // console.log(data);
+        //setUserDetails(user);
     }
 
     const login = async (email, password) => {
@@ -107,7 +109,7 @@ export const AuthProvider = ({children}) => {
             setUserToken(userToken);
             setUserDetails(JSON.parse(userDetails));    
         } catch (e) {
-            console.log('error on is looged in method:');
+            console.log('error on is logged in method:');
             console.log(e);
         }
         setIsLoading(false);
@@ -119,13 +121,21 @@ export const AuthProvider = ({children}) => {
     }, [])
 
 
-    useEffect(()=>{
-        console.log('user details updated....')
-        // isLoggedIn();
-    }, [userDetails])
+    // useEffect(()=>{
+    //     console.log('user details updated....')
+    //     // isLoggedIn();
+    // }, [userDetails])
 
     return(
-        <AuthContext.Provider value={{signUp, login, updateUser, logout, isLoading, userToken, userDetails }}> 
+        <AuthContext.Provider value={{signUp, 
+                                    login, 
+                                    logout, 
+                                    isLoading, 
+                                    userToken, 
+                                    userDetails, 
+                                    setUserDetails,
+                                    updateUser,
+                                    }}> 
             {children}
         </AuthContext.Provider>
     )

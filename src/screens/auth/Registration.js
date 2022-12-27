@@ -47,7 +47,7 @@ const Registration: () => Node = () => {
 
   const submit = (data) => {
     console.log('performing login...');
-    console.log(data);
+    // console.log(data);
 
     if(data.password != data.passwordConfirmation) {
       console.log('password is different...');
