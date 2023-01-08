@@ -560,7 +560,7 @@ return(
                             name="depth"
                             placeholder="Profundidad (cm)"
                             control={control}
-                            customStyles={{width:"30%"}}
+                            customStyles={{width:"100%"}}
                             //   rules={{required: 'Email is required'}}
                             // onPress={showDatepicker}
                             />
@@ -571,7 +571,7 @@ return(
                                 name="width"
                                 placeholder="Ancho (m)"
                                 control={control}
-                                customStyles={{width:"30%"}}
+                                customStyles={{width:"100%"}}
                                 //   rules={{required: 'Email is required'}}
                                 // onPress={showDatepicker}
                                 />
@@ -581,35 +581,14 @@ return(
                                 name="length"
                                 placeholder="Largo (m)"
                                 control={control}
-                                customStyles={{width:"30%"}}
+                                customStyles={{width:"100%"}}
                                 //   rules={{required: 'Email is required'}}
                                 // onPress={showDatepicker}
                                 />
                            
                        
                     </View>
-                    <View style={styles.inputGroup}>
-                    
-                        <CustomInput
-                            name="snowType"
-                            placeholder="Grano de la capa debil"
-                            control={control}
-                            customStyles={{width:"45%"}}
-                            //   rules={{required: 'Email is required'}}
-                            // onPress={showDatepicker}
-                            />
-                    
-                
-                        <CustomInput
-                            name="inclination"
-                            placeholder="Inclinación zona de salida (º)"
-                            control={control}
-                            customStyles={{width:"45%"}}
-                            //   rules={{required: 'Email is required'}}
-                            // onPress={showDatepicker}
-                            />
-                      
-                    </View> 
+                   
                 </View>
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}></View>
@@ -678,22 +657,29 @@ return(
                             name="height"
                             placeholder="Cota altimetrica zona de salida (m)"
                             control={control}
-                            customStyles={{width:"45%"}}
-                            //   rules={{required: 'Email is required'}}
-                            // onPress={showDatepicker}
-                            />
-                    
-                      
-                        <CustomInput
-                            name="inclination"
-                            placeholder="Inclinación zona de salida (º)"
-                            control={control}
-                            customStyles={{width:"45%"}}
+                            customStyles={{width:"100%"}}
                             //   rules={{required: 'Email is required'}}
                             // onPress={showDatepicker}
                             />
                     
                        
+                    </View> 
+                </View>
+                <View style={styles.formContainer} >
+                <Text>Inclinación zona de salida:</Text>
+                <View style={styles.spacer}></View>
+                    <View style={styles.inputGroup}>
+                    
+                         
+                    <CustomInput
+                            name="inclination"
+                            placeholder="Inclinación zona de salida (º)"
+                            control={control}
+                            customStyles={{width:"100%"}}
+                            //   rules={{required: 'Email is required'}}
+                            // onPress={showDatepicker}
+                            />
+                    
                     </View> 
                 </View>
                 <View style={styles.formContainer} >
@@ -769,7 +755,22 @@ return(
                     <Text style={{color: 'red', alignSelf: 'stretch'}}>{errors.deepPowder?.message || 'Error'}</Text>
                 )} 
                 </View>*/}
-                
+                <View style={styles.formContainer} >
+                <Text>Grano de la capa:</Text>
+                <View style={styles.spacer}></View>
+                    <View style={styles.inputGroup}>
+                    
+                        <CustomInput
+                            name="snowType"
+                            placeholder="Grano de la capa debil"
+                            control={control}
+                            customStyles={{width:"100%"}}
+                            //   rules={{required: 'Email is required'}}
+                            // onPress={showDatepicker}
+                            />
+                    
+                    </View> 
+                </View>
                 <View style={styles.formContainer} >
                  <View style={styles.spacer}></View>
                  <CustomRadioButton 
@@ -855,25 +856,13 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         backgroundColor: 'white',
-        width: '100%',
+        // width: '100%',
         borderColor: '#e8e8e8',
         borderWidth: 1,
         borderRadius: 5,
         paddingHorizontal: 10,
         marginVertical: 5,
     },
-    input: {
-        borderColor: "gray",
-        width: "100%",
-        height:'24%',
-        paddingTop: 10,
-        paddingBottom: 10,
-    },
-    container: {
-        width: '100%',
-        borderColor: 'none',
-        marginVertical: 5,
-    }, 
     space: {
         height: 150,
     }

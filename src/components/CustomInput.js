@@ -39,7 +39,8 @@ const CustomInput = ({
               numberOfLines={numberOfLines}
               placeholder={placeholder}
               style={[styles.input ]}
-              secureTextEntry={secureTextEntry}
+              secureTextEntry={secureTextEntry} 
+              placeholderTextColor="#000" 
             />
           </View>
           {error && (

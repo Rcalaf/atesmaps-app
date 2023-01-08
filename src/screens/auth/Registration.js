@@ -40,6 +40,7 @@ const Registration: () => Node = () => {
     defaultValues: {
         userName: '',
         email: '',
+        emailConfirmation: '',
         password: '',
         passwordConfirmation: ''
     }
@@ -53,6 +54,17 @@ const Registration: () => Node = () => {
       console.log('password is different...');
       Snackbar.show({
           text: 'Los passwords no coinciden',
+          duration: Snackbar.LENGTH_SHORT,
+          numberOfLines: 2,
+          textColor: "#fff",
+          backgroundColor: "#B00020",
+      });
+      return null;
+    }
+    if(data.email != data.emailConfirmation) {
+      console.log('emails is different...');
+      Snackbar.show({
+          text: 'Los emails no coinciden',
           duration: Snackbar.LENGTH_SHORT,
           numberOfLines: 2,
           textColor: "#fff",
@@ -94,7 +106,7 @@ const Registration: () => Node = () => {
             placeholder="Nombre de usuario"
             control={control}
             // customStyles={{width:"100%"}}
-            rules={{required: 'Introduce el nombre de usuario, no usar characteres especials.'}}
+            rules={{required: 'Introduce el nombre de usuario, no usar characteres especiales.'}}
             // onPress={showDatepicker}
             />
 
@@ -105,6 +117,17 @@ const Registration: () => Node = () => {
             control={control}
             // customStyles={{width:"100%"}}
             rules={{required: 'Introduce el Email'}}
+
+            // onPress={showDatepicker}
+            />
+
+          <CustomInput
+            name="emailConfirmation"
+            placeholder="Confirmación del email"
+            keyboardType='email-address'
+            control={control}
+            // customStyles={{width:"100%"}}
+            rules={{required: 'Confirma el email'}}
 
             // onPress={showDatepicker}
             />
