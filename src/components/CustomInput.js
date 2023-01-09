@@ -38,7 +38,7 @@ const CustomInput = ({
               multiline={multiline}
               numberOfLines={numberOfLines}
               placeholder={placeholder}
-              style={[styles.input ]}
+              style={multiline ? styles.textArea : styles.input }
               secureTextEntry={secureTextEntry} 
               placeholderTextColor="#000" 
             />
@@ -67,6 +67,11 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingTop: 10,
     paddingBottom: 10,
+  },
+  textArea: {
+    borderColor: "gray",
+    width: "100%",
+    height:'20%',
   },
 });
 

@@ -16,6 +16,7 @@ import {
 
 import CustomRadioButton from "../components/CustomRadioButton";
 import CustomButton from "../components/CustomButton";
+import CustomInput from "../components/CustomInput";
 import CustomCheckbox from "../components/CustomCheckbox";
 import  Snackbar  from "react-native-snackbar";
 
@@ -680,6 +681,23 @@ return(
 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}></View>
+                    <Text>Otras observaciones:</Text>
+                
+                    <CustomInput
+                        name="comments"
+                        control={control}
+                        multiline={true}
+                        numberOfLines={4}
+                        customStyles={styles.inputContainer}
+                        placeholder="1000 letras max"
+                        />
+                    <View style={{marginBottom: 30}}>
+                            <CustomButton text="Borrar datos" bgColor={"#B00020"} fgColor='white' iconName={null} onPress={removeData} />
+                        </View>
+                </View>
+
+                {/* <View style={styles.formContainer} >
+                    <View style={styles.spacer}></View>
                          <Text>Otras observaciones:</Text>
 
                         <View style={styles.inputContainer}>
@@ -695,7 +713,7 @@ return(
                         <View style={{marginBottom: 30}}>
                             <CustomButton text="Borrar observación rápida" bgColor={"#B00020"} fgColor='white' iconName={null} onPress={removeData} />
                         </View>
-                </View>    
+                </View>     */}
 
             </View>
             <View style={styles.space} />
@@ -746,6 +764,11 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         backgroundColor: 'gray',
         height: 1,
+    },
+    textArea: {
+        borderColor: "gray",
+        width: "100%",
+        height:'20%',
     },
     inputContainer: {
         backgroundColor: 'white',

@@ -145,7 +145,7 @@ const updateData = () => {
     aux['values'].footPenetration= values.footPenetration;
     aux['values'].skiPenetration= values.skiPenetration;
 
-    aux['values'].handTest= values.skiPenetration;
+    aux['values'].handTest= values.handTest;
     aux['values'].compresionTest= values.compresionTest;
     aux['values'].extensionTest= values.extensionTest;
     aux['values'].fractureType= values.fractureType;
@@ -424,7 +424,7 @@ return(
                     </View> 
                     <CustomInput
                         name="altitude"
-                        placeholder="(m)"
+                        placeholder="Cota altimetrica zona de salida (m)"
                         control={control}
                         // rules={{required: 'Title is required'}}
                     />      
@@ -513,7 +513,7 @@ return(
                     <Text>Profundidad del manto:</Text>
                     <CustomInput
                         name="depth"
-                        placeholder="Cota altimetrica (m)"
+                        placeholder="Profundidad del manto (cm)"
                         control={control}
                         // rules={{required: 'Title is required'}}
                     />       
@@ -651,7 +651,7 @@ return(
                     <Text>Profundidad de fractura (cm, desde la superfície):</Text>
                     <CustomInput
                         name="fractureDepth"
-                        placeholder="Cota altimetrica (m)"
+                        placeholder="Profundidad de fractura (cm)"
                         control={control}
                         // rules={{required: 'Title is required'}}
                     />   
@@ -700,6 +700,23 @@ return(
 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}></View>
+                    <Text>Otras observaciones:</Text>
+                
+                    <CustomInput
+                        name="comments"
+                        control={control}
+                        multiline={true}
+                        numberOfLines={4}
+                        customStyles={styles.inputContainer}
+                        placeholder="1000 letras max"
+                        />
+                    <View style={{marginBottom: 30}}>
+                            <CustomButton text="Borrar datos" bgColor={"#B00020"} fgColor='white' iconName={null} onPress={removeData} />
+                        </View>
+                </View>
+
+                {/* <View style={styles.formContainer} >
+                    <View style={styles.spacer}></View>
                          <Text>Otras observaciones:</Text>
 
                         <View style={styles.inputContainer}>
@@ -715,7 +732,7 @@ return(
                         <View style={{marginBottom: 30}}>
                             <CustomButton text="Borrar datos" bgColor={"#B00020"} fgColor='white' iconName={null} onPress={removeData} />
                         </View>
-                </View> 
+                </View>  */}
                 
             </View>
             
@@ -776,6 +793,11 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 10,
         marginVertical: 5,
+    },
+    textArea: {
+        borderColor: "gray",
+        width: "100%",
+        height:'20%',
     },
     input: {
         borderColor: "gray",

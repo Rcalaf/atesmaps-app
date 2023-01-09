@@ -86,7 +86,7 @@ useLayoutEffect(() => {
           
             // navigation.navigate('Observación', {index, update:true})
           }}
-          title="Save"
+          title="Guardar"
         />
       )
     });
@@ -785,27 +785,26 @@ return(
                     />
                    
                 </View>
-                
+
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}></View>
-                         <Text>Otras observaciones:</Text>
-
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                value={comments}
-                                multiline={true}
-                                numberOfLines={4}
-                                style={styles.input}
-                                placeholder={"1000 letras max"}
-                                onChangeText={(text) => setComments(text)}
-                                />
-                        </View>
-                        <View style={{marginBottom: 30}}>
+                    <Text>Otras observaciones:</Text>
+                
+                    <CustomInput
+                        name="comments"
+                        control={control}
+                        multiline={true}
+                        numberOfLines={4}
+                        customStyles={styles.inputContainer}
+                        placeholder="1000 letras max"
+                        />
+                    <View style={{marginBottom: 30}}>
                             <CustomButton text="Borrar datos" bgColor={"#B00020"} fgColor='white' iconName={null} onPress={removeData} />
                         </View>
                 </View>
+                
             </View>
-            <View style={styles.space} />
+            {/* <View style={styles.space} /> */}
         </ScrollView>
     </SafeAreaView>
 )};
@@ -863,8 +862,20 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         marginVertical: 5,
     },
+    textArea: {
+        borderColor: "gray",
+        width: "100%",
+        height:'20%',
+    },
+    input: {
+        borderColor: "gray",
+        width: "100%",
+        height:'auto',
+        paddingTop: 10,
+        paddingBottom: 10,
+    },
     space: {
-        height: 150,
+        height: 20,
     }
 
 });

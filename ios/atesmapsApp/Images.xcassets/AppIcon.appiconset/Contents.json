@@ -1,55 +1,55 @@
 {
   "images" : [
     {
-      "filename" : "pyrscope-logo40.png",
+      "filename" : "Pyrscope40_icon.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
-      "filename" : "pyrscope-logo60.png",
+      "filename" : "Pyrscope60_icon.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "20x20"
     },
     {
-      "filename" : "pyrscope-logo58.png",
+      "filename" : "Pyrscope58_icon.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
-      "filename" : "pyrscope-logo87.png",
+      "filename" : "Pyrscope87_icon.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "29x29"
     },
     {
-      "filename" : "pyrscope-logo80.png",
+      "filename" : "Pyrscope80_icon.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
-      "filename" : "Pyrscope-logo120.png",
+      "filename" : "Pyrscope120_icon.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "40x40"
     },
     {
-      "filename" : "pyrscope120.png",
+      "filename" : "Pyrscope120_icon-1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x60"
     },
     {
-      "filename" : "Pyrscope180.png",
+      "filename" : "Pyrscope180_icon.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "60x60"
     },
     {
-      "filename" : "Logo1024.png",
+      "filename" : "atesmaps1024.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"
