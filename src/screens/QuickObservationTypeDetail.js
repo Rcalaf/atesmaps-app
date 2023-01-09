@@ -67,7 +67,7 @@ const { control, handleSubmit, formState: { errors }, getValues, setValue, reset
         sounds: quickValues.values.avalancheConditions?.sounds ? quickValues.values.avalancheConditions?.sounds : null,
         tempChanges: quickValues.values.avalancheConditions?.tempChanges ? quickValues.values.avalancheConditions?.tempChanges : null,
         snowAccumulation: quickValues.values.avalancheConditions?.snowAccumulation ? quickValues.values.avalancheConditions?.snowAccumulation : null,
-        comments: quickValues.values.otherComments ? quickValues.values.otherComments : null,
+        comments: quickValues.values.comments ? quickValues.values.comments : null,
         ridingQuality: quickValues.values.ridingQuality ? quickValues.values.ridingQuality : null,
         activityType: quickValues.values.activityType ? quickValues.values.activityType : null,
     }
@@ -141,7 +141,7 @@ const updateData = () => {
         'snowAccumulation': values.snowAccumulation
     }
 
-    aux['values'].otherComments = values.comments
+    aux['values'].comments = values.comments
 
     aux['values'].ridingQuality = values.ridingQuality
 

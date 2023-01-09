@@ -132,7 +132,6 @@ export default function ObservationDetail({ route, navigation }) {
         console.log(error.response.status);
         setIsLoading(false);
       }
-      
     };
     
 

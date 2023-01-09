@@ -271,7 +271,7 @@ const [snowType, setSnowType] = useState(snowpackValues.values?.snowType);
 // },[woumpfs,sounds,layerSnowType,footPenetration,skiPenetration,handTest, compresionTest,extensionTest,fractureType,fractureDepth,layerHardness,snowHumidity,snowType]);
 
 //comments 
-const [comments, setComments] = useState(snowpackValues.values?.otherComments);
+const [comments, setComments] = useState(snowpackValues.values?.comments);
 
 // useEffect(()=>{
 //     let conditions = snowpackValues;
@@ -589,7 +589,17 @@ return(
 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
-                    <Text>Test Cizalla de mano</Text>
+                    <CustomRadioButton 
+                        name="handTest"
+                        title="Test Cizalla de mano"
+                        control={control}
+                        data={cmtOptions}
+                        // rules={{required: 'Campo obligatorio'}}
+                        box={false}
+                        textColor={'black'}
+                        circleSize={14}
+                    />
+                    {/* <Text>Test Cizalla de mano</Text>
                         <RadioButtonRN
                             textColor={'black'}
                             circleSize={14}
@@ -599,7 +609,7 @@ return(
                             selectedBtn={(e) => {
                                 setHandTest(cmtOptions.map(object => object.label).indexOf(e.label)+1);
                             }}
-                            />
+                            /> */}
                 </View>
 
                 <View style={styles.formContainer} >
