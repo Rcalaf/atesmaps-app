@@ -569,7 +569,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.atesmaps.pyrscope;
+				PRODUCT_BUNDLE_IDENTIFIER = com.atesmapsapp;
 				PRODUCT_NAME = atesmapsApp;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -598,7 +598,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.atesmaps.pyrscope;
+				PRODUCT_BUNDLE_IDENTIFIER = com.atesmapsapp;
 				PRODUCT_NAME = atesmapsApp;
 				PROVISIONING_PROFILE_SPECIFIER = "Pyrscope-Distribution";
 				SWIFT_VERSION = 5.0;
