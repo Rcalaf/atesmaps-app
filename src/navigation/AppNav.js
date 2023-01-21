@@ -37,7 +37,7 @@ const AppNav: () => Node = () => {
     
     return (
       <NavigationContainer>
-        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+       <StatusBar barStyle={'light-content'} hidden={true} />
         { userToken !== null ? <BottomTabs /> : <AuthStack />}
       </NavigationContainer>
     );

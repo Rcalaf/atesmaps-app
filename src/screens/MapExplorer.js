@@ -14,7 +14,7 @@ import MapView from 'react-native-maps';
 import {
   SafeAreaView,
   ScrollView,
-  StatusBar,
+
   StyleSheet,
   Text,
   Button,
@@ -132,7 +132,7 @@ const MapExplorer: () => Node = () => {
 
   return (
     <>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+     
       <View
         style={styles.container}>
        <MapView style={styles.map}

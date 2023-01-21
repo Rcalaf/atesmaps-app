@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const CustomButton = ({onPress, order, text, type = 'primary', bgColor , fColor, iconName = 'arrow-forward-ios'}) => {
+const CustomButton = ({onPress, order, text, type = 'primary', bgColor , fColor, iconName = 'arrow-forward-ios', customStyle = {}}) => {
   return (
     <Pressable
       onPress={onPress}
@@ -11,6 +11,7 @@ const CustomButton = ({onPress, order, text, type = 'primary', bgColor , fColor,
         styles[`container_${type}`],
         styles[`position_${order}`],
         bgColor ? {backgroundColor: bgColor} : {},
+        customStyle,
       ]}>
       <Text
         style={[

@@ -294,9 +294,9 @@ return(
         <ScrollView >
             <View style={styles.container}>
                 <View style={styles.introContainer} >
-                    <Text style={styles.intro}>Use the Quick Report to quickly share information 
-                    about your trip. You can create a comprehensive report by adding more details in 
-                    the Avalanche, Snowpack, Weather and/or Incident tabs.</Text> 
+                    <Text style={styles.intro}>Realiza un breve análisis de tu actividad y las condiciones observadas. 
+                    Cualquier informacion puede ser útil a otros usuarios o profesionales. Solo la primera pregunta es obligada, 
+                    no respondas aquellas de las que no estés seguro/a. Puedes añadir más detalles en los apartados Avalancha, Manto, Meteo y Accidente.</Text> 
                 </View>
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
@@ -522,100 +522,6 @@ return(
                 )} 
                 </View>*/}
 
-
-             
-                {/* <View style={styles.formContainer} >
-                    <View style={styles.spacer}></View>
-
-                    <Text>Meteo del día:</Text>
-  
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                            style={[ { height: 20, width: 20 } ]}
-                            disabled={false}
-                            boxType={'circle'}
-                            animationDuration={0.2}
-                            onAnimationType={'flat'}
-                            offAnimationType={'flat'}
-                            value={avoidAlpine}
-                            onValueChange={(newValue) => setAvoidAlpine(newValue)}
-
-                            />
-                            <Text style={{marginLeft:10}}>Cálido</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                           style={[ { height: 20, width: 20 } ]}
-                           disabled={false}
-                           boxType={'circle'}
-                           animationDuration={0.2}
-                           onAnimationType={'flat'}
-                           offAnimationType={'flat'}
-                           value={avoidDense}
-                           onValueChange={(newValue) => setAvoidDense(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Frío</Text>
-                        </View> 
-                    </View>   
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                          style={[ { height: 20, width: 20 } ]}
-                          disabled={false}
-                          boxType={'circle'}
-                          animationDuration={0.2}
-                          onAnimationType={'flat'}
-                          offAnimationType={'flat'}
-                          value={avoidSteep}
-                          onValueChange={(newValue) => setAvoidSteep(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Nublado</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                         style={[ { height: 20, width: 20 } ]}
-                         disabled={false}
-                         boxType={'circle'}
-                         animationDuration={0.2}
-                         onAnimationType={'flat'}
-                         offAnimationType={'flat'}r
-                         value={avoidOpen}
-                         onValueChange={(newValue) => setAvoidOpen(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Venteado</Text>
-                        </View> 
-                    </View>
-                    <View style={styles.formGroup}>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                          style={[ { height: 20, width: 20 } ]}
-                          disabled={false}
-                          boxType={'circle'}
-                          animationDuration={0.2}
-                          onAnimationType={'flat'}
-                          offAnimationType={'flat'}r
-                          value={avoidCut}
-                          onValueChange={(newValue) => setAvoidCut(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Niebla</Text>
-                        </View>
-                        <View style={styles.checkboxGroup}>
-                            <CheckBox
-                         style={[ { height: 20, width: 20 } ]}
-                         disabled={false}
-                         boxType={'circle'}
-                         animationDuration={0.2}
-                         onAnimationType={'flat'}
-                         offAnimationType={'flat'}r
-                         value={avoidSunny}
-                         onValueChange={(newValue) => setAvoidSunny(newValue)}
-                            />
-                            <Text style={{marginLeft:10}}>Tormenta</Text>
-                        </View> 
-                    </View>
-                </View> */}
-
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}></View>
                     {/* <View
@@ -691,29 +597,14 @@ return(
                         customStyles={styles.inputContainer}
                         placeholder="1000 letras max"
                         />
-                    <View style={{marginBottom: 30}}>
+                        <View style={{marginTop: 30}}>
+                            <CustomButton text="Guardar" bgColor={"#62a256"} fgColor='white' iconName={null} onPress={handleSubmit(updateData)} />
+                        </View>
+                        <View>
                             <CustomButton text="Borrar datos" bgColor={"#B00020"} fgColor='white' iconName={null} onPress={removeData} />
                         </View>
                 </View>
 
-                {/* <View style={styles.formContainer} >
-                    <View style={styles.spacer}></View>
-                         <Text>Otras observaciones:</Text>
-
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                value={comments}
-                                multiline={true}
-                                numberOfLines={4}
-                                style={styles.input}
-                                placeholder={"1000 letras max"}
-                                onChangeText={(text) => setComments(text)}
-                                />
-                        </View>
-                        <View style={{marginBottom: 30}}>
-                            <CustomButton text="Borrar observación rápida" bgColor={"#B00020"} fgColor='white' iconName={null} onPress={removeData} />
-                        </View>
-                </View>     */}
 
             </View>
             <View style={styles.space} />

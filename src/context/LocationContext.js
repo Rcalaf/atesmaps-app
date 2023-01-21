@@ -1,4 +1,5 @@
 import React, {createContext, useState, useEffect} from 'react';
+import { PermissionsAndroid, Platform } from 'react-native';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from '@react-native-community/geolocation';
 

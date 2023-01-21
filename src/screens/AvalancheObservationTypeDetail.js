@@ -380,7 +380,8 @@ return(
         <ScrollView >
             <View style={styles.container}>
                 <View style={styles.introContainer} >
-                    <Text style={styles.intro}>Avalanche text intro.... HERE </Text> 
+                    <Text style={styles.intro}>Si tienes informacion sobre una avalancha o una situacion de condiciones generalizada, 
+                    aqui puedes detallar informacion al respecto. Rellena solamente aquellos campos de los que tengas informacion precisa </Text> 
                 </View>
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
@@ -798,7 +799,10 @@ return(
                         customStyles={styles.inputContainer}
                         placeholder="1000 letras max"
                         />
-                    <View style={{marginBottom: 30}}>
+                        <View style={{marginTop: 30}}>
+                            <CustomButton text="Guardar" bgColor={"#62a256"} fgColor='white' iconName={null} onPress={handleSubmit(updateData)} />
+                        </View>
+                        <View>
                             <CustomButton text="Borrar datos" bgColor={"#B00020"} fgColor='white' iconName={null} onPress={removeData} />
                         </View>
                 </View>

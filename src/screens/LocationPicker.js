@@ -1,21 +1,24 @@
 
-import React, { useState, useEffect, useLayoutEffect, useContext } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useContext, useRef } from 'react';
 import type {Node} from 'react';
 
 import {
     StyleSheet,
     View,
     Text,
-    Dimensions,
+    Image, 
+    Platform,
     Button,
     TouchableOpacity,
   } from 'react-native';
+
+import Svg from 'react-native-svg';
 
  import { HeaderBackButton } from '@react-navigation/elements';
 //import { HeaderBackButton } from '@react-navigation/stack';
 import  Snackbar  from "react-native-snackbar";
 
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {Marker, UrlTile} from 'react-native-maps';
 
 // import RNLocation from 'react-native-location';
 import { ObservationContext } from '../context/ObservationContext';
@@ -25,13 +28,17 @@ const LocationPicker: () => Node = ({ route, navigation }) => {
     const { location } = useContext(LocationContext);
     const { editingObservation, setEditingObservation, observations, updateObservations, setObservations,selectedIndex} = useContext(ObservationContext);
     const [pickedLocation, setPickedLocation]= useState({latitude:Number(editingObservation.location.latitude),longitude:Number(editingObservation.location.longitude)}); 
+    const [newDelta, setNewDelta]=useState({latitude: 0.0220, longitude: 0.0170})
+    const [newRegion, setNewRegion]=useState({latitude:Number(editingObservation.location.latitude),longitude:Number(editingObservation.location.longitude)}); 
     // const [ observation, setObservation ] = useState(observations[route.params?.index]);
     const [marker, setMarker] = useState({
       // coordinate: editingObservation.location,
       coordinate: {latitude:Number(editingObservation.location.latitude),longitude:Number(observations[selectedIndex].location.longitude)},
       key: 1,
       color: '#ff0000'
-  });
+    });
+
+    // const map: LegacyRef<MapView> = useRef(null);
 
     // useEffect(()=>{
     //   console.log('Location picked updated...');
@@ -80,49 +87,80 @@ const LocationPicker: () => Node = ({ route, navigation }) => {
       //check documentation here: https://reactnavigation.org/docs/navigation-prop/#setparams
     }, [navigation, pickedLocation]);
 
-    const getMapRegion = () => {
-      //console.log('Updating map location');
-      console.log(location); 
-       
-      return {latitude: pickedLocation.latitude ? pickedLocation.latitude : location?.latitude,
-              longitude: pickedLocation.longitude ? pickedLocation.longitude : location?.longitude,
-              latitudeDelta: pickedLocation.latitudeDelta ? pickedLocation.latitudeDelta : location?.latitudeDelta,
-              longitudeDelta: pickedLocation.longitudeDelta ? pickedLocation.longitudeDelta : location?.longitudeDelta,
+    const getMapRegion = (data) => {       
+      return {latitude: newRegion.latitude ? newRegion.latitude : location?.latitude,
+              longitude: newRegion.longitude ? newRegion.longitude : location?.longitude,
+              latitudeDelta: newDelta.latitude,//pickedLocation.latitudeDelta ? pickedLocation.latitudeDelta : location?.latitudeDelta,
+              longitudeDelta: newDelta.longitude//pickedLocation.longitudeDelta ? pickedLocation.longitudeDelta : location?.longitudeDelta,
             }
       
     };
 
     const onMapPress = (e) => {
-        //console.log(e.nativeEvent.coordinate)
+        // console.log(e.nativeEvent)
         setMarker({
             coordinate: e.nativeEvent.coordinate,
             key: 1,
             color: '#ff0000'
         })
         setPickedLocation(e.nativeEvent.coordinate);
+       // setNewRegion({latitude: e.nativeEvent.coordinate.latitude,longitude:e.nativeEvent.coordinate.longitude });
     }
+
+   
 
 return(
     <View style={styles.container}>
         <MapView
           // provider={this.props.provider}
+          provider={Platform.OS == "android" ?  "google" : null}
           style={styles.map}
           showsUserLocation = {true}
-          mapType="satellite"
-          initialRegion={{
-            latitude: pickedLocation.latitude ? pickedLocation.latitude : location.latitude,
-            longitude: pickedLocation.longitude ? pickedLocation.longitude : location.longitude,
-            latitudeDelta: pickedLocation.latitudeDelta ? pickedLocation.latitudeDelta : location.latitudeDelta,
-            longitudeDelta: pickedLocation.longitudeDelta ? pickedLocation.longitudeDelta : location.longitudeDelta,
-          }}
+          // mapType= {Platform.OS == "android" ? "terrain" : "satellite"}
+          // initialRegion={{
+          //   latitude: pickedLocation.latitude ? pickedLocation.latitude : location.latitude,
+          //   longitude: pickedLocation.longitude ? pickedLocation.longitude : location.longitude,
+          //   latitudeDelta: delta.latitude,//pickedLocation.latitudeDelta ? pickedLocation.latitudeDelta : location.latitudeDelta,
+          //   longitudeDelta: delta.longitude//</View>pickedLocation.longitudeDelta ? pickedLocation.longitudeDelta : location.longitudeDelta,
+          // }}
           onPress={onMapPress}
+          onRegionChangeComplete={(region) => {
+            // console.log(region);
+            setNewDelta({latitude: (region.latitudeDelta < 0.0170 ? 0.0170 : region.latitudeDelta),longitude:(region.longitudeDelta < 0.0200 ? 0.0200 : region.longitudeDelta) })
+            setNewRegion({latitude: region.latitude,longitude:region.longitude })}
+          }
           region={getMapRegion()}>
+            <UrlTile
+              /**
+               * The url template of the tile server. The patterns {x} {y} {z} will be replaced at runtime
+               * For example, http://c.tile.openstreetmap.org/{z}/{x}/{y}.png
+               */
+              urlTemplate={"https://4umaps.atesmaps.org/{z}/{x}/{y}.png"}
+              /**
+              * The maximum zoom level for this tile overlay. Corresponds to the maximumZ setting in
+              * MKTileOverlay. iOS only.
+              */
+              maximumZ={19}
+              
+              /**
+              * flipY allows tiles with inverted y coordinates (origin at bottom left of map)
+              * to be used. Its default value is false.
+              */
+              flipY={false}
+            />
          { marker ? 
             <Marker
               key={marker.key}
               coordinate={marker.coordinate}
-              pinColor={marker.color}
-            />
+             
+            >
+              <Svg style={styles.pin} >
+                <Image style={styles.pin}
+                     source={require('../../assets/images/pins/atesmaps-blue.png')}/> 
+              </Svg>
+              {/* <Image style={styles.pin}
+                     source={require('../../assets/images/pins/atesmaps-blue.png')}/> */}
+            </Marker>
             : null
           }
         </MapView>
@@ -140,6 +178,7 @@ return(
           <TouchableOpacity
             onPress={() => {
               setPickedLocation({latitude:location.latitude,longitude:location.longitude});
+              setNewRegion({latitude: location.latitude,longitude:location.longitude });
               setMarker({
                 coordinate: {latitude:location.latitude,longitude:location.longitude},
                 key: 1,
@@ -183,6 +222,22 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       marginVertical: 10,
       backgroundColor: 'transparent',
+    },
+    pin: {
+      ...Platform.select({
+        ios: {
+          width: 42,
+          height: 50,
+          marginBottom: 55,
+        },
+        android: {
+          marginBottom: 0,
+        },
+        default: {
+          // other platforms, web for example
+          marginBottom: 0,
+        },
+      }),
     },
   });
 

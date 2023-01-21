@@ -503,6 +503,7 @@
 			baseConfigurationReference = 1EB5A3AE3111777A4384492F /* Pods-atesmapsApp-atesmapsAppTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 5RWQ925M98;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -531,6 +532,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 5RWQ925M98;
 				INFOPLIST_FILE = atesmapsAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -555,7 +557,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 5RWQ925M98;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = atesmapsApp/Info.plist;
@@ -563,14 +566,15 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.3;
+				MARKETING_VERSION = 0.2.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.atesmapsapp;
+				PRODUCT_BUNDLE_IDENTIFIER = org.atesmaps.pyrscope;
 				PRODUCT_NAME = atesmapsApp;
+				PROVISIONING_PROFILE_SPECIFIER = "Pyrscope-Distribution";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -585,20 +589,20 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 5RWQ925M98;
 				INFOPLIST_FILE = atesmapsApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.2.3;
+				MARKETING_VERSION = 0.2.4;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.atesmapsapp;
+				PRODUCT_BUNDLE_IDENTIFIER = org.atesmaps.pyrscope;
 				PRODUCT_NAME = atesmapsApp;
 				PROVISIONING_PROFILE_SPECIFIER = "Pyrscope-Distribution";
 				SWIFT_VERSION = 5.0;

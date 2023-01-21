@@ -8,13 +8,15 @@
 
 import React from 'react';
 import type {Node} from 'react';
-
+import {enableLatestRenderer} from 'react-native-maps';
 import AppNav from './navigation/AppNav';
 
 import { AuthProvider } from './context/AuthContext';
 import { ObservationProvider } from './context/ObservationContext';
 import { LocationProvider } from './context/LocationContext';
 // import  Snackbar  from "react-native-snackbar";
+
+enableLatestRenderer();
 
 const App: () => Node = () => {
   // Snackbar.show({

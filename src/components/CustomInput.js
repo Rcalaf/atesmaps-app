@@ -1,8 +1,8 @@
-import React from 'react';
+import React,{forwardRef} from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
 import {Controller} from 'react-hook-form';
 
-const CustomInput = ({
+const CustomInput = forwardRef(({
   control,
   name,
   rules = {},
@@ -12,14 +12,15 @@ const CustomInput = ({
   numberOfLines=1,
   keyboardType='default',
   onPress,
-  customStyles={}
-}) => {
+  customStyles={},
+  blurOnTap=false,
+},ref) => {
+  if(blurOnTap && ref?.current) ref.current.blur(); 
   return (
     <Controller
       control={control}
       name={name}
       rules={rules}
-
       render={({field: {value, onChange, onBlur}, fieldState: {error}}) => (
         <>
           <View
@@ -41,6 +42,7 @@ const CustomInput = ({
               style={multiline ? styles.textArea : styles.input }
               secureTextEntry={secureTextEntry} 
               placeholderTextColor="#000" 
+              ref={ref}
             />
           </View>
           {error && (
@@ -50,7 +52,7 @@ const CustomInput = ({
       )}
     />
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

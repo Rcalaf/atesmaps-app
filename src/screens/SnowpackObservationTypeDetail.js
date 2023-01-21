@@ -366,7 +366,8 @@ return(
         <ScrollView >
             <View style={styles.container}>
                 <View style={styles.introContainer} >
-                    <Text style={styles.intro}>manto nieve text intro.... HERE </Text> 
+                    <Text style={styles.intro}>Has evaluado la estabilidad del manto durante tu salida? 
+                    Rellena solamente aquellos campos de los que tengas informacion precisa </Text> 
                 </View>
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
@@ -720,29 +721,13 @@ return(
                         customStyles={styles.inputContainer}
                         placeholder="1000 letras max"
                         />
-                    <View style={{marginBottom: 30}}>
-                            <CustomButton text="Borrar datos" bgColor={"#B00020"} fgColor='white' iconName={null} onPress={removeData} />
+                    <View style={{marginTop: 30}}>
+                            <CustomButton text="Guardar" bgColor={"#62a256"} fgColor='white' iconName={null} onPress={handleSubmit(updateData)} />
                         </View>
+                    <View>
+                        <CustomButton text="Borrar datos" bgColor={"#B00020"} fgColor='white' iconName={null} onPress={removeData} />
+                    </View>
                 </View>
-
-                {/* <View style={styles.formContainer} >
-                    <View style={styles.spacer}></View>
-                         <Text>Otras observaciones:</Text>
-
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                value={comments}
-                                multiline={true}
-                                numberOfLines={4}
-                                style={styles.input}
-                                placeholder={"1000 letras max"}
-                                onChangeText={(text) => setComments(text)}
-                                />
-                        </View>
-                        <View style={{marginBottom: 30}}>
-                            <CustomButton text="Borrar datos" bgColor={"#B00020"} fgColor='white' iconName={null} onPress={removeData} />
-                        </View>
-                </View>  */}
                 
             </View>
             

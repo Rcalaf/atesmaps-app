@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useLayoutEffect, useContext} from "react";
-import { Text, View, ActivityIndicator, Button, Alert, ScrollView, StyleSheet, SafeAreaView, Keyboard } from "react-native";
+import React, {useState, useEffect, useLayoutEffect, useContext, useRef} from "react";
+import { Text, View, ActivityIndicator, Button, Platform, ScrollView, StyleSheet, SafeAreaView, Keyboard } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import moment from 'moment';
 
@@ -18,7 +18,7 @@ import CustomInput from "../components/CustomInput";
 import { ObservationContext } from '../context/ObservationContext';
 import { AuthContext } from '../context/AuthContext';
 import  Snackbar  from "react-native-snackbar";
-import { UpdateIdentityPoolCommand } from "@aws-sdk/client-cognito-identity";
+// import { UpdateIdentityPoolCommand } from "@aws-sdk/client-cognito-identity";
 
 
 export default function ObservationDetail({ route, navigation }) {
@@ -37,7 +37,9 @@ export default function ObservationDetail({ route, navigation }) {
 
     const [rawDate, setRawDate] = useState(moment(observation.date).toDate());
     const [show, setShow] = useState(false);
-    
+    const [showAndroidDatePicker, setShowAndroidDatePicker] = useState(false);
+    const [showAndroidTimePicker, setShowAndroidTimePicker] = useState(false);
+    const dateTimeInput = useRef(null);
 
     const formatLocation = (locationDetails) =>{
       return locationDetails?.latitude + ', ' +locationDetails?.longitude;
@@ -138,7 +140,7 @@ export default function ObservationDetail({ route, navigation }) {
     const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
       defaultValues: {
         title: editingObservation.title,
-        date: moment(editingObservation.date).format('MMMM Do YYYY, hh:mm:ss'),
+        date: moment(editingObservation.date).format('MMMM Do YYYY, HH:mm:ss'),
         location: formatLocation(editingObservation.location),
       }
     });
@@ -216,54 +218,33 @@ export default function ObservationDetail({ route, navigation }) {
     }; 
 
     const onChange = (event, selectedDate) => {
+      if(Platform.OS == "android"){
+        if(showAndroidTimePicker) setShowAndroidTimePicker(false);
+        if(showAndroidDatePicker) setShowAndroidDatePicker(false);          
+      }else{
+        setShow(false);
+      }
+      
       const currentDate = selectedDate;
-      setShow(false);
-      setRawDate(currentDate);      
-      setValue('date',moment(currentDate).format('MMMM Do YYYY, hh:mm:ss'))
+      currentDate && setRawDate(currentDate);   
+      setValue('date',moment(currentDate).format('MMMM Do YYYY, HH:mm:ss'))
     };
 
     const showDatepicker = () => {
-      // console.log('showing date picker...');
+      console.log('showing date picker...');
       // showMode('date');
       setShow(!show);
     };
 
-    // useEffect(()=>{
-    //   console.log('Observation has been updated');
-    //   // editingObservation.user = userDetails.userId;
-    //   setObservation(observations[selectedIndex]);
-    //  // console.log(observation);
-    // },[observations]);
 
     useEffect(()=>{
-      console.log('Updating editing observation on Observation details');
-      // editingObservation.user = userDetails.userId;
-      
+      //console.log('Updating editing observation on Observation details');
       setObservation(editingObservation);
-      setLocation(editingObservation.location)
+      setLocation(editingObservation.location);
       setValue('location',formatLocation(editingObservation.location))
-      // setImages(editingObservation.images)
-      // console.log(editingObservation.images.length)
       
     },[editingObservation]);
 
-    // useEffect(()=>{
-    //   setImages(editingObservation.images)
-    // })
-
-
-    // useEffect(()=>{
-    //    console.log('observations has been Updated...')
-    //    console.log(observation);
-    // },[observation])
-
-    // useEffect(()=>{
-    //   setLocation(editingObservation.location);
-    //   setValue('location', formatLocation(editingObservation.location));
-    //   route.params={index}
-    // },[route.params?.update]);
-
-    
     if( isLoading ) {
       return(
           <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>
@@ -271,6 +252,83 @@ export default function ObservationDetail({ route, navigation }) {
           </View>
       )
     }
+    const plaformDateComponent = () =>{
+    if (Platform.OS == "android") {
+      return (
+        <>
+          <View style={{display: 'flex',  flexDirection: 'row', marginBottom: 5}}>
+              <CustomButton text="Día"  
+                            bgColor={"#48a5e9"} 
+                            fgColor='white' 
+                            customStyle={{width: '33%', marginRight: 15, padding: 11, height:40}}
+                            iconName={null} 
+                            onPress={() => {
+                              console.log('photos library to be called');
+                              setShowAndroidDatePicker(true);
+                            }} />
+              <CustomButton text="Hora"  
+                            customStyle={{width: '33%', marginRight: 15, padding: 11, height:40}}
+                            bgColor={"#48a5e9"} 
+                            fgColor='white' 
+                            iconName={null}
+                            onPress={() => {
+                              console.log('photos library to be called');
+                              setShowAndroidTimePicker(true);
+                            }} />
+            </View>
+          {showAndroidDatePicker && (
+            <View style={{display: 'flex',  flexDirection: 'row', marginBottom: 5}}>
+              <DateTimePicker
+                style={{ width: '43%'}}
+                testID="datePicker"
+                value={rawDate}
+                mode='date'
+                onChange={onChange}
+              />
+            </View>
+          )}  
+
+          {showAndroidTimePicker && (
+            <View style={{display: 'flex',  flexDirection: 'row', marginBottom: 5}}>
+                <DateTimePicker
+                  style={{width: '43%'}}
+                  testID="timePicker"
+                  value={rawDate}
+                  mode='time'
+                  is24Hour={true}
+                  onChange={onChange}
+                />
+              </View>
+          )}  
+        </>
+      )
+    }else{
+      return (
+        <>
+          {show && (
+            <View style={{display: 'flex',  flexDirection: 'row', marginBottom: 5}}>
+              <DateTimePicker
+                style={{ width: '43%'}}
+                testID="datePicker"
+                value={rawDate}
+                mode='date'
+                is24Hour={true}
+                onChange={onChange}
+              />
+              <DateTimePicker
+                style={{width: '33%'}}
+                testID="timePicker"
+                value={rawDate}
+                mode='time'
+                is24Hour={true}
+                onChange={onChange}
+              />
+            </View>
+          )} 
+        </> 
+      )
+    }
+  }
 
     return (
       <SafeAreaView style={styles.safeContainer}>
@@ -284,51 +342,20 @@ export default function ObservationDetail({ route, navigation }) {
           
           <CustomInput
             name="date"
-            placeholder={moment().format('MMMM Do YYYY, hh:mm:ss')}
+            placeholder={moment().format('MMMM Do YYYY, HH:mm:ss')}
             control={control}
             rules={{required: 'Date is required'}}
             onPress={showDatepicker}
+            blurOnTap={Platform.OS == "android" ? false : true}
+            ref={dateTimeInput}
           />
-        
-        {/* <CustomButton 
-            text="Date" 
-            type="TERTIARY"
-            onPress={showDatepicker}
-          /> */}
 
-        {show && (
-          
-          <View style={{display: 'flex', flexDirection: 'row'}}>
-            <DateTimePicker
-              style={{ width: '43%',}}
-              testID="datePicker"
-              value={rawDate}
-              mode='date'
-              is24Hour={true}
-              onChange={onChange}
-            />
-            <DateTimePicker
-              style={{width: '33%'}}
-              testID="TimePicker"
-              value={rawDate}
-              mode='time'
-              is24Hour={true}
-              onChange={onChange}
-            />
-          </View>
-        )}  
-
-          {/* <CustomInput
-            name="location"
-            placeholder={'Ubicación'}
-            control={control}
-            rules={{required: 'Ubicación is required'}}
-            onPress={() => navigation.navigate('Location Picker')}
-          />  */}
-
+          {plaformDateComponent()}
+  
           <CustomButton 
             text={'Ubicación: '+ getValues("location")} 
             type="custom"
+            order="top"
             fColor="gray"
             onPress={() => {
               navigation.navigate('Location Picker',{index, resetPin: true});
@@ -338,6 +365,7 @@ export default function ObservationDetail({ route, navigation }) {
           <CustomButton 
             text={`Fotos (${editingObservation.images ? editingObservation.images.length : 0})`}
             type="custom"
+            order="bottom"
             fColor="gray"
             onPress={() => {
               console.log('photos library to be called');
@@ -355,12 +383,13 @@ export default function ObservationDetail({ route, navigation }) {
             <CustomButton text="Incident" type="custom" order="bottom" bgColor={"#e15141"} fgColor='white' iconName={"add-circle"} onPress={()=>{console.log('seting type Incident')}} /> */}
           </View>
           <View style={{marginTop: 50}}>
-            <CustomButton text="Subir a Atesmaps" bgColor={"#62a256"} fgColor='white' iconName={null} onPress={handleSubmit(onSubmit)} />
+            <CustomButton text="Subir a Atesmaps"  bgColor={"#62a256"} fgColor='white' iconName={null} onPress={handleSubmit(onSubmit)} />
           </View>
-          <View >
+          <View style={{marginBottom: 30}}>
             <CustomButton text="Eliminar" 
                 bgColor={"#B00020"} 
                 fgColor='white' 
+               
                 iconName={null} 
                 onPress={() => {
                   //let index = selectedIndex;
@@ -416,6 +445,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    paddingBottom: 40
+    paddingBottom: Platform.OS == "android" ? 0 : 40
 },
 });

@@ -3,7 +3,6 @@ import React, { useState, useEffect,useContext } from 'react';
 import type {Node} from 'react';
 
 import {
-    StatusBar,
     StyleSheet,
     Button,
     Pressable,
