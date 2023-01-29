@@ -14,15 +14,14 @@ const iconComponents = require('../../assets/images/tabbar/components.png');
 
 const bottomMenuData = [
   {
-    name: 'Perfil',
-    component: ProfileStack,
-    icon: 'account',
-  },
-
-  {
     name: 'Observaciones',
     component: ObservationStack,
     icon: 'eye',
+  },
+  {
+    name: 'Perfil',
+    component: ProfileStack,
+    icon: 'account',
   },
 //   {
 //     name: 'Pages',

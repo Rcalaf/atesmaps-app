@@ -48,7 +48,7 @@ export const ObservationProvider = ({children}) => {
             
         } catch (err){
             console.log(err);
-            setHistoricObservations([]);
+            setHistoricObservations(historicObservations);
         }
         let list = JSON.parse(await AsyncStorage.getItem('list'));
         if(list) setObservations(list);

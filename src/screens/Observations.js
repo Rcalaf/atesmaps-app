@@ -4,6 +4,7 @@ import {
   Text, 
   View, 
   FlatList, 
+  RefreshControl,
   Pressable,
   Button,
    } from 'react-native';
@@ -20,12 +21,13 @@ import Item from '../components/ObservationItem';
 
 export default function ObservationDetail({ navigation }) {
     const {location} = useContext(LocationContext);
-    const {lastIndex, observations, historicObservations, newObservation} = useContext(ObservationContext);
+    const {lastIndex, observations, historicObservations, newObservation, getData} = useContext(ObservationContext);
     const {userDetails} = useContext(AuthContext);
 
     // const [user, setUser] = useState(userDetails);
     const [drafts, setDrafts] = useState(observations);
     const [uploaded, setUplodaded] = useState(historicObservations);
+    const [refreshing, setRefreshing] = useState(false);
 
     useLayoutEffect(() => {
       navigation.setOptions({
@@ -75,7 +77,13 @@ export default function ObservationDetail({ navigation }) {
 
     useEffect(()=>{
       setUplodaded(historicObservations);
+      setRefreshing(false);
     },[historicObservations])
+
+    const handleRefreshing = () => {
+      setRefreshing(true);
+      getData();
+    }
 
     if (!userDetails.status) {
       
@@ -169,6 +177,9 @@ export default function ObservationDetail({ navigation }) {
         data={uploaded}
         renderItem={({ item, index }) => <Item item={item} index={index} navigation={navigation}/>}
         keyExtractor={(item,index) => index}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefreshing} />
+        }
         />
     }
 
