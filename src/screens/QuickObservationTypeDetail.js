@@ -73,6 +73,32 @@ const { control, handleSubmit, formState: { errors }, getValues, setValue, reset
     }
 });
 
+useEffect(()=>{
+    if (errors && Object.keys(errors).length != 0) {
+        let errorsText = 'Revisa los siguientes campos: \n';
+        for (const key in errors) {
+            errorsText += `${key}: ${errors[key]['message']} \n`
+            // console.log(`${key}: ${errors[key]}`);
+        }
+        Snackbar.show({
+            text: errorsText,
+            duration: Snackbar.LENGTH_INDEFINITE,
+            numberOfLines: 4,
+            textColor: "#fff",
+            backgroundColor: "#B00020",
+            action: {
+                text: 'Cerrar',
+                textColor: 'white',
+                onPress: () => { /* Do something. */ },
+            },
+        });
+    }
+},[errors])
+
+useEffect(() => {
+    Snackbar.dismiss();
+},[])
+
 useLayoutEffect(() => {
     navigation.setOptions({
       // title: value === '' ? 'No title' : value,

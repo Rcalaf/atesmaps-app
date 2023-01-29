@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import type {Node} from 'react';
+// import type {Node} from 'react';
+import  Snackbar  from "react-native-snackbar";
 
 import {
     StatusBar,
@@ -11,8 +12,8 @@ import {
     SafeAreaView
   } from 'react-native';
 
- import axios from 'axios';
- import { BASE_URL } from '../config';
+//  import axios from 'axios';
+//  import { BASE_URL } from '../config';
 
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
@@ -44,8 +45,28 @@ const UserForm = ({preloadedValues, onSubmit}) => {
       }
     });
 
-    // console.log('---- Preloading values on the form ----');
-    // console.log(preloadedValues);
+
+    useEffect(()=>{
+        if (errors && Object.keys(errors).length != 0) {
+            let errorsText = 'Revisa los siguientes campos: \n';
+            for (const key in errors) {
+                errorsText += `${key}: ${errors[key]['message']} \n`
+                // console.log(`${key}: ${errors[key]}`);
+            }
+            Snackbar.show({
+                text: errorsText,
+                duration: Snackbar.LENGTH_INDEFINITE,
+                numberOfLines: 4,
+                textColor: "#fff",
+                backgroundColor: "#B00020",
+                action: {
+                    text: 'Cerrar',
+                    textColor: 'white',
+                    onPress: () => { /* Do something. */ },
+                },
+            });
+        }
+    },[errors])
 
     //Activity type:
     const genderOptions = [
