@@ -48,6 +48,7 @@ const ForgotPassword: () => Node = ({navigation}) => {
         textColor: "#fff",
         backgroundColor: "#62a256",
       });
+      navigation.goBack(null)
       // console.log(response);
     }catch (err){
       console.log(err);
