@@ -101,9 +101,7 @@ const takePhotoFromCamera = () => {
     cropping: true,
     compressImageQuality: 0.7
   }).then(chosenImage => {
-
     setImages( (arr) => { return [...arr, {path: chosenImage.path, filename: chosenImage.filename}]});
- 
     sheetRef.current.snapTo(1);
   });
 }

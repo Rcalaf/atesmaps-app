@@ -14,13 +14,13 @@ import {
 
 import Svg from 'react-native-svg';
 
- import { HeaderBackButton } from '@react-navigation/elements';
+import { HeaderBackButton } from '@react-navigation/elements';
 //import { HeaderBackButton } from '@react-navigation/stack';
 import  Snackbar  from "react-native-snackbar";
 
 import MapView, {Marker, UrlTile} from 'react-native-maps';
 
-// import RNLocation from 'react-native-location';
+
 import { ObservationContext } from '../context/ObservationContext';
 import { LocationContext } from '../context/LocationContext';
 

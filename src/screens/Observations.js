@@ -18,13 +18,14 @@ import { ObservationContext } from '../context/ObservationContext';
 import { LocationContext } from '../context/LocationContext';
 
 import Item from '../components/ObservationItem';
+import Loading from '../components/Loading';
 
 export default function ObservationDetail({ navigation }) {
-    const {location} = useContext(LocationContext);
-    const {lastIndex, observations, historicObservations, newObservation, getData} = useContext(ObservationContext);
+    const {currentLocation, getOneTimeLocation} = useContext(LocationContext);
+    const {isLoading, lastIndex, observations, historicObservations, newObservation, getData} = useContext(ObservationContext);
     const {userDetails} = useContext(AuthContext);
 
-    // const [user, setUser] = useState(userDetails);
+    //const [user, setUser] = useState(userDetails);
     const [drafts, setDrafts] = useState(observations);
     const [uploaded, setUplodaded] = useState(historicObservations);
     const [refreshing, setRefreshing] = useState(false);
@@ -35,19 +36,20 @@ export default function ObservationDetail({ navigation }) {
         headerRight: userDetails.status ? () => (
                 <Pressable
                   onPress={async ()  => {
-                    await newObservation({
-                      title: 'New observation',
-                      date: Date.now(),
-                      location: {
-                        latitude: location.latitude,
-                        longitude: location.longitude
-                      },
-                      directoryId: userDetails._id+moment().format('X'),
-                      observationTypes:{},
-                      images: [],
-                      status: 0,
-                      submitted: false,
-                    });
+                    // getOneTimeLocation()
+                    // await newObservation({
+                    //   title: 'Nueva Observación',
+                    //   date: Date.now(),
+                    //   location: {
+                    //     latitude: currentLocation.latitude,
+                    //     longitude: currentLocation.longitude
+                    //   },
+                    //   directoryId: userDetails._id+moment().format('X'),
+                    //   observationTypes:{},
+                    //   images: [],
+                    //   status: 0,
+                    //   submitted: false,
+                    // });
                     let index = lastIndex;      
                     navigation.navigate('Observación', {index})
                     }}
@@ -80,9 +82,25 @@ export default function ObservationDetail({ navigation }) {
       setRefreshing(false);
     },[historicObservations])
 
+    useEffect(()=>{
+      return function cleanup() {
+        console.log('cleaning up observations ')
+        getOneTimeLocation();
+      };
+    },[])
+
     const handleRefreshing = () => {
       setRefreshing(true);
       getData();
+    }
+
+    if( isLoading &&  uploaded.length < 1 ) {
+      return(
+          <Loading />
+          // <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>
+          //     <ActivityIndicator size={'large'}/> 
+          // </View>
+      )
     }
 
     if (!userDetails.status) {
@@ -120,19 +138,19 @@ export default function ObservationDetail({ navigation }) {
             style={{marginBottom: 20}}/>
           <Text>No se ha creado ninguna observación.</Text>
           <Button style={styles.button} title="Añadir observación"  onPress={async () => {
-                  await newObservation({
-                    title: 'New observation',
-                    date: Date.now(),
-                    location: {
-                      latitude: location.latitude,
-                      longitude: location.longitude
-                    },
-                    directoryId: userDetails._id+moment().format('X'),
-                    observationTypes:{},
-                    images: [],
-                    status: 0,
-                    submitted: false,
-                  });
+                  // await newObservation({
+                  //   title: 'New observation',
+                  //   date: Date.now(),
+                  //   location: {
+                  //     latitude: currentLocation.latitude,
+                  //     longitude: currentLocation.longitude
+                  //   },
+                  //   directoryId: userDetails._id+moment().format('X'),
+                  //   observationTypes:{},
+                  //   images: [],
+                  //   status: 0,
+                  //   submitted: false,
+                  // });
                   let index = lastIndex;      
                   navigation.navigate('Observación', {index})
                   }} />

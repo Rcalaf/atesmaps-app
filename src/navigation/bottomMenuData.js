@@ -1,9 +1,11 @@
-import Profile from '../screens/Profile';
-import LocationPicker from '../screens/LocationPicker';
+// import Profile from '../screens/Profile';
+// import LocationPicker from '../screens/LocationPicker';
 import ObservationStack from './ObservationStack';
 import ProfileStack from './ProfileStack';
+
 // import PagesScreen from '../pages/PagesViewContainer';
 // import ComponentsScreen from '../components/ComponentsViewContainer';
+import TrackRecorder from '../screens/TrackRecorder';
 
 const iconHome = require('../../assets/images/tabbar/home.png');
 const iconCalendar = require('../../assets/images/tabbar/calendar.png');
@@ -18,6 +20,11 @@ const bottomMenuData = [
     component: ObservationStack,
     icon: 'eye',
   },
+  // {
+  //   name: 'Tracks',
+  //   component: TrackRecorder,
+  //   icon: 'chart-timeline-variant',
+  // },
   {
     name: 'Perfil',
     component: ProfileStack,

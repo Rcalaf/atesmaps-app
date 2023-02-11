@@ -28,7 +28,7 @@ export const AuthProvider = ({children}) => {
             console.log(BASE_URL);
             console.log('---------');
             let response = await axios.post(`${BASE_URL}/auth/login`,{'email': email, 'pwd':password});
-            console.log(response.data);
+            // console.log(response.data);
             //console.log(response.data.accessToken);
             //let user = {userName, userEmail, userId} = response.data;
             let user = response.data.user;
@@ -116,7 +116,7 @@ export const AuthProvider = ({children}) => {
     }
 
     useEffect(()=>{
-        console.log('checking if logged in....')
+        // console.log('checking if logged in....')
         isLoggedIn();
     }, [])
 

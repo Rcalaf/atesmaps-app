@@ -16,6 +16,7 @@ import {
 import BottomTabs from './BottomMenu';
 import AuthStack from './AuthStack';
 import { AuthContext } from '../context/AuthContext';
+import Loading from '../components/Loading';
 
 
 const AppNav: () => Node = () => {
@@ -29,9 +30,10 @@ const AppNav: () => Node = () => {
 
     if( isLoading ) {
         return(
-            <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>
-                <ActivityIndicator size={'large'}/> 
-            </View>
+            <Loading />
+            // <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>
+            //     <ActivityIndicator size={'large'}/> 
+            // </View>
         )
     }
     

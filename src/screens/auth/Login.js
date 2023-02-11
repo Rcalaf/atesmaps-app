@@ -65,20 +65,7 @@ const Login: () => Node = ({navigation}) => {
             // customStyles={{width:"100%"}}
             keyboardType='email-address'
             rules={{required: 'Introduce el Email'}}
-
-            // onPress={showDatepicker}
             />
-
-          {/* <View style={{flexDirection: 'row', borderBottomColor:'#ccc', borderBottomWidth: 1, paddingBottom: 8, marginBottom: 25}}>
-            <MaterialIcons name='alternate-email' size={20} color="#333" style={{marginRight: 5}}/>
-            <TextInput 
-              placeholder='Email' 
-              style={{flex: 1, paddingVertical: 0}} 
-              keyboardType='email-address'
-              value={email}
-              onChangeText={text => setEmail(text)} />
-
-          </View> */}
 
           <CustomInput
             name="password"
@@ -87,37 +74,13 @@ const Login: () => Node = ({navigation}) => {
             // customStyles={{width:"100%"}}
             secureTextEntry={true}
             rules={{required: 'Introduce el password'}}
-            // onPress={showDatepicker}
             />
-          {/* <View style={{flexDirection: 'row', borderBottomColor:'#ccc', borderBottomWidth: 1, paddingBottom: 8, marginBottom: 25}}>
-            <MaterialIcons 
-              name='lock' 
-              size={20} 
-              color="#333" 
-              style={{marginRight: 5}}/>
-            <TextInput 
-              placeholder='Password' 
-              style={{flex: 1, paddingVertical: 0}} 
-              secureTextEntry={true}
-              value={password}
-              onChangeText={text => setPassword(text)} />
-              <TouchableOpacity onPress={() => {
-                  navigation.navigate('Forgot');
-              }}>
-                 <Text style={{color: '#3098CF', fontWeight: '700'  }}>Forgot?</Text>
-              </TouchableOpacity>
-          </View> */}
           <TouchableOpacity style={{alignItems: 'flex-end', marginBottom: 25}} onPress={() => {navigation.navigate('Forgot');}}>
                  <Text style={{color: '#3098CF', fontWeight: '700'  }}>Olvidaste el password?</Text>
           </TouchableOpacity>
           <View style={{marginTop: 0}}>
                 <CustomButton text="Login" bgColor={"#3098CF"} fgColor='white' iconName={null} onPress={handleSubmit(submit)} />
-            </View>
-          {/* <TouchableOpacity style={{backgroundColor: '#3098CF', padding: 20, borderRadius:10, marginBottom: 20}} onPress={() => {
-            login(email, password)
-          }}>
-              <Text style={{textAlign:'center', color:'#fff', fontWeight: '700', fontSize: 17  }}>Login</Text>
-          </TouchableOpacity> */}
+          </View>
 
           <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom: 30}}>
             <Text> Crear una cuenta:</Text>

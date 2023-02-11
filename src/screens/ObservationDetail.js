@@ -4,6 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import moment from 'moment';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
+import Geolocation from 'react-native-geolocation-service';
 
 import axios from 'axios';
 import fs from "react-native-fs";
@@ -17,20 +18,40 @@ import CustomInput from "../components/CustomInput";
 
 import { ObservationContext } from '../context/ObservationContext';
 import { AuthContext } from '../context/AuthContext';
+import { LocationContext } from '../context/LocationContext';
 import  Snackbar  from "react-native-snackbar";
 // import { UpdateIdentityPoolCommand } from "@aws-sdk/client-cognito-identity";
 
 
 export default function ObservationDetail({ route, navigation }) {
-    const {editingObservation,setEditingObservation, selectedIndex, observations, getData, deleteObservation, updateObservations } = useContext(ObservationContext);
+ 
+    const {editingObservation,setEditingObservation, newObservation, selectedIndex, observations, getData, deleteObservation, updateObservations } = useContext(ObservationContext);
     const {userDetails,userToken} = useContext(AuthContext);
+    const {currentLocation, LATITUDE_DELTA,LONGITUDE_DELTA,getOneTimeLocation } = useContext(LocationContext)
 
-    const [isLoading, setIsLoading] = useState(false);
+    
+    const newObs = {
+      title: 'Nueva Observación',
+      date: Date.now(),
+      location: {
+        latitude: currentLocation.latitude,
+        longitude: currentLocation.longitude
+      },
+      directoryId: userDetails._id+moment().format('X'),
+      observationTypes:{},
+      images: [],
+      status: 0,
+      submitted: false,
+    }
+   
+
+    const [isLoading, setIsLoading] = useState(true);
 
     const [index, setIndex] = useState(route.params?.index);
     const [update, setUpdate] = useState(route.params?.update);
 
-    const [ observation, setObservation ] = useState(editingObservation);
+    const [ observation, setObservation ] = useState(Object.keys(editingObservation).length === 0 ? newObs : editingObservation );
+    // console.log(observation)
     const [ location, setLocation] = useState(editingObservation.location);
 
     // const [images, setImages] = useState(editingObservation.images);
@@ -40,6 +61,77 @@ export default function ObservationDetail({ route, navigation }) {
     const [showAndroidDatePicker, setShowAndroidDatePicker] = useState(false);
     const [showAndroidTimePicker, setShowAndroidTimePicker] = useState(false);
     const dateTimeInput = useRef(null);
+
+    useEffect(()=>{
+      if(Object.keys(editingObservation).length === 0){
+        setIsLoading(true);
+        Geolocation.getCurrentPosition(
+          //Will give you the current location
+          (position) => {
+            const newLocation = { ...position.coords, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA }
+            setLocation(newLocation)
+            setObservation({...observation, location: currentLocation })
+            setEditingObservation({...observation, location: currentLocation })
+            newObservation({...observation,title:'Nueva Observación', location: newLocation });
+            setIsLoading(false);
+          },
+          (error) => {
+            console.log(error)
+            setIsLoading(false);
+          },
+          {
+            enableHighAccuracy: false,
+            timeout: 3000,
+            maximumAge: 1000
+          },
+        );
+      }
+      // if(Object.keys(editingObservation).length === 0){
+      //   getOneTimeLocation();
+      // }
+      return function cleanup() {
+        console.log('cleaning up observation Details ');
+        setEditingObservation({});
+        setObservation({});
+        Snackbar.dismiss();
+      };
+    },[])
+
+    useEffect(() => {  
+      setValue('location', formatLocation(observation.location));
+      setIsLoading(false);
+    },[observation])
+    // useEffect(() => {  
+    //   if(Object.keys(editingObservation).length === 0){
+    //     console.log('refreshing view')
+    //     const handleNewObs = async () => {
+    //       console.log('Updating shit')
+    //       setLocation(currentLocation)
+    //       console.log(newObs)
+    //       console.log(observation)
+    //       console.log(editingObservation)
+    //       console.log(currentLocation.latitude, currentLocation.longitude)
+    //       // console.log({...observation, location: currentLocation });
+    //       setObservation({...observation, location: currentLocation })
+    //       setEditingObservation({...observation, location: currentLocation })
+    //       setValue('location', formatLocation(currentLocation));
+    //       await newObservation({...observation,title:'Nueva Observación', location: currentLocation });
+    //     }
+    //     handleNewObs();
+    //   }
+    //   setIsLoading(false);
+    // },[currentLocation])
+
+    useLayoutEffect(() => {  
+      setValue('location', formatLocation(currentLocation));
+    },[observation])
+
+
+
+
+
+     
+    // console.log(currentLocation)
 
     const formatLocation = (locationDetails) =>{
       return locationDetails?.latitude + ', ' +locationDetails?.longitude;
@@ -92,8 +184,8 @@ export default function ObservationDetail({ route, navigation }) {
           //headers: { "Content-Type": "multipart/form-data" },
           headers: {"Authorization": `Bearer ${userToken}`}
         });
-         console.log(response.status);
-         console.log(response.data);
+        //  console.log(response.status);
+        //  console.log(response.data);
 
         if (response.status === 201){
             console.log('uploading images...');
@@ -103,19 +195,20 @@ export default function ObservationDetail({ route, navigation }) {
             
             // console.log('cleaning local storage');
             getData();
-            setObservation({
-              title: 'Has no title',
-              date: Date.now(),
-              location: {
-                latitude: location.latitude,
-                longitude: location.longitude
-              },
-              directoryId: userDetails._id+moment().format('X'),
-              observationTypes:{},
-              status: 0,
-              images: [],
-              submitted: false,
-            });
+            setObservation({});
+            // setObservation({
+            //   title: 'Has no title',
+            //   date: Date.now(),
+            //   location: {
+            //     latitude: location.latitude,
+            //     longitude: location.longitude
+            //   },
+            //   directoryId: userDetails._id+moment().format('X'),
+            //   observationTypes:{},
+            //   status: 0,
+            //   images: [],
+            //   submitted: false,
+            // });
             setIsLoading(false);
             navigation.navigate('Lista de Observaciones');
             deleteObservation();
@@ -139,9 +232,9 @@ export default function ObservationDetail({ route, navigation }) {
 
     const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
       defaultValues: {
-        title: editingObservation.title,
-        date: moment(editingObservation.date).format('MMMM Do YYYY, HH:mm:ss'),
-        location: formatLocation(editingObservation.location),
+        title: observation.title,
+        date: moment(observation.date).format('MMMM Do YYYY, HH:mm:ss'),
+        location: formatLocation(observation.location),
       }
     });
 
@@ -168,7 +261,7 @@ export default function ObservationDetail({ route, navigation }) {
     },[errors])
 
     useEffect(() => {
-      Snackbar.dismiss();
+      getOneTimeLocation();
     },[])
 
     useLayoutEffect(() => {
@@ -187,7 +280,9 @@ export default function ObservationDetail({ route, navigation }) {
           />
         )
       });
-    }, [navigation,editingObservation,rawDate]);
+    }, [navigation, editingObservation, rawDate, currentLocation]);
+
+    
 
 
     const onSave = (data) => {
@@ -216,7 +311,7 @@ export default function ObservationDetail({ route, navigation }) {
     
     const onSubmit = (data) => {
       if(editingObservation.observationTypes.quick?.status ||
-        editingObservation.observationTypes.snowConditions?.status ||
+        editingObservation.observationTypes.snowpack?.status ||
         editingObservation.observationTypes.avalanche?.status){
         //console.log('at least one report...')
        
@@ -264,12 +359,19 @@ export default function ObservationDetail({ route, navigation }) {
 
 
     useEffect(()=>{
-      //console.log('Updating editing observation on Observation details');
+      console.log('Updating editing observation on Observation details');
       setObservation(editingObservation);
       setLocation(editingObservation.location);
       setValue('location',formatLocation(editingObservation.location))
       
     },[editingObservation]);
+
+    // useEffect(()=>{
+    //   console.log('Context location changed....')
+    //   console.log(currentLocation)
+    //   setLocation(currentLocation)
+
+    // },[currentLocation])
 
     if( isLoading ) {
       return(
@@ -402,9 +504,9 @@ export default function ObservationDetail({ route, navigation }) {
           <View style={{marginTop: 50}}>
               
             <Text style={{marginBottom: 10, fontWeight:'bold'}}>Observaciones</Text>
-            <CustomButton text="Quick" type="custom" order="top" bgColor={"#48a5e9"} fColor='white' iconName={observation.observationTypes.quick?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Rapida')} />
-            <CustomButton text="Avalanche" type="custom" order="middle" bgColor={"#4062ff"} fColor='white' iconName={observation.observationTypes.avalanche?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Avalancha')} /> 
-            <CustomButton text="Snowpack" type="custom" order="bottom" bgColor={"#48a5e9"} fColor='white' iconName={observation.observationTypes.snowpack?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Manto de nieve')} />
+            <CustomButton text="Quick" type="custom" order="top" bgColor={"#48a5e9"} fColor='white' iconName={observation.observationTypes?.quick?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Rapida')} />
+            <CustomButton text="Avalanche" type="custom" order="middle" bgColor={"#4062ff"} fColor='white' iconName={observation.observationTypes?.avalanche?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Avalancha')} /> 
+            <CustomButton text="Snowpack" type="custom" order="bottom" bgColor={"#48a5e9"} fColor='white' iconName={observation.observationTypes?.snowpack?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Manto de nieve')} />
             {/* <CustomButton text="Weather" type="custom" order="middle" bgColor={"#f5c144"} fgColor='white' iconName={"add-circle"} onPress={()=>{console.log('seting type Weather')}} />
             <CustomButton text="Incident" type="custom" order="bottom" bgColor={"#e15141"} fgColor='white' iconName={"add-circle"} onPress={()=>{console.log('seting type Incident')}} /> */}
           </View>
@@ -420,19 +522,20 @@ export default function ObservationDetail({ route, navigation }) {
                 onPress={() => {
                   //let index = selectedIndex;
                   deleteObservation();
-                  setObservation({
-                    title: 'Has no title',
-                    date: Date.now(),
-                    location: {
-                      latitude: location.latitude,
-                      longitude: location.longitude
-                    },
-                    directoryId: userDetails._id+moment().format('X'),
-                    observationTypes:{},
-                    status: 0,
-                    images: [],
-                    submitted: false,
-                  });
+                  setObservation({});
+                  // setObservation({
+                  //   title: 'Has no title',
+                  //   date: Date.now(),
+                  //   location: {
+                  //     latitude: location.latitude,
+                  //     longitude: location.longitude
+                  //   },
+                  //   directoryId: userDetails._id+moment().format('X'),
+                  //   observationTypes:{},
+                  //   status: 0,
+                  //   images: [],
+                  //   submitted: false,
+                  // });
                   navigation.navigate('Lista de Observaciones');
                 }} />
           </View>

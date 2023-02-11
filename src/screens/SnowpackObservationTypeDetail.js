@@ -211,18 +211,6 @@ const [altitudeRange1, setAltitudeRange1] = useState(snowpackValues.values?.alti
 const [altitudeRange2, setAltitudeRange2] = useState(snowpackValues.values?.altitudeRange?.range_2);
 const [altitudeRange3, setAltitudeRange3] = useState(snowpackValues.values?.altitudeRange?.range_3);
 const [altitudeRange4, setAltitudeRange4] = useState(snowpackValues.values?.altitudeRange?.range_4);
-// useEffect(()=>{
-//     let conditions = snowpackValues;
-//     conditions.values['altitudeRange'] = {
-//         range_1: altitudeRange1,
-//         range_2: altitudeRange2,
-//         range_3: altitudeRange3,
-//         range_4: altitudeRange4,
-//     }
-//     // conditions.status = true;
-//     setsnowpackValues(conditions);
-
-// },[altitudeRange1,altitudeRange2,altitudeRange3,altitudeRange4])
 
 const [orientationN, setOrientationN] = useState(snowpackValues.values?.orientation?.N);
 const [orientationNE, setOrientationNE] = useState(snowpackValues.values?.orientation?.NE);
@@ -232,37 +220,11 @@ const [orientationS, setOrientationS] = useState(snowpackValues.values?.orientat
 const [orientationSO, setOrientationSO] = useState(snowpackValues.values?.orientation?.SO);
 const [orientationO, setOrientationO] = useState(snowpackValues.values?.orientation?.O);
 const [orientationNO, setOrientationNO] = useState(snowpackValues.values?.orientation?.NO);
-// useEffect(()=>{
-//     let conditions = snowpackValues;
-//     conditions.values['orientation'] = {
-//         N: orientationN,
-//         NE: orientationNE,
-//         E: orientationE,
-//         SE: orientationSE,
-//         S: orientationS,
-//         SO: orientationSO,
-//         O: orientationO,
-//         NO: orientationNO,
-//     }
-//     // conditions.status = true;
-//     setsnowpackValues(conditions);
- 
-// },[orientationN,orientationNE,orientationE,orientationSE,orientationS,orientationO,orientationNO])
 
 const [depth, setDepth] = useState(snowpackValues.values?.depth);
-// useEffect(()=>{
-//     let conditions = snowpackValues;
-//     conditions.values['depth'] = depth
-//     // conditions.status = true;
-//     setsnowpackValues(conditions);
-// },[depth]);
+
 const [observationType, setObservationType] = useState(snowpackValues.values?.observationType);
-// useEffect(()=>{
-//     let conditions = snowpackValues;
-//     conditions.values['observationType'] = observationType
-//     // conditions.status = true;
-//     setsnowpackValues(conditions);
-// },[observationType]);
+
 const [woumpfs, setWoumpfs] = useState(snowpackValues.values?.woumpfs);
 const [sounds, setSounds] = useState(snowpackValues.values?.sounds);
 const [layerSnowType, setLayerSnowType] = useState(snowpackValues.values?.layerSnowType);
@@ -277,35 +239,8 @@ const [layerHardness, setLayerHardness] = useState(snowpackValues.values?.layerH
 const [snowHumidity, setSnowHumidity] = useState(snowpackValues.values?.snowHumidity);
 const [snowType, setSnowType] = useState(snowpackValues.values?.snowType);
 
-// useEffect(()=>{
-//     let conditions = snowpackValues;
-//     conditions.values['woumpfs'] = woumpfs
-//     conditions.values['sounds'] = sounds
-//     conditions.values['layerSnowType'] = layerSnowType
-//     conditions.values['footPenetration'] = footPenetration
-//     conditions.values['skiPenetration'] = skiPenetration
-//     conditions.values['handTest'] = handTest
-//     conditions.values['compresionTest'] = compresionTest
-//     conditions.values['extensionTest'] = extensionTest
-//     conditions.values['fractureType'] = fractureType
-//     conditions.values['fractureDepth'] = fractureDepth
-//     conditions.values['layerHardness'] = layerHardness
-//     conditions.values['snowHumidity'] = snowHumidity
-//     conditions.values['snowType'] = snowType
-//     // conditions.status = true;
-//     setsnowpackValues(conditions);
-// },[woumpfs,sounds,layerSnowType,footPenetration,skiPenetration,handTest, compresionTest,extensionTest,fractureType,fractureDepth,layerHardness,snowHumidity,snowType]);
-
 //comments 
 const [comments, setComments] = useState(snowpackValues.values?.comments);
-
-// useEffect(()=>{
-//     let conditions = snowpackValues;
-//     conditions.values['cxz  omments'] = comments
-//     conditions.status = true;
-//     setsnowpackValues(conditions);
-// },[comments]);
-
 
 const typeOptions = [
         {label: 'Puntual'},

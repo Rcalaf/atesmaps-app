@@ -1,7 +1,8 @@
 import React, {createContext, useState, useEffect} from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
-import Geolocation from '@react-native-community/geolocation';
+//import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 
 export const LocationContext = createContext();
 
@@ -22,19 +23,40 @@ export const LocationProvider = ({children}) => {
       setLocationStatus
     ] = useState('');
 
-
-    const [location, setLocation] = useState({latitude: 42.677973,
+    const [currentLocation, setCurrentlocation] = useState({latitude: 42.677973,
         longitude: 1.218886,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,});
     
-    let watchID;
-
+    const [position, setPosition] = useState( {coords: {latitude: 42.677973,
+                                                longitude: 1.218886,
+                                                altitude: 0,
+                                                accuracy: 0,
+                                                altitudeAccuracy: null,
+                                                heading: 0,
+                                                speed:0 }});
+    
+    const [trackingLocation, setTrackingLocation ] = useState(false); 
+    const [watchId, setWatchId ] = useState(null);                                              
+  
         useEffect(() => {
+          console.log('Requesting location permision')
           const requestLocationPermission = async () => {
             if (Platform.OS === 'ios') {
-              getOneTimeLocation();
-             // subscribeLocationLocation();
+              try {
+                const granted = await Geolocation.requestAuthorization('always');
+                // console.log(granted);
+                if (granted === 'granted') {
+                  getOneTimeLocation();
+                  if (trackingLocation) subscribeLocation();
+                }else{
+                  console.log(granted);
+                  setLocationStatus('Permission Denied');
+                } 
+                
+              }catch (err) {
+                console.warn(err);
+              }
             } else {
               try {
                 const granted = await PermissionsAndroid.request(
@@ -47,7 +69,8 @@ export const LocationProvider = ({children}) => {
                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                   //To Check, If Permission is granted
                   getOneTimeLocation();
-                  //subscribeLocationLocation();
+                  if (trackingLocation) subscribeLocation();
+                  //subscribeLocation();
                 } else {
                   setLocationStatus('Permission Denied');
                 }
@@ -58,7 +81,9 @@ export const LocationProvider = ({children}) => {
           };
           requestLocationPermission();
           return () => {
-            Geolocation.clearWatch(watchID);
+            Geolocation.clearWatch(watchId);
+            //console.log(watchId);
+            //console.log('cleared the watchpostion process')
           };
         }, []);
       
@@ -68,7 +93,7 @@ export const LocationProvider = ({children}) => {
             //Will give you the current location
             (position) => {
               setLocationStatus('You are Here');
-              console.log('You are Here One time:')
+              // console.log('You are Here One time:')
               //getting the Longitude from the location json
               const currentLongitude = 
                 JSON.stringify(position.coords.longitude);
@@ -79,9 +104,9 @@ export const LocationProvider = ({children}) => {
 
 
               const currentLocation = { ...position.coords, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA }
-              console.log('----')
-              console.log(currentLocation);
-              setLocation(currentLocation);
+              console.log('----Location Context-----')
+              console.log(currentLocation.latitude, currentLocation.longitude);
+              setCurrentlocation(currentLocation);
       
               //Setting Longitude state
               setCurrentLongitude(currentLongitude);
@@ -94,19 +119,19 @@ export const LocationProvider = ({children}) => {
             },
             {
               enableHighAccuracy: false,
-              timeout: 30000,
+              timeout: 3000,
               maximumAge: 1000
             },
           );
         };
       
-        const subscribeLocationLocation = () => {
-          watchID = Geolocation.watchPosition(
+        const subscribeLocation = () => {
+         let id = Geolocation.watchPosition(
             (position) => {
               //Will give you the location on location change
               
               setLocationStatus('You are Here');
-              console.log('You are Here:')
+              console.log('Subscription pushe location:')
               console.log(position);
       
               //getting the Longitude from the location json        
@@ -122,6 +147,8 @@ export const LocationProvider = ({children}) => {
       
               //Setting Latitude state
               setCurrentLatitude(currentLatitude);
+
+              setPosition(position)
             },
             (error) => {
               setLocationStatus(error.message);
@@ -131,14 +158,21 @@ export const LocationProvider = ({children}) => {
               maximumAge: 1000
             },
           );
+          // console.log(watchId);
+          setWatchId(id);
         };
       
+        const unsubscribeLocation = (id) => {
+          console.log('Calling unsubscribe method in context')
+          console.log(watchId);
+          Geolocation.clearWatch(watchId);
+        }
     
     
 
 
     return(
-        <LocationContext.Provider value={{ location }}> 
+        <LocationContext.Provider value={{ currentLocation, LATITUDE_DELTA , LONGITUDE_DELTA, position, watchId, unsubscribeLocation, subscribeLocation, getOneTimeLocation}}> 
             {children}
         </LocationContext.Provider>
     )

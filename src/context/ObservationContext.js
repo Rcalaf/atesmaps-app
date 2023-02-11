@@ -6,11 +6,12 @@ import  Snackbar  from "react-native-snackbar";
 import { BASE_URL } from '../config';
 
 import { AuthContext } from '../context/AuthContext';
+import { GetBucketLoggingOutputFilterSensitiveLog } from '@aws-sdk/client-s3';
 
 export const ObservationContext = createContext();
 
 export const ObservationProvider = ({children}) => {
-    const {userDetails,userToken} = useContext(AuthContext);
+    const {userDetails,userToken, logout} = useContext(AuthContext);
     const [isLoading, setIsLoading] = useState(false);
 
     const [observations, setObservations] = useState([]);
@@ -39,10 +40,13 @@ export const ObservationProvider = ({children}) => {
     };
 
     const getData = async () => {
+        setIsLoading(true);
         try{
             let response = await sentRequest(`/observations/user/${userDetails?._id}`, "get", '');
             //TODO: Sync local data with new data
-            if (response.data) {
+            if(response.status != 200){
+                logout();
+            } else if (response.data) {
                 setHistoricObservations(response.data);
             }
             
@@ -50,15 +54,21 @@ export const ObservationProvider = ({children}) => {
             console.log(err);
             setHistoricObservations(historicObservations);
         }
-        let list = JSON.parse(await AsyncStorage.getItem('list'));
-        if(list) setObservations(list);
+        try{
+            let list = JSON.parse(await AsyncStorage.getItem('list'));
+            if(list) setObservations(list);
+        }catch(err){
+            console.log(err)
+        }
+        setIsLoading(false);
     }
     
     const newObservation = async (observation) => {
-        // setIsLoading(true);
-            // console.log('------ New Observation data received----')
-            // console.log(observation);
-            // console.log('----------------------------------------')
+        setIsLoading(true);
+        // console.log('------ New Observation data received----')
+        // console.log(observation);
+        // console.log('----------------------------------------')
+        try{
             let aux = observations;
             aux.push(observation);
             // setObservations( (arr) => { return [...arr, observation]});
@@ -73,7 +83,10 @@ export const ObservationProvider = ({children}) => {
                 textColor: "#fff",
                 backgroundColor: "#62a256",
             });
-        // setIsLoading(false);
+        }catch(err){
+            console.log(err)
+        }
+        setIsLoading(false);
     }
 
   
@@ -84,14 +97,19 @@ export const ObservationProvider = ({children}) => {
 
     const updateObservations = async (obj) => {
         console.log('calling update observations');
-        // setIsLoading(true);
+        setIsLoading(true);
         let aux = observations;
         aux[selectedIndex] = obj;
         setObservations(aux);
         setEditingObservation({...obj}); 
-        await AsyncStorage.setItem('list', JSON.stringify(aux));
+        try{
+            await AsyncStorage.setItem('list', JSON.stringify(aux));
+        }catch (err){
+            console.log(err)
+        }
+        
        // console.log('------------------');  
-        // setIsLoading(false);
+        setIsLoading(false);
         
     }
 
@@ -99,31 +117,33 @@ export const ObservationProvider = ({children}) => {
         console.log('Remove observation');
         //let response = await sentRequest(`/observations`, "delete", editingObservation);
         //TODO: update async storage list
-        let aux = observations;
-        aux.splice(selectedIndex,1);
-        setEditingObservation({});
-        setObservations(aux);
-        // setObservations( (arr) => {
-        //     observations.splice(selectedIndex,1)
-        //     return observations});
-        // console.log(aux);
-       
-
-        await AsyncStorage.setItem('list', JSON.stringify(aux));
-        let index = aux.length 
-        setLastIndex(index);
-        setSelectedIndex(null);
-        Snackbar.show({
-            text: 'Tu borrador de observación se ha eliminado.',
-            duration: Snackbar.LENGTH_SHORT,
-            numberOfLines: 2,
-            textColor: "#fff",
-            backgroundColor: "#62a256",
-        });
+        setIsLoading(true);
+        try{
+            let aux = observations;
+            aux.splice(selectedIndex,1);
+            setEditingObservation({});
+            setObservations(aux);
+    
+            await AsyncStorage.setItem('list', JSON.stringify(aux));
+            let index = aux.length 
+            setLastIndex(index);
+            setSelectedIndex(null);
+            Snackbar.show({
+                text: 'Tu borrador de observación se ha eliminado.',
+                duration: Snackbar.LENGTH_SHORT,
+                numberOfLines: 2,
+                textColor: "#fff",
+                backgroundColor: "#62a256",
+            });
+        }catch(err){
+          console.log(err)
+        } 
+        setIsLoading(false);
         // console.log('---');
         // console.log(observations);
         // console.log('---END REmoving observation---');
         // navigation.navigate('Lista de Observaciones');
+       
     }
 
     useEffect(()=>{
@@ -137,24 +157,6 @@ export const ObservationProvider = ({children}) => {
         // setList();
     },[observations]);
 
-
-    // useEffect(()=>{
-    //     console.log('-----Last index updated -----')
-    //     console.log(lastIndex);
-    //     console.log('-----------------------------')
-    // },[lastIndex]);
-
-    // useEffect(()=>{
-    //     console.log('-----Selected index updated -----')
-    //     console.log(selectedIndex);
-    //     console.log('-----------------------------')
-    // },[selectedIndex]);
-
-    // useEffect(()=>{
-    //     console.log('-----Update Editing observation -----')
-    //     console.log(editingObservation.images?.length);
-    //     console.log('-----------------------------')
-    // },[editingObservation]);
 
     useEffect(()=>{  
         console.log('Loading user oservations data...');  

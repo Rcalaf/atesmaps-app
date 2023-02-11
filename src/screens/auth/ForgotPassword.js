@@ -42,7 +42,7 @@ const ForgotPassword: () => Node = ({navigation}) => {
     try{
       let response = await axios.post(`${BASE_URL}/auth/request-new-password`,{'email': data.email});
       Snackbar.show({
-        text: 'Tu observación rápida se ha guardado.',
+        text: 'Se envió un email a tu cuenta de correo.',
         duration: Snackbar.LENGTH_SHORT,
         numberOfLines: 2,
         textColor: "#fff",
