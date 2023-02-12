@@ -84,7 +84,7 @@ export default function ObservationDetail({ navigation }) {
 
     useEffect(()=>{
       return function cleanup() {
-        console.log('cleaning up observations ')
+        // console.log('cleaning up observations ')
         getOneTimeLocation();
       };
     },[])

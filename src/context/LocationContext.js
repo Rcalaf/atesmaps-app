@@ -104,8 +104,8 @@ export const LocationProvider = ({children}) => {
 
 
               const currentLocation = { ...position.coords, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA }
-              console.log('----Location Context-----')
-              console.log(currentLocation.latitude, currentLocation.longitude);
+              // console.log('----Location Context-----')
+              // console.log(currentLocation.latitude, currentLocation.longitude);
               setCurrentlocation(currentLocation);
       
               //Setting Longitude state

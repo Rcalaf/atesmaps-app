@@ -42,11 +42,12 @@ export const ObservationProvider = ({children}) => {
     const getData = async () => {
         setIsLoading(true);
         try{
-            let response = await sentRequest(`/observations/user/${userDetails?._id}`, "get", '');
+            let response = null
+            if (userDetails)  response = await sentRequest(`/observations/user/${userDetails?._id}`, "get", '');
             //TODO: Sync local data with new data
-            if(response.status != 200){
-                logout();
-            } else if (response.data) {
+            if(response && response.status != 200){
+                if (userDetails) logout();
+            } else if (response && response.data) {
                 setHistoricObservations(response.data);
             }
             

@@ -359,7 +359,7 @@ export default function ObservationDetail({ route, navigation }) {
 
 
     useEffect(()=>{
-      console.log('Updating editing observation on Observation details');
+      // console.log('Updating editing observation on Observation details');
       setObservation(editingObservation);
       setLocation(editingObservation.location);
       setValue('location',formatLocation(editingObservation.location))
