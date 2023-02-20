@@ -15,6 +15,7 @@ import { s3Client } from "../aws/s3";
 
 import CustomButton from "../components/CustomButton";
 import CustomInput from "../components/CustomInput";
+import CustomRadioButton from "../components/CustomRadioButton";
 
 import { ObservationContext } from '../context/ObservationContext';
 import { AuthContext } from '../context/AuthContext';
@@ -31,64 +32,51 @@ export default function ObservationDetail({ route, navigation }) {
 
     
     const newObs = {
-      title: 'Nueva Observación',
+      title: '',
       date: Date.now(),
+      location_update: false,
       location: {
         latitude: currentLocation.latitude,
         longitude: currentLocation.longitude
       },
       directoryId: userDetails._id+moment().format('X'),
       observationTypes:{},
+      whenObsTaken: null,
       images: [],
       status: 0,
       submitted: false,
     }
    
-
     const [isLoading, setIsLoading] = useState(true);
-
     const [index, setIndex] = useState(route.params?.index);
     const [update, setUpdate] = useState(route.params?.update);
-
     const [ observation, setObservation ] = useState(Object.keys(editingObservation).length === 0 ? newObs : editingObservation );
-    // console.log(observation)
-    const [ location, setLocation] = useState(editingObservation.location);
 
-    // const [images, setImages] = useState(editingObservation.images);
+    // const [ location, setLocation] = useState(editingObservation.location);
+    const [ locationError, setLocationError] = useState(false);
 
     const [rawDate, setRawDate] = useState(moment(observation.date).toDate());
     const [show, setShow] = useState(false);
     const [showAndroidDatePicker, setShowAndroidDatePicker] = useState(false);
     const [showAndroidTimePicker, setShowAndroidTimePicker] = useState(false);
     const dateTimeInput = useRef(null);
+    // const [whenObsTaken, setWhenObsTaken] = useState(1);
+
+    const obsTakenOptions = [
+      {label: 'Durante la salida (sobre el terreno)'},
+      {label: 'Immediatamente después de la salida (parquing)'},
+      {label: 'Posteriormente (casa/refugio)'},
+  ]
 
     useEffect(()=>{
       if(Object.keys(editingObservation).length === 0){
-        setIsLoading(true);
-        Geolocation.getCurrentPosition(
-          //Will give you the current location
-          (position) => {
-            const newLocation = { ...position.coords, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA }
-            setLocation(newLocation)
-            setObservation({...observation, location: currentLocation })
-            setEditingObservation({...observation, location: currentLocation })
-            newObservation({...observation,title:'Nueva Observación', location: newLocation });
-            setIsLoading(false);
-          },
-          (error) => {
-            console.log(error)
-            setIsLoading(false);
-          },
-          {
-            enableHighAccuracy: false,
-            timeout: 3000,
-            maximumAge: 1000
-          },
-        );
+        // setEditingObservation(observation)
+        console.log(observation);
+        newObservation(observation)
+      }else{
+        console.log(observation)
+        console.log(editingObservation)
       }
-      // if(Object.keys(editingObservation).length === 0){
-      //   getOneTimeLocation();
-      // }
       return function cleanup() {
         console.log('cleaning up observation Details ');
         setEditingObservation({});
@@ -96,42 +84,17 @@ export default function ObservationDetail({ route, navigation }) {
         Snackbar.dismiss();
       };
     },[])
-
-    useEffect(() => {  
-      setValue('location', formatLocation(observation.location));
+    
+    useEffect(()=>{
+      console.log('editing observation was updated...');
+      console.log(editingObservation)
+      setObservation(editingObservation);
+      // setLocation(editingObservation.location);
+      // setValue('location',formatLocation(editingObservation.location))
+      setLocationError(false)
+      setValue('location',checkLocation(editingObservation))
       setIsLoading(false);
-    },[observation])
-    // useEffect(() => {  
-    //   if(Object.keys(editingObservation).length === 0){
-    //     console.log('refreshing view')
-    //     const handleNewObs = async () => {
-    //       console.log('Updating shit')
-    //       setLocation(currentLocation)
-    //       console.log(newObs)
-    //       console.log(observation)
-    //       console.log(editingObservation)
-    //       console.log(currentLocation.latitude, currentLocation.longitude)
-    //       // console.log({...observation, location: currentLocation });
-    //       setObservation({...observation, location: currentLocation })
-    //       setEditingObservation({...observation, location: currentLocation })
-    //       setValue('location', formatLocation(currentLocation));
-    //       await newObservation({...observation,title:'Nueva Observación', location: currentLocation });
-    //     }
-    //     handleNewObs();
-    //   }
-    //   setIsLoading(false);
-    // },[currentLocation])
-
-    useLayoutEffect(() => {  
-      setValue('location', formatLocation(currentLocation));
-    },[observation])
-
-
-
-
-
-     
-    // console.log(currentLocation)
+    },[editingObservation]);
 
     const formatLocation = (locationDetails) =>{
       return locationDetails?.latitude + ', ' +locationDetails?.longitude;
@@ -184,15 +147,12 @@ export default function ObservationDetail({ route, navigation }) {
           //headers: { "Content-Type": "multipart/form-data" },
           headers: {"Authorization": `Bearer ${userToken}`}
         });
-        //  console.log(response.status);
-        //  console.log(response.data);
-
+   
         if (response.status === 201){
             console.log('uploading images...');
             aux_images.forEach(image => {
               uploadFile(image);
             });
-            
             // console.log('cleaning local storage');
             getData();
             setObservation({});
@@ -229,12 +189,16 @@ export default function ObservationDetail({ route, navigation }) {
       }
     };
     
+    const checkLocation = (observation) => {
+      return observation.location_update ? formatLocation(observation.location) : "Selecciona Ubicación"
+    }
 
     const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
       defaultValues: {
         title: observation.title,
         date: moment(observation.date).format('MMMM Do YYYY, HH:mm:ss'),
-        location: formatLocation(observation.location),
+        location: checkLocation(observation),//formatLocation(observation.location),
+        whenObsTaken: observation.whenObsTaken
       }
     });
 
@@ -271,7 +235,8 @@ export default function ObservationDetail({ route, navigation }) {
           <Button
             onPress={() => {
               // console.log(handleSubmit);
-              handleSubmit(onSave)();
+              onSave();
+              // handleSubmit(onSave)();
               // let index = route.params?.index;
               // setEditingObservation({...editingObservation, location:pickedLocation});
               navigation.navigate('Lista de Observaciones');
@@ -280,39 +245,48 @@ export default function ObservationDetail({ route, navigation }) {
           />
         )
       });
-    }, [navigation, editingObservation, rawDate, currentLocation]);
 
-    
+    }, [navigation, editingObservation, rawDate]);
 
 
-    const onSave = (data) => {
+    const onSave = () => {
+      let obj = getValues(); 
 
-      let obj = data;
-      
       obj.date = moment(rawDate).format();
-      obj.location = parseLocation(data.location);
+      obj.location = editingObservation.location_update ? parseLocation(obj.location) : {latitude: currentLocation.latitude,longitude: currentLocation.longitude};
       obj.images = editingObservation.images;
       obj.directoryId= editingObservation.directoryId;
-      obj.status = 0;
       obj.observationTypes = editingObservation.observationTypes;
-      setEditingObservation(obj);
+      obj.status = 0;
+      obj.location_update = editingObservation.location_update;
+      obj.observationTypes = editingObservation.observationTypes;
+      console.log(obj) ;
+      // setEditingObservation(obj);
       updateObservations(obj);
- 
-      Snackbar.show({
-        text: 'Los datos de tu observación se han guardado.',
-        duration: Snackbar.LENGTH_SHORT,
-        numberOfLines: 2,
-        textColor: "#fff",
-        backgroundColor: "#62a256",
-      });
+      // Snackbar.show({
+      //   text: 'Los datos de tu observación se han guardado.',
+      //   duration: Snackbar.LENGTH_SHORT,
+      //   numberOfLines: 2,
+      //   textColor: "#fff",
+      //   backgroundColor: "#62a256",
+      // });
     }
 
-
-    
     const onSubmit = (data) => {
-      if(editingObservation.observationTypes.quick?.status ||
+      console.log(editingObservation);
+      if(!editingObservation.location_update){
+        setLocationError(true)
+        Snackbar.show({
+          text: 'Antes de subir una Observación, indica su ubicación',
+          duration: Snackbar.LENGTH_SHORT,
+          numberOfLines: 2,
+          textColor: "#fff",
+          backgroundColor: "#B00020",
+        });
+      }else if(editingObservation.observationTypes.quick?.status ||
         editingObservation.observationTypes.snowpack?.status ||
-        editingObservation.observationTypes.avalanche?.status){
+        editingObservation.observationTypes.avalanche?.status || 
+        editingObservation.observationTypes.accident?.status){
         //console.log('at least one report...')
        
         let obj = data;
@@ -322,7 +296,7 @@ export default function ObservationDetail({ route, navigation }) {
         //TODO: check if date updates properly
         obj.date = moment(rawDate).format();
         
-        obj.location = location;
+        obj.location = editingObservation.location;
         obj.observationTypes = editingObservation.observationTypes;
     
         sendData(userDetails._id,obj); 
@@ -337,6 +311,8 @@ export default function ObservationDetail({ route, navigation }) {
         });
       } 
     }; 
+
+   
 
     const onChange = (event, selectedDate) => {
       if(Platform.OS == "android"){
@@ -357,20 +333,10 @@ export default function ObservationDetail({ route, navigation }) {
       setShow(!show);
     };
 
-
-    useEffect(()=>{
-      // console.log('Updating editing observation on Observation details');
-      setObservation(editingObservation);
-      setLocation(editingObservation.location);
-      setValue('location',formatLocation(editingObservation.location))
-      
-    },[editingObservation]);
-
     // useEffect(()=>{
     //   console.log('Context location changed....')
     //   console.log(currentLocation)
     //   setLocation(currentLocation)
-
     // },[currentLocation])
 
     if( isLoading ) {
@@ -461,32 +427,37 @@ export default function ObservationDetail({ route, navigation }) {
     return (
       <SafeAreaView style={styles.safeContainer}>
         <ScrollView style={styles.container}>
+          <View style={styles.introContainer} >
+            <Text style={styles.intro}>Intrduce la información básica de la salida: Un título que la haga reconocible, fecha y geolocalización. 
+            El momento de publicación de la SCOPE y alguna foto serán de gran utilidad para toda la comunidad.</Text> 
+          </View>
+          <View style={styles.spacer}/>
           <CustomInput
             name="title"
             placeholder="Titulo"
             control={control}
-            rules={{required: 'Title is required'}}
+            rules={{required: 'Debes dar un título a la Observación'}}
           />
           
           <CustomInput
             name="date"
             placeholder={moment().format('MMMM Do YYYY, HH:mm:ss')}
             control={control}
-            rules={{required: 'Date is required'}}
+            rules={{required: 'Debes indicar una fecha'}}
             onPress={showDatepicker}
             blurOnTap={Platform.OS == "android" ? false : true}
             ref={dateTimeInput}
           />
 
           {plaformDateComponent()}
-  
+
           <CustomButton 
-            text={'Ubicación: '+ getValues("location")} 
+            text={getValues("location")} 
             type="custom"
             order="top"
-            fColor="gray"
+            fColor={locationError ? "red" : "gray"}
             onPress={() => {
-              navigation.navigate('Location Picker',{index, resetPin: true});
+              navigation.navigate('Ubicación',{index, resetPin: true});
             }} 
           />
 
@@ -501,16 +472,30 @@ export default function ObservationDetail({ route, navigation }) {
             }} 
           />
 
-          <View style={{marginTop: 50}}>
+          <CustomRadioButton 
+                name="whenObsTaken"
+                title="Publicación de la OBS:"
+                control={control}
+                data={obsTakenOptions}
+                rules={{required: 'Debes indicar cuando realizaste la Observación'}}
+                box={false}
+                textColor={'black'}
+                containerStyle={styles.radioButtonCointainer}
+                circleSize={14}
+                
+            />
+
+          <View style={{marginTop: 10}}>
               
-            <Text style={{marginBottom: 10, fontWeight:'bold'}}>Observaciones</Text>
-            <CustomButton text="Quick" type="custom" order="top" bgColor={"#48a5e9"} fColor='white' iconName={observation.observationTypes?.quick?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Rapida')} />
-            <CustomButton text="Avalanche" type="custom" order="middle" bgColor={"#4062ff"} fColor='white' iconName={observation.observationTypes?.avalanche?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Avalancha')} /> 
-            <CustomButton text="Snowpack" type="custom" order="bottom" bgColor={"#48a5e9"} fColor='white' iconName={observation.observationTypes?.snowpack?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Manto de nieve')} />
+            <Text style={{marginBottom: 10, fontWeight:'bold'}}>Tipo de observaciones:</Text>
+            <CustomButton text="Rápida" type="custom" order="top" bgColor={"#48a5e9"} fColor='white' iconName={observation.observationTypes?.quick?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Rapida')} />
+            <CustomButton text="Avalancha" type="custom" order="middle" bgColor={"#4062ff"} fColor='white' iconName={observation.observationTypes?.avalanche?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Avalancha')} /> 
+            <CustomButton text="Manto de nieve" type="custom" order="middle" bgColor={"#48a5e9"} fColor='white' iconName={observation.observationTypes?.snowpack?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Manto de nieve')} />
+            <CustomButton text="Accidente" type="custom" order="bottom" bgColor={"#B00020"} fColor='white' iconName={observation.observationTypes?.accident?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Accidente')} /> 
             {/* <CustomButton text="Weather" type="custom" order="middle" bgColor={"#f5c144"} fgColor='white' iconName={"add-circle"} onPress={()=>{console.log('seting type Weather')}} />
             <CustomButton text="Incident" type="custom" order="bottom" bgColor={"#e15141"} fgColor='white' iconName={"add-circle"} onPress={()=>{console.log('seting type Incident')}} /> */}
           </View>
-          <View style={{marginTop: 50}}>
+          <View style={{marginTop: 40}}>
             <CustomButton text="Subir a Atesmaps"  bgColor={"#62a256"} fgColor='white' iconName={null} onPress={handleSubmit(onSubmit)} />
           </View>
           <View style={{marginBottom: 30}}>
@@ -555,6 +540,11 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginTop: 5
   },
+
+  introContainer:{
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
   container: {
     flex: 1,
     padding: 15
@@ -575,5 +565,21 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     paddingBottom: Platform.OS == "android" ? 0 : 40
-},
+  },
+  spacer: {
+    width: '100%',
+    marginTop: 10,
+    marginBottom: 10,
+    backgroundColor: 'gray',
+    height: 1,
+  },
+  radioButtonCointainer: {
+    backgroundColor: 'white',
+    width: '100%',
+    borderColor: '#e8e8e8',
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 5,
+  }
 });

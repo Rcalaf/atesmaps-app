@@ -49,12 +49,21 @@ export default function Item({ item, index,  navigation  }) {
       }
     }
 
+    const title = (title) => {
+      if (title === ''){
+        return <Text style={{color:"gray"}}>( Sin titulo )</Text>
+      }else{
+       return  <Text style={{fontWeight:"bold"}}>{item.title}</Text>
+      }
+    }
+
     return (
       <>
       <View style={styles.listItem}>
        {/* <Image source={{uri:item.photo}}  style={{width:60, height:60,borderRadius:30, marginRight: 10}} /> */}
         <View style={{marginTop:5,marginBottom: (item.status > 0 ? 5 : 0), alignItems:"flex-start",flex:1}}>
-          <Text style={{fontWeight:"bold"}}>{item.title}</Text>
+          {/* <Text style={{fontWeight:"bold"}}>{item.title}</Text> */}
+          {title(item.title)}
           <Text style={{ marginTop: (item.status > 0 ? 5 : 0)}}>{moment(item.date).format('Do MMMM YYYY')}</Text>
          
         </View>

@@ -14,36 +14,42 @@ import {
 
 import Svg from 'react-native-svg';
 
-import { HeaderBackButton } from '@react-navigation/elements';
+// import { HeaderBackButton } from '@react-navigation/elements';
 //import { HeaderBackButton } from '@react-navigation/stack';
 import  Snackbar  from "react-native-snackbar";
-
 import MapView, {Marker, UrlTile} from 'react-native-maps';
+
+import Geolocation from 'react-native-geolocation-service';
+
+import Loading from '../components/Loading';
 
 
 import { ObservationContext } from '../context/ObservationContext';
 import { LocationContext } from '../context/LocationContext';
 
 const LocationPicker: () => Node = ({ route, navigation }) => {
-    const { location } = useContext(LocationContext);
-    const { editingObservation, setEditingObservation, observations, updateObservations, setObservations,selectedIndex} = useContext(ObservationContext);
-    const [pickedLocation, setPickedLocation]= useState({latitude:Number(editingObservation.location.latitude),longitude:Number(editingObservation.location.longitude)}); 
+
+    const {LATITUDE_DELTA,LONGITUDE_DELTA} = useContext(LocationContext)
+    const {editingObservation, setEditingObservation,updateObservations} = useContext(ObservationContext);
+    const [pickedLocation, setPickedLocation]= useState({
+      latitude: editingObservation.location?.latitude ? Number(editingObservation?.location?.latitude) : '' ,
+      longitude: editingObservation.location?.longitude ? Number(editingObservation?.location?.longitude) : ''
+    }); 
+    const [location, setLocation] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const [newDelta, setNewDelta]=useState({latitude: 0.0220, longitude: 0.0170})
     const [newRegion, setNewRegion]=useState({latitude:Number(editingObservation.location.latitude),longitude:Number(editingObservation.location.longitude)}); 
     // const [ observation, setObservation ] = useState(observations[route.params?.index]);
+    
+    //const [marker, setMarker] = useState(null)
+
+
     const [marker, setMarker] = useState({
-      // coordinate: editingObservation.location,
-      coordinate: {latitude:Number(editingObservation.location.latitude),longitude:Number(observations[selectedIndex].location.longitude)},
+      coordinate: {latitude:Number(editingObservation.location?.latitude),longitude:Number(editingObservation.location?.longitude)},
       key: 1,
       color: '#ff0000'
     });
-
     // const map: LegacyRef<MapView> = useRef(null);
-
-    // useEffect(()=>{
-    //   console.log('Location picked updated...');
-    //   console.log(pickedLocation);
-    // },[pickedLocation]);
 
     useLayoutEffect( () => {
       navigation.setOptions({
@@ -54,20 +60,13 @@ const LocationPicker: () => Node = ({ route, navigation }) => {
               let index = route.params?.index;
 
               let observation = editingObservation;
+              observation.location_update = true;
               observation.location = pickedLocation; 
               setEditingObservation(observation);
               updateObservations(observation);
-
-             // const observation = {...editingObservation, location:pickedLocation}
-             // updateObservations(observation);
-              // let aux = observations;
-              // aux[selectedIndex] = observation;
-              // console.log('----Location picker-----')
-              // console.log([...aux]);
-              // console.log('------------')
-              // setObservations([...aux]);
-              // setEditingObservation({...observations[selectedIndex], location:pickedLocation});
+              
               navigation.navigate('Observación', {index, update:true})
+
               Snackbar.show({
                 text: 'Tu ubicación se ha guardado.',
                 duration: Snackbar.LENGTH_SHORT,
@@ -87,7 +86,40 @@ const LocationPicker: () => Node = ({ route, navigation }) => {
       //check documentation here: https://reactnavigation.org/docs/navigation-prop/#setparams
     }, [navigation, pickedLocation]);
 
-    const getMapRegion = (data) => {       
+    useEffect(()=>{
+        Geolocation.getCurrentPosition(
+          //Will give you the current location
+          (position) => {
+            const newLocation = { ...position.coords, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA }
+            setLocation(newLocation)
+            if( !editingObservation.location_update ) {
+              setNewRegion({latitude:Number(newLocation.latitude),longitude:Number(newLocation.longitude)});
+              setMarker({
+                coordinate: {latitude:Number(newLocation.latitude),longitude:Number(newLocation.longitude)},
+                key: 1,
+                color: '#ff0000'
+              })
+              setPickedLocation({latitude:Number(newLocation.latitude),longitude:Number(newLocation.longitude)});
+            } 
+            
+            //setEditingObservation({...editingObservation, location: newLocation })          
+            setIsLoading(false);
+          },
+          (error) => {
+            console.log(error)
+            setIsLoading(false);
+          },
+          {
+            enableHighAccuracy: false,
+            timeout: 3000,
+            maximumAge: 1000
+          },
+        );
+    },[])
+
+
+
+    const getMapRegion = () => {       
       return {latitude: newRegion.latitude ? newRegion.latitude : location?.latitude,
               longitude: newRegion.longitude ? newRegion.longitude : location?.longitude,
               latitudeDelta: newDelta.latitude,//pickedLocation.latitudeDelta ? pickedLocation.latitudeDelta : location?.latitudeDelta,
@@ -108,7 +140,12 @@ const LocationPicker: () => Node = ({ route, navigation }) => {
     }
 
    
-
+    if( isLoading ) {
+      return(
+        <Loading />
+      )
+    }
+    
 return(
     <View style={styles.container}>
         <MapView
@@ -125,7 +162,6 @@ return(
           // }}
           onPress={onMapPress}
           onRegionChangeComplete={(region) => {
-            // console.log(region);
             setNewDelta({latitude: (region.latitudeDelta < 0.0170 ? 0.0170 : region.latitudeDelta),longitude:(region.longitudeDelta < 0.0200 ? 0.0200 : region.longitudeDelta) })
             setNewRegion({latitude: region.latitude,longitude:region.longitude })}
           }

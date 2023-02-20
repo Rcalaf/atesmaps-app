@@ -35,6 +35,7 @@ const { control, handleSubmit, formState: { errors }, getValues, setValue } = us
         date: avalancheValues.values?.date,
         when: avalancheValues.values?.when,
         amount: avalancheValues.values?.amount,
+        obsType: avalancheValues.values?.obsType,
         windExposure: avalancheValues.values?.windExposure,
         dangerLevel1: avalancheValues.values?.dangerLevel?.level_1,
         dangerLevel2: avalancheValues.values?.dangerLevel?.level_2,
@@ -159,6 +160,7 @@ const updateData = () => {
         'level_4': values.heavy,
         'level_5': values.heavy,
     }
+
     aux['values']['avalancheType'] = {
         'type_1': values.avalancheType1,
         'type_2': values.avalancheType2,
@@ -197,6 +199,7 @@ const updateData = () => {
     aux.values.when = values.when;
     aux.values.amount = values.amount;
     aux.values.windExposure = values.windExposure;
+    aux.values.obsType = values.obsType;
 
     aux.status = true;
     // console.log("----------------");
@@ -222,155 +225,21 @@ const updateData = () => {
 
 }
 
-
-
 useEffect(()=>{
     let observation = editingObservation.observationTypes;
-    observation['avalanche'] = avalancheValues; 
+    console.log(editingObservation)
+    console.log(observation)
+    // observation['avalanche'] = avalancheValues; 
     setEditingObservation({...editingObservation,observationTypes: observation});
     //updateObservations(obj);
     // console.log(observation);
 },[avalancheValues]);
 
-//Snow conditions:
-const [date, setDate] = useState(avalancheValues.values?.date);
-const [when, setWhen] = useState(avalancheValues.values?.when);
-const [amount, setAmount] = useState(avalancheValues.values?.amount);
-const [windExposure, setWindExposure] = useState(avalancheValues.values?.windExposure);
-const [trigger, setTrigger] = useState(avalancheValues.values?.trigger);
 
-// useEffect(()=>{
-//     let conditions = avalancheValues;
-//     conditions.values['when'] = when;
-//     conditions.values['amount'] = amount;
-//     conditions.values['windExposure'] = windExposure;
-//     conditions.values['trigger'] = trigger;
-//     // conditions.status = true;
-//     setavalancheValues(conditions);
-//     console.log(avalancheValues);
-// },[when,amount,windExposure,trigger])
-
-const [snowType, setSnowType] = useState(avalancheValues.values?.snowType);
-const [depth, setDepth] = useState(avalancheValues.values?.depth);
-const [width, setWidth] = useState(avalancheValues.values?.width);
-const [length, setLength] = useState(avalancheValues.values?.length);
-const [height, setHeight] = useState(avalancheValues.values?.height);
-const [inclination, setInclination] = useState(avalancheValues.values?.inclination);
-
-// useEffect(()=>{
-//     let conditions = avalancheValues;
-//     conditions.values['depth'] = depth;
-//     conditions.values['width'] = width;
-//     conditions.values['height'] = height;
-//     conditions.values['length'] = length;
-//     conditions.values['inclination'] = inclination;
-//     conditions.values['snowType'] = snowType;
-//     // conditions.status = true;
-//     setavalancheValues(conditions);
-//     console.log(avalancheValues);
-// },[depth,width,height,length,inclination,snowType])
-
-const [dangerLevel1, setDangerLevel1] = useState(avalancheValues.values?.dangerLevel?.level_1);
-const [dangerLevel2, setDangerLevel2] = useState(avalancheValues.values?.dangerLevel?.level_2);
-const [dangerLevel3, setDangerLevel3] = useState(avalancheValues.values?.dangerLevel?.level_3);
-const [dangerLevel4, setDangerLevel4] = useState(avalancheValues.values?.dangerLevel?.level_4);
-const [dangerLevel5, setDangerLevel5] = useState(avalancheValues.values?.dangerLevel?.level_5);
-// useEffect(()=>{
-//     let conditions = avalancheValues;
-//     conditions.values['dangerLevel'] = {
-//         level_1: dangerLevel1,
-//         level_2: dangerLevel2,
-//         level_3: dangerLevel3,
-//         level_4: dangerLevel4,
-//         level_5: dangerLevel5,
-//     }
-//     // conditions.status = true;
-//     setavalancheValues(conditions);
-//     console.log(avalancheValues);
-// },[dangerLevel1,dangerLevel2,dangerLevel3,dangerLevel4,dangerLevel5])
-
-const [avalancheType1, setAvalancheType1] = useState(avalancheValues.values?.avalancheType?.type_1);
-const [avalancheType2, setAvalancheType2] = useState(avalancheValues.values?.avalancheType?.type_2);
-const [avalancheType3, setAvalancheType3] = useState(avalancheValues.values?.avalancheType?.type_3);
-const [avalancheType4, setAvalancheType4] = useState(avalancheValues.values?.avalancheType?.type_4);
-const [avalancheType5, setAvalancheType5] = useState(avalancheValues.values?.avalancheType?.type_5);
-const [avalancheType6, setAvalancheType6] = useState(avalancheValues.values?.avalancheType?.type_6);
-const [avalancheType7, setAvalancheType7] = useState(avalancheValues.values?.avalancheType?.type_7);
-const [avalancheType8, setAvalancheType8] = useState(avalancheValues.values?.avalancheType?.type_8);
-const [avalancheType9, setAvalancheType9] = useState(avalancheValues.values?.avalancheType?.type_9);
-// useEffect(()=>{
-//     let conditions = avalancheValues;
-//     conditions.values['avalancheType'] = {
-//        type_1: avalancheType1,
-//        type_2: avalancheType2,
-//        type_3: avalancheType3,
-//        type_4: avalancheType4,
-//        type_5: avalancheType5,
-//        type_6: avalancheType6,
-//        type_7: avalancheType7,
-//        type_8: avalancheType8,
-//        type_9: avalancheType9,
-//     }
-//     // conditions.status = true;
-//     setavalancheValues(conditions);
-//     console.log(avalancheValues);
-// },[avalancheType1,avalancheType2,avalancheType3,avalancheType4,avalancheType5,avalancheType6,avalancheType7,avalancheType8,avalancheType9])
-
-
-const [heightRange1, setHeightRange1] = useState(avalancheValues.values?.heightRange?.range_1);
-const [heightRange2, setHeightRange2] = useState(avalancheValues.values?.heightRange?.range_2);
-const [heightRange3, setHeightRange3] = useState(avalancheValues.values?.heightRange?.range_3);
-const [heightRange4, setHeightRange4] = useState(avalancheValues.values?.heightRange?.range_4);
-// useEffect(()=>{
-//     let conditions = avalancheValues;
-//     conditions.values['heightRange'] = {
-//         range_1: heightRange1,
-//         range_2: heightRange2,
-//         range_3: heightRange3,
-//         range_4: heightRange4,
-//     }
-//     // conditions.status = true;
-//     setavalancheValues(conditions);
-//     console.log(avalancheValues);
-// },[heightRange1,heightRange2,heightRange3,heightRange4])
-
-const [orientation, setOrientation] = useState(avalancheValues.values?.orientation);
-const [orientationN, setOrientationN] = useState(avalancheValues.values?.orientation?.N);
-const [orientationNE, setOrientationNE] = useState(avalancheValues.values?.orientation?.NE);
-const [orientationE, setOrientationE] = useState(avalancheValues.values?.orientation?.E);
-const [orientationSE, setOrientationSE] = useState(avalancheValues.values?.orientation?.SE);
-const [orientationS, setOrientationS] = useState(avalancheValues.values?.orientation?.S);
-const [orientationSO, setOrientationSO] = useState(avalancheValues.values?.orientation?.SO);
-const [orientationO, setOrientationO] = useState(avalancheValues.values?.orientation?.O);
-const [orientationNO, setOrientationNO] = useState(avalancheValues.values?.orientation?.NO);
-// useEffect(()=>{
-//     let conditions = avalancheValues;
-//     conditions.values['orientation'] = {
-//         N: orientationN,
-//         NE: orientationNE,
-//         E: orientationE,
-//         SE: orientationSE,
-//         S: orientationS,
-//         SO: orientationSO,
-//         O: orientationO,
-//         NO: orientationNO,
-
-//     }
-//     // conditions.status = true;
-//     setavalancheValues(conditions);
-//     console.log(avalancheValues);
-// },[orientationN,orientationNE,orientationE,orientationSE,orientationS,orientationO,orientationNO])
-
-//comments 
-const [comments, setComments] = useState(avalancheValues.values?.otherComments);
-
-// useEffect(()=>{
-//     let conditions = avalancheValues;
-//     conditions.values['otherComments'] = comments
-//     conditions.status = true;
-//     setavalancheValues(conditions);
-// },[comments]);
-
+const obsTypeOptions = [
+    {label: 'Singular'},
+    {label: 'Síntesis'},
+];
 
 const whenOptions = [
         {label: '< 12 horas'},
@@ -383,8 +252,7 @@ const amountOptions = [
         {label: '1'},
         {label: '2-5'},
         {label: '6-10'},
-        {label: '10-20'},
-        {label: '>20'},
+        {label: '>10'}
     ];
 
 const triggerOptions = [
@@ -395,8 +263,8 @@ const triggerOptions = [
 
 const windExposureOptions = [
         {label: 'Sotavento'},
-        {label: 'Sobrevento'},
         {label: 'Carga cruzada'},
+        {label: 'Otras situaciones'},
         {label: 'Sin exposicion al viento'},
     ];
 
@@ -407,7 +275,22 @@ return(
                 <View style={styles.introContainer} >
                     <Text style={styles.intro}>Si tienes informacion sobre una avalancha o una situacion de condiciones generalizada, 
                     aqui puedes detallar informacion al respecto. Rellena solamente aquellos campos de los que tengas informacion precisa </Text> 
+                    <Text style={styles.introSubtext}> * campos obligatorios</Text>
                 </View>
+                <View style={styles.formContainer} >
+                    <View style={styles.spacer}/>
+                     <CustomRadioButton 
+                        name="obsType"
+                        title="Observación singular o síntesis de la salida?*"
+                        control={control}
+                        data={obsTypeOptions}
+                        rules={{required: 'Campo obligatorio'}}
+                        box={false}
+                        textColor={'black'}
+                        circleSize={14}
+                    />
+                </View>
+
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
                     <CustomRadioButton 
@@ -522,7 +405,7 @@ return(
 
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="avalancheType3"
-                                        title="Placa capa debil persistente." 
+                                        title="Capa debil persistente" 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
@@ -648,20 +531,25 @@ return(
                     
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="heightRange1"
-                                        title="inferior a 1.600 m" 
+                                        title="<2.000 m" 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
                         <CustomCheckbox name="heightRange2" 
-                                        title="entre 1.600 - 2.000 m"
+                                        title="2.000 - 2.300 m"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                        <CustomCheckbox name="heightRange3"
+                                        title="> 2.300" 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
                     </View> 
 
-                    <View style={styles.formGroup}>
+                    {/* <View style={styles.formGroup}>
                         <CustomCheckbox name="heightRange3"
-                                        title="entre 2.000 - 2.400 m" 
+                                        title="> 2.300" 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
@@ -670,7 +558,7 @@ return(
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
-                    </View> 
+                    </View>  */}
                  
              
                 {/* {errors.deepPowder && (
@@ -845,7 +733,7 @@ const styles = StyleSheet.create({
         marginBottom: 100
     },
     introContainer:{
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'flex-start',
     },
     formContainer:{
@@ -853,7 +741,13 @@ const styles = StyleSheet.create({
     },
     intro: {
         padding:10,
+        paddingBottom: 5,
         textAlign: 'left'
+    },
+    introSubtext:{
+        color: 'gray',
+        fontSize:12,
+        paddingLeft:10,
     },
     formGroup: {
         flex: 1,

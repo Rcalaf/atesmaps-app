@@ -12,6 +12,7 @@ const CustomInput = forwardRef(({
   numberOfLines=1,
   keyboardType='default',
   onPress,
+  customError=false,
   customStyles={},
   blurOnTap=false,
 },ref) => {
@@ -27,7 +28,7 @@ const CustomInput = forwardRef(({
             style={[
               styles.container,
               customStyles,
-              {borderColor: error ? 'red' : '#e8e8e8'},
+              {borderColor: (error || customError) ? 'red' : '#e8e8e8'},
             ]}
           >
             <TextInput

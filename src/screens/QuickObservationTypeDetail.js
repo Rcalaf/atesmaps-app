@@ -18,7 +18,7 @@ import CustomRadioButton from "../components/CustomRadioButton";
 import CustomButton from "../components/CustomButton";
 import CustomInput from "../components/CustomInput";
 import CustomCheckbox from "../components/CustomCheckbox";
-import  Snackbar  from "react-native-snackbar";
+import Snackbar from "react-native-snackbar";
 
 
 // import CheckBox from '@react-native-community/checkbox';
@@ -62,6 +62,7 @@ const { control, handleSubmit, formState: { errors }, getValues, setValue, reset
         coldDay: quickValues.values.dayType?.cold  ? quickValues.values.dayType?.cold : null,
         wetDay: quickValues.values.dayType?.wet ? quickValues.values.dayType?.wet : null,
         sunnyDay: quickValues.values.dayType?.sunny ? quickValues.values.dayType?.sunny : null,
+        rainyDay: quickValues.values.dayType?.rainy ? quickValues.values.dayType?.rainy : null,
         newConditions: quickValues.values.avalancheConditions?.newConditions ? quickValues.values.avalancheConditions?.newConditions : null,
         avalanches: quickValues.values.avalancheConditions?.slabs ? quickValues.values.avalancheConditions?.slabs : null,
         sounds: quickValues.values.avalancheConditions?.sounds ? quickValues.values.avalancheConditions?.sounds : null,
@@ -156,7 +157,8 @@ const updateData = () => {
         'windy': values.windyDay,
         'cold': values.coldDay,
         'wet': values.wetDay, 
-        'sunny': values.sunnyDay
+        'sunny': values.sunnyDay,
+        'rainy': values.rainyDay
     }
 
     aux['values']['avalancheConditions'] = {
@@ -214,25 +216,25 @@ const removeData = () => {
 }
 
 //Snow conditions:
-const [deepPowder, setDeepPowder] = useState(quickValues.values?.snowConditions?.deepPowder);
-const [crusty, setCrusty] = useState(quickValues.values?.snowConditions?.crusty);
-const [wet, setWet] = useState(quickValues.values?.snowConditions?.wet);
-const [heavy, setHeavy] = useState(quickValues.values?.snowConditions?.heavy);
-// const [powder, setPowder] = useState(quickValues.values?.snowConditions?.powder);
-const [windAffected, setWindAffected] = useState(quickValues.values?.snowConditions?.windAffected);
-const [hard, setHard] = useState(quickValues.values?.snowConditions?.hard);
+// const [deepPowder, setDeepPowder] = useState(quickValues.values?.snowConditions?.deepPowder);
+// const [crusty, setCrusty] = useState(quickValues.values?.snowConditions?.crusty);
+// const [wet, setWet] = useState(quickValues.values?.snowConditions?.wet);
+// const [heavy, setHeavy] = useState(quickValues.values?.snowConditions?.heavy);
+// // const [powder, setPowder] = useState(quickValues.values?.snowConditions?.powder);
+// const [windAffected, setWindAffected] = useState(quickValues.values?.snowConditions?.windAffected);
+// const [hard, setHard] = useState(quickValues.values?.snowConditions?.hard);
 
 
 
 //ridden slopes:
-const [rodeMellow, setRodeMellow] = useState(quickValues.values?.rodeSlopeTypes?.mellow);
-const [rodeAlpine, setRodeAlpine] = useState(quickValues.values?.rodeSlopeTypes?.alpine);
-const [rodeClear, setRodeClear] = useState(quickValues.values?.rodeSlopeTypes?.clear);
-const [rodeDense, setRodeDense] = useState(quickValues.values?.rodeSlopeTypes?.dense);
-const [rodeSteep, setRodeSteep] = useState(quickValues.values?.rodeSlopeTypes?.steep);
-const [rodeOpen, setRodeOpen] = useState(quickValues.values?.rodeSlopeTypes?.open);
-const [rodeShade, setRodeShade] = useState(quickValues.values?.rodeSlopeTypes?.shade);
-const [rodeSunny, setRodeSunny] = useState(quickValues.values?.rodeSlopeTypes?.sunnys);
+// const [rodeMellow, setRodeMellow] = useState(quickValues.values?.rodeSlopeTypes?.mellow);
+// const [rodeAlpine, setRodeAlpine] = useState(quickValues.values?.rodeSlopeTypes?.alpine);
+// const [rodeClear, setRodeClear] = useState(quickValues.values?.rodeSlopeTypes?.clear);
+// const [rodeDense, setRodeDense] = useState(quickValues.values?.rodeSlopeTypes?.dense);
+// const [rodeSteep, setRodeSteep] = useState(quickValues.values?.rodeSlopeTypes?.steep);
+// const [rodeOpen, setRodeOpen] = useState(quickValues.values?.rodeSlopeTypes?.open);
+// const [rodeShade, setRodeShade] = useState(quickValues.values?.rodeSlopeTypes?.shade);
+// const [rodeSunny, setRodeSunny] = useState(quickValues.values?.rodeSlopeTypes?.sunnys);
 
 
 //avoided slopes 
@@ -259,24 +261,24 @@ const [rodeSunny, setRodeSunny] = useState(quickValues.values?.rodeSlopeTypes?.s
 
 
 //weather conditions
-const [warmDay, setWarmDay] = useState(quickValues.values?.dayType?.warm);
-const [foggyDay, setFoggyDay] = useState(quickValues.values?.dayType?.foggy);
-const [cloudyDay, setCloudyDay] = useState(quickValues.values?.dayType?.cloudy);
-const [stormyDay, setStormyDay] = useState(quickValues.values?.dayType?.stormy);
-const [windyDay, setWindyDay] = useState(quickValues.values?.dayType?.windy);
-const [wetDay, setWetDay] = useState(quickValues.values?.dayType?.wet);
-const [coldDay, setColdDay] = useState(quickValues.values?.dayType?.cold);
-const [sunnyDay, setSunnyDay] = useState(quickValues.values?.dayType?.sunny);
+// const [warmDay, setWarmDay] = useState(quickValues.values?.dayType?.warm);
+// const [foggyDay, setFoggyDay] = useState(quickValues.values?.dayType?.foggy);
+// const [cloudyDay, setCloudyDay] = useState(quickValues.values?.dayType?.cloudy);
+// const [stormyDay, setStormyDay] = useState(quickValues.values?.dayType?.stormy);
+// const [windyDay, setWindyDay] = useState(quickValues.values?.dayType?.windy);
+// const [wetDay, setWetDay] = useState(quickValues.values?.dayType?.wet);
+// const [coldDay, setColdDay] = useState(quickValues.values?.dayType?.cold);
+// const [sunnyDay, setSunnyDay] = useState(quickValues.values?.dayType?.sunny);
 
 //avalanche conditions:
-const [newConditions, setNewConditions] = useState(quickValues.values?.avalancheConditions?.newConditions);
-const [avalanches, setAvalanches] = useState(quickValues.values?.avalancheConditions?.slabs);
-const [sounds, setSounds] = useState(quickValues.values?.avalancheConditions?.sounds);
-const [tempChanges, setTempChanges] = useState(quickValues.values?.avalancheConditions?.tempChanges);
-const [snowAccumulation, setSnowAccumulation] = useState(quickValues.values?.avalancheConditions?.setSnowAccumulation);
+// const [newConditions, setNewConditions] = useState(quickValues.values?.avalancheConditions?.newConditions);
+// const [avalanches, setAvalanches] = useState(quickValues.values?.avalancheConditions?.slabs);
+// const [sounds, setSounds] = useState(quickValues.values?.avalancheConditions?.sounds);
+// const [tempChanges, setTempChanges] = useState(quickValues.values?.avalancheConditions?.tempChanges);
+// const [snowAccumulation, setSnowAccumulation] = useState(quickValues.values?.avalancheConditions?.setSnowAccumulation);
 
 //comments 
-const [comments, setComments] = useState(quickValues.values?.otherComments);
+// const [comments, setComments] = useState(quickValues.values?.otherComments);
 
 
 //Riding conditions:
@@ -298,9 +300,12 @@ const [ridingQuality, setRidingQuality] = useState(quickValues.values?.ridingQua
 
 //Activity type:
 const activityData = [
-    {label: 'Esqui de montaña'},
+    {label: 'Esqui de montaña / Splitboard'},
     {label: 'Raquetas de nieve'},
     {label: 'Alpinismo'},
+    {label: 'Esquí/Snowboard (Pista)'},
+    {label: 'Esquí de fondo'},
+    {label: 'Sin actividad'},
 ]
 
 const [activityType, setActivityType] = useState();
@@ -323,12 +328,14 @@ return(
                     <Text style={styles.intro}>Realiza un breve análisis de tu actividad y las condiciones observadas. 
                     Cualquier informacion puede ser útil a otros usuarios o profesionales. Solo la primera pregunta es obligada, 
                     no respondas aquellas de las que no estés seguro/a. Puedes añadir más detalles en los apartados Avalancha, Manto, Meteo y Accidente.</Text> 
+                    <Text style={styles.introSubtext}> * campos obligatorios</Text>
                 </View>
+
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
                      <CustomRadioButton 
                         name="activityType"
-                        title="Actividad:"
+                        title="Actividad*:"
                         control={control}
                         data={activityData}
                         rules={{required: 'Campo obligatorio'}}
@@ -342,7 +349,7 @@ return(
                     <View style={styles.spacer}/>
                     <CustomRadioButton 
                         name="ridingQuality"
-                        title="Evaluación general de la actividad:"
+                        title="Evaluación general de la actividad*:"
                         control={control}
                         data={data}
                         rules={{required: 'Campo obligatorio'}}
@@ -498,8 +505,8 @@ return(
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
-                        <CustomCheckbox name="foggyDay" 
-                                        title="Niebla"
+                        <CustomCheckbox name="coldDay" 
+                                        title="Frio"
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
@@ -511,8 +518,8 @@ return(
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
-                        <CustomCheckbox name="stormyDay" 
-                                        title="Tormenta"
+                        <CustomCheckbox name="sunnyDay" 
+                                        title="Soleado"
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
@@ -523,8 +530,8 @@ return(
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
-                        <CustomCheckbox name="coldDay" 
-                                        title="Frio"
+                        <CustomCheckbox name="foggyDay" 
+                                        title="Niebla"
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
@@ -536,8 +543,15 @@ return(
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
-                        <CustomCheckbox name="sunnyDay" 
-                                        title="Soleado"
+                        <CustomCheckbox name="stormyDay" 
+                                        title="Tormenta"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                    </View> 
+                    <View style={styles.formGroup}>
+                        <CustomCheckbox name="rainyDay"
+                                        title="Lluvia" 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
@@ -590,7 +604,7 @@ return(
                     </View> 
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="tempChanges"
-                                        title="Subida crítica de la temperatura (temp cercana a 0º)." 
+                                        title="Sobrecarga por humidificacion o fusión." 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
@@ -645,7 +659,7 @@ const styles = StyleSheet.create({
         marginBottom: 100
     },
     introContainer:{
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'flex-start',
     },
     formContainer:{
@@ -653,7 +667,13 @@ const styles = StyleSheet.create({
     },
     intro: {
         padding:10,
+        paddingBottom: 5,
         textAlign: 'left'
+    },
+    introSubtext:{
+        color: 'gray',
+        fontSize:12,
+        paddingLeft:10,
     },
     formGroup: {
         flex: 1,

@@ -146,8 +146,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         //targetSdkVersion 31
         ndkVersion = "21.4.7075529"
-        versionCode 11
-        versionName "1.0"
+        versionCode 12
+        versionName "1.1"
         //react-native-image-crop-picker required config
             vectorDrawables.useSupportLibrary = true
     }

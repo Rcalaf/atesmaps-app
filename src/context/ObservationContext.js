@@ -72,6 +72,7 @@ export const ObservationProvider = ({children}) => {
         try{
             let aux = observations;
             aux.push(observation);
+            
             // setObservations( (arr) => { return [...arr, observation]});
             setObservations(aux);
             updateSelectedIndex(aux.length-1)

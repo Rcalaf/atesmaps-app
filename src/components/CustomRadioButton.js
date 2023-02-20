@@ -26,11 +26,12 @@ const CustomRadioButton = ({
           <View
             style={[
               styles.container,
-              { borderColor: error ? 'red' : 'none',
-                borderWidth:  error ? 1 : 0,
-                borderRadius: error ? 5 : 0,
-                padding: error ? 5 : 0
-              },containerStyle
+              containerStyle,
+              { borderColor: error ? 'red' : containerStyle.borderColor ? containerStyle.borderColor : 'none',
+                borderWidth: error ? 1 : containerStyle.borderWidth ? containerStyle.borderWidth : 0,
+                borderRadius: error ? 5 : containerStyle.borderRadius ? containerStyle.borderRadius : 0,
+                padding: error ? 5 : containerStyle.padding ? containerStyle.padding : 0
+              }
             ]}
           >
 

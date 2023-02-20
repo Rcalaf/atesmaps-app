@@ -58,6 +58,7 @@ const { control, handleSubmit, formState: { errors }, getValues, setValue } = us
         // range_3: snowpackValues.values.altitudeRange?.range_3 ? snowpackValues.values.altitudeRange?.range_3 : null,
         // range_4: snowpackValues.values.altitudeRange?.range_4 ? snowpackValues.values.altitudeRange?.range_4 : null,
         altitude: snowpackValues.values?.altitude ? snowpackValues.values?.altitude : null,
+        geolocationAccuracy: snowpackValues.values?.geolocationAccuracy ? snowpackValues.values?.geolocationAccuracy : null,
         altitudeRange1: snowpackValues.values?.altitudeRange?.range_1 ? snowpackValues.values?.altitudeRange?.range_1 : null,
         altitudeRange2: snowpackValues.values?.altitudeRange?.range_2 ? snowpackValues.values?.altitudeRange?.range_2 : null,
         altitudeRange3: snowpackValues.values?.altitudeRange?.range_3 ? snowpackValues.values?.altitudeRange?.range_3 : null,
@@ -73,18 +74,29 @@ const { control, handleSubmit, formState: { errors }, getValues, setValue } = us
         depth: snowpackValues.values?.depth ? snowpackValues.values?.depth : null,
         observationType: snowpackValues.values?.observationType ? snowpackValues.values?.observationType : null,
         woumpfs:snowpackValues.values?.woumpfs ? snowpackValues.values?.woumpfs : null, 
-        sounds:snowpackValues.values?.sounds ? snowpackValues.values?.sounds : null, 
-        layerSnowType:snowpackValues.values?.layerSnowType ? snowpackValues.values?.layerSnowType : null, 
+        cracks:snowpackValues.values?.cracks ? snowpackValues.values?.cracks : null, 
+        snowType:snowpackValues.values?.snowType ? snowpackValues.values?.snowType : null, 
         footPenetration:snowpackValues.values?.footPenetration ? snowpackValues.values?.footPenetration : null,
         skiPenetration:snowpackValues.values?.skiPenetration ? snowpackValues.values?.skiPenetration : null,
         handTest:snowpackValues.values?.handTest ? snowpackValues.values?.handTest : null, 
         compresionTest:snowpackValues.values?.compresionTest ? snowpackValues.values?.compresionTest : null,
         extensionTest:snowpackValues.values?.extensionTest ? snowpackValues.values?.extensionTest : null,
-        fractureType:snowpackValues.values?.fractureType ? snowpackValues.values?.fractureType : null,
+        fractureType1:snowpackValues.values?.fractureType?.type_1 ? snowpackValues.values?.fractureType?.type_1 : null,
+        fractureType2:snowpackValues.values?.fractureType?.type_2 ? snowpackValues.values?.fractureType?.type_2 : null,
+        fractureType3:snowpackValues.values?.fractureType?.type_3 ? snowpackValues.values?.fractureType?.type_3 : null,
+        fractureType4:snowpackValues.values?.fractureType?.type_4 ? snowpackValues.values?.fractureType?.type_4 : null,
+        fractureType5:snowpackValues.values?.fractureType?.type_5 ? snowpackValues.values?.fractureType?.type_5 : null,
+        fractureType6:snowpackValues.values?.fractureType?.type_6 ? snowpackValues.values?.fractureType?.type_6 : null,
         fractureDepth:snowpackValues.values?.fractureDepth ? snowpackValues.values?.fractureDepth : null,
         layerHardness:snowpackValues.values?.layerHardness ? snowpackValues.values?.layerHardness : null,
+        weakLayerHardness:snowpackValues.values?.weakLayerHardness ? snowpackValues.values?.weakLayerHardness : null,
         snowHumidity:snowpackValues.values?.snowHumidity ? snowpackValues.values?.snowHumidity : null, 
-        snowType:snowpackValues.values?.snowType ? snowpackValues.values?.snowType : null,
+        layerSnowType1:snowpackValues.values?.layerSnowType?.type_1 ? snowpackValues.values?.layerSnowType?.type_1 : null,
+        layerSnowType2:snowpackValues.values?.layerSnowType?.type_2 ? snowpackValues.values?.layerSnowType?.type_2 : null,
+        layerSnowType3:snowpackValues.values?.layerSnowType?.type_3 ? snowpackValues.values?.layerSnowType?.type_3 : null,
+        layerSnowType4:snowpackValues.values?.layerSnowType?.type_4 ? snowpackValues.values?.layerSnowType?.type_4 : null,
+        layerSnowType5:snowpackValues.values?.layerSnowType?.type_5 ? snowpackValues.values?.layerSnowType?.type_5 : null,
+        layerSnowType6:snowpackValues.values?.layerSnowType?.type_6 ? snowpackValues.values?.layerSnowType?.type_6 : null,
         comments:snowpackValues.values?.comments ? snowpackValues.values?.comments : null,
     }
 });
@@ -118,13 +130,10 @@ useEffect(() => {
 const removeData = () => {
     // console.log('------Snowpack report---------');
     // console.log("Delete Snowpack report observation...");  
-
-   
     let observation = editingObservation;
     observation.observationTypes['snowpack'] = {status: false, values: {}}; 
     setEditingObservation({...editingObservation, observationTypes: observation.observationTypes['snowpack']});
     updateObservations(observation);
-    
     // console.log(observation);
     // console.log('---------------------------');
     Snackbar.show({
@@ -141,7 +150,6 @@ const updateData = () => {
     // console.log('------Quick report---------');
     const values = getValues();
     // console.log(values);
-
     let aux = {values: {}}
 
     aux['values'].observationType= values.observationType;
@@ -163,22 +171,40 @@ const updateData = () => {
         'O': values.orientationO,
         'NO': values.orientationNO,
     }
+    
+    aux['values']['layerSnowType'] = {
+        'type_1': values.layerSnowType1,
+        'type_2': values.layerSnowType2,
+        'type_3': values.layerSnowType3,
+        'type_4': values.layerSnowType4,
+        'type_5': values.layerSnowType5,
+        'type_6': values.layerSnowType6,
+    }
+
+    aux['values']['fractureType'] = {
+        'type_1': values.fractureType1,
+        'type_2': values.fractureType2,
+        'type_3': values.fractureType3,
+        'type_4': values.fractureType4,
+        'type_5': values.fractureType5,
+        'type_6': values.fractureType6,
+    }
 
     aux['values'].depth= values.depth;
     aux['values'].woumpfs= values.woumpfs;
     aux['values'].sounds= values.sounds;
-    aux['values'].layerSnowType= values.layerSnowType;
+    aux['values'].snowType= values.snowType;
     aux['values'].footPenetration= values.footPenetration;
     aux['values'].skiPenetration= values.skiPenetration;
 
     aux['values'].handTest= values.handTest;
     aux['values'].compresionTest= values.compresionTest;
     aux['values'].extensionTest= values.extensionTest;
-    aux['values'].fractureType= values.fractureType;
+    // aux['values'].fractureType= values.fractureType;
     aux['values'].fractureDepth= values.fractureDepth;
     aux['values'].layerHardness= values.layerHardness;
+    aux['values'].weakLayerHardness= values.weakLayerHardness;
     aux['values'].layerHumidity= values.layerHumidity;
-    aux['values'].snowType= values.snowType;
     aux['values'].comments= values.comments;
 
     aux.status = true;
@@ -203,49 +229,10 @@ const updateData = () => {
     navigation.navigate('Observación',{selectedIndex});
 }
 
-//Snow conditions:
-const [altitude, setAltitude] = useState(snowpackValues.values?.altitude);
-
-
-const [altitudeRange1, setAltitudeRange1] = useState(snowpackValues.values?.altitudeRange?.range_1);
-const [altitudeRange2, setAltitudeRange2] = useState(snowpackValues.values?.altitudeRange?.range_2);
-const [altitudeRange3, setAltitudeRange3] = useState(snowpackValues.values?.altitudeRange?.range_3);
-const [altitudeRange4, setAltitudeRange4] = useState(snowpackValues.values?.altitudeRange?.range_4);
-
-const [orientationN, setOrientationN] = useState(snowpackValues.values?.orientation?.N);
-const [orientationNE, setOrientationNE] = useState(snowpackValues.values?.orientation?.NE);
-const [orientationE, setOrientationE] = useState(snowpackValues.values?.orientation?.E);
-const [orientationSE, setOrientationSE] = useState(snowpackValues.values?.orientation?.SE);
-const [orientationS, setOrientationS] = useState(snowpackValues.values?.orientation?.S);
-const [orientationSO, setOrientationSO] = useState(snowpackValues.values?.orientation?.SO);
-const [orientationO, setOrientationO] = useState(snowpackValues.values?.orientation?.O);
-const [orientationNO, setOrientationNO] = useState(snowpackValues.values?.orientation?.NO);
-
-const [depth, setDepth] = useState(snowpackValues.values?.depth);
-
-const [observationType, setObservationType] = useState(snowpackValues.values?.observationType);
-
-const [woumpfs, setWoumpfs] = useState(snowpackValues.values?.woumpfs);
-const [sounds, setSounds] = useState(snowpackValues.values?.sounds);
-const [layerSnowType, setLayerSnowType] = useState(snowpackValues.values?.layerSnowType);
-const [footPenetration, setFootPenetration] = useState(snowpackValues.values?.footPenetration);
-const [skiPenetration, setSkiPenetration] = useState(snowpackValues.values?.skiPenetration);
-const [handTest, setHandTest] = useState(snowpackValues.values?.handTest);
-const [compresionTest, setCompresionTest] = useState(snowpackValues.values?.compresionTest);
-const [extensionTest, setExtensionTest] = useState(snowpackValues.values?.extensionTest);
-const [fractureType, setFractureType] = useState(snowpackValues.values?.fractureType);
-const [fractureDepth, setFractureDepth] = useState(snowpackValues.values?.fractureDepth);
-const [layerHardness, setLayerHardness] = useState(snowpackValues.values?.layerHardness);
-const [snowHumidity, setSnowHumidity] = useState(snowpackValues.values?.snowHumidity);
-const [snowType, setSnowType] = useState(snowpackValues.values?.snowType);
-
-//comments 
-const [comments, setComments] = useState(snowpackValues.values?.comments);
-
 const typeOptions = [
-        {label: 'Puntual'},
-        {label: 'Salida'},
-      
+        {label: 'Exacta'},
+        {label: 'Bastante precisa'},
+        {label: 'Poco precisa'},
     ];
 
 const triggerOptions = [
@@ -290,18 +277,18 @@ const ctOptions = [
     ];
 
 const ectOptions = [
-        {label: 'Positivo'},
-        {label: 'Negativo'},
+        {label: 'Propagación'},
+        {label: 'Sin propagarción'},
         {label: 'No concluyente'},
     ];
 
-const fractureOptions = [
-        {label: 'Subito/Colapso'},
-        {label: 'Subita/Planar'},
-        {label: 'Resistente/Planar'},
-        {label: 'Progresiva/Colapso'},
-        {label: 'Irregular'},
-    ];
+// const fractureOptions = [
+//         {label: 'Subito/Colapso'},
+//         {label: 'Subita/Planar'},
+//         {label: 'Resistente/Planar'},
+//         {label: 'Progresiva/Colapso'},
+//         {label: 'Irregular'},
+//     ];
 
 const hardnessOptions = [
         {label: '1 - (P) Puño'},
@@ -321,6 +308,12 @@ const humidityOptions = [
      
     ]
 
+const obsTypeOptions = [
+        {label: 'Singular'},
+        {label: 'Síntesis'},
+    ];
+    
+
 
 return(
     <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
@@ -329,15 +322,29 @@ return(
                 <View style={styles.introContainer} >
                     <Text style={styles.intro}>Has evaluado la estabilidad del manto durante tu salida? 
                     Rellena solamente aquellos campos de los que tengas informacion precisa </Text> 
+                    <Text style={styles.introSubtext}>* campos obligatorios</Text>
+                </View>
+                <View style={styles.formContainer} >
+                    <View style={styles.spacer}/>
+                     <CustomRadioButton 
+                        name="observationType"
+                        title="Observación singular o síntesis de la salida?*"
+                        control={control}
+                        data={obsTypeOptions}
+                        rules={{required: 'Campo obligatorio'}}
+                        box={false}
+                        textColor={'black'}
+                        circleSize={14}
+                    />
                 </View>
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
                     <CustomRadioButton 
-                        name="observationType"
-                        title="La observación fué hace:"
+                        name="geolocatioAccuracy"
+                        title="La geolocalización de la observación es precisa?"
                         control={control}
                         data={typeOptions}
-                        rules={{required: 'Campo obligatorio'}}
+                        // rules={{required: 'Campo obligatorio'}}
                         box={false}
                         textColor={'black'}
                         circleSize={14}
@@ -360,30 +367,31 @@ return(
                     <Text>Franja altitudinal:</Text>
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="altitudeRange1"
-                                        title="inferior a 1.600 m" 
+                                        title="< 2.000m" 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
                         <CustomCheckbox name="altitudeRange2" 
-                                        title="entre 1.600 - 2.000 m"
-                                        control={control}  
-                                        // rules={{required: 'Campo obligatorio'}}
-                        />
-                    </View> 
-
-                    <View style={styles.formGroup}>
-                        <CustomCheckbox name="altitudeRange3"
-                                        title="entre 2.000 - 2.400 m" 
-                                        control={control}  
-                                        // rules={{required: 'Campo obligatorio'}}
-                        />
-                        <CustomCheckbox name="altitudeRange4" 
-                                        title="superior a 2.400 m"
+                                        title="2.000 - 2.300 m"
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
                        
                     </View> 
+
+                    <View style={styles.formGroup}>
+                        <CustomCheckbox name="altitudeRange3"
+                                        title="> 2.300 m" 
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                        {/* <CustomCheckbox name="altitudeRange4" 
+                                        title="superior a 2.400 m"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        /> */}
+                       
+                    </View>  
                     <CustomInput
                         name="altitude"
                         placeholder="Cota altimetrica zona de salida (m)"
@@ -456,14 +464,10 @@ return(
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
-                         <View style={styles.checkboxGroup}>
-                            
-                            </View>
-                        
-                       
+                        <View style={styles.checkboxGroup}>
+            
+                        </View>
                     </View> 
-                  
-                  
                 </View>
                 {/* {errors.deepPowder && (
                     <Text style={{color: 'red', alignSelf: 'stretch'}}>{errors.deepPowder?.message || 'Error'}</Text>
@@ -475,7 +479,7 @@ return(
                     <Text>Profundidad del manto:</Text>
                     <CustomInput
                         name="depth"
-                        placeholder="Profundidad del manto (cm)"
+                        placeholder="(cm)"
                         control={control}
                         // rules={{required: 'Title is required'}}
                     />       
@@ -501,8 +505,8 @@ return(
                
                     <View style={styles.spacer}/>
                     <CustomRadioButton 
-                        name="sounds"
-                        title="Has escuchado crujidos?"
+                        name="cracks"
+                        title="Has observado fisuras en propagación?"
                         control={control}
                         data={booleanOptions}
                         // rules={{required: 'Campo obligatorio'}}
@@ -511,10 +515,11 @@ return(
                         circleSize={14}
                     />
                 </View>
+
             
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
-                    <CustomRadioButton 
+                    {/* <CustomRadioButton 
                         name="layerSnowType"
                         title="Nieve en superfície"
                         control={control}
@@ -523,8 +528,44 @@ return(
                         box={false}
                         textColor={'black'}
                         circleSize={14}
-                    />
-                   
+                    /> */}
+                    <Text>Nieve en superfície:</Text>
+                    <View style={styles.formGroup}>
+                        <CustomCheckbox name="layerSnowType1"
+                                        title="Nueva" 
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                        <CustomCheckbox name="layerSnowType2" 
+                                        title="Crosta"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                    </View> 
+                    <View style={styles.formGroup}>
+                        <CustomCheckbox name="layerSnowType3"
+                                        title="Escarcha de superfície" 
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                        <CustomCheckbox name="layerSnowType4" 
+                                        title="Facetas"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                    </View> 
+                    <View style={styles.formGroup}>
+                        <CustomCheckbox name="layerSnowType5"
+                                        title="Grano fino" 
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                        <CustomCheckbox name="layerSnowType6" 
+                                        title="Variable"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                    </View> 
                 </View>
 
                 <View style={styles.formContainer} >
@@ -606,7 +647,7 @@ return(
 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
-                    <CustomRadioButton 
+                    {/* <CustomRadioButton 
                         name="fractureType"
                         title="Tipo de fractura"
                         control={control}
@@ -615,7 +656,40 @@ return(
                         box={false}
                         textColor={'black'}
                         circleSize={14}
-                    />
+                    /> */}
+                    <Text>Tipo de fractura:</Text>
+                    <Text style={styles.introSubtext}>Si dudas entre dos tipos, puedes marcar las dos</Text>
+                    <View style={styles.formGroup}>
+                        <CustomCheckbox name="fractureType1"
+                                        title="Colapso subito" 
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                        <CustomCheckbox name="fractureType2" 
+                                        title="Planar subito"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                    </View> 
+                    <View style={styles.formGroup}>
+                        <CustomCheckbox name="fractureType3"
+                                        title="Planar resistente" 
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                        <CustomCheckbox name="fractureType4" 
+                                        title="Colapso progresivo"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                    </View> 
+                    <View style={styles.formGroup}>
+                        <CustomCheckbox name="fractureType5"
+                                        title="Rotura (Break)" 
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                    </View> 
                 </View>
 
                 <View style={styles.formContainer} >
@@ -623,7 +697,7 @@ return(
                     <Text>Profundidad de fractura (cm, desde la superfície):</Text>
                     <CustomInput
                         name="fractureDepth"
-                        placeholder="Profundidad de fractura (cm)"
+                        placeholder="(cm)"
                         control={control}
                         // rules={{required: 'Title is required'}}
                     />   
@@ -634,7 +708,21 @@ return(
                     <View style={styles.spacer}/>
                     <CustomRadioButton 
                         name="layerHardness"
-                        title="Dureza de la capa"
+                        title="Dureza de la placa (sobre la capa debil)"
+                        control={control}
+                        data={hardnessOptions}
+                        // rules={{required: 'Campo obligatorio'}}
+                        box={false}
+                        textColor={'black'}
+                        circleSize={14}
+                    />
+                </View>
+
+                <View style={styles.formContainer} >
+                    <View style={styles.spacer}/>
+                    <CustomRadioButton 
+                        name="weakLayerHardness"
+                        title="Dureza de la capa debil"
                         control={control}
                         data={hardnessOptions}
                         // rules={{required: 'Campo obligatorio'}}
@@ -664,7 +752,7 @@ return(
                     <Text>Tipo de grano:</Text>
                     <CustomInput
                         name="snowType"
-                        placeholder="(cm)"
+                        placeholder="Describe el tipo de copo"
                         control={control}
                         // rules={{required: 'Title is required'}}
                     />  
@@ -704,14 +792,26 @@ const styles = StyleSheet.create({
         marginBottom: 100
     },
     introContainer:{
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'flex-start',
+        padding: 10
+    },
+    // introSubtext:{
+    //     flex: 1,
+    //     fontSize:10,
+    //     // paddingLeft: 10,
+    //     alignItems: 'flex-end'
+    // },
+    introSubtext:{
+        color: 'gray',
+        fontSize:12,
+        paddingLeft:5,
     },
     formContainer:{
         padding: 10
     },
     intro: {
-        padding:10,
+        paddingBottom: 5,
         textAlign: 'left'
     },
     formGroup: {
@@ -768,7 +868,7 @@ const styles = StyleSheet.create({
         marginVertical: 5,
     }, 
     space: {
-        height: 150,
+        height: 200,
     }
 
 });

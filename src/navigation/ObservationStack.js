@@ -18,6 +18,7 @@ import ObservationDetail from '../screens/ObservationDetail';
 import QuickObservationTypeDetail from '../screens/QuickObservationTypeDetail';
 import AvalancheObservationTypeDetail from '../screens/AvalancheObservationTypeDetail';
 import SnowpackObservationTypeDetail from '../screens/SnowpackObservationTypeDetail';
+import AccidentObservationTypeDetail from '../screens/AccidentObservationTypeDetail';
 import ObservationImageList from '../screens/ObservationImageList';
 import LocationPicker from '../screens/LocationPicker';
 import ShowObservation from '../screens/ShowObservation';
@@ -52,7 +53,7 @@ return(
       <Stack.Screen name="Imagenes" component={ObservationImageList} />
 
       <Stack.Screen 
-          name="Location Picker" 
+          name="Ubicación" 
           component={LocationPicker} 
           // options={{
           //   headerRight: () => (
@@ -68,7 +69,7 @@ return(
       <Stack.Screen name="Rapida" component={QuickObservationTypeDetail} />
       <Stack.Screen name="Avalancha" component={AvalancheObservationTypeDetail} />
       <Stack.Screen name="Manto de nieve" component={SnowpackObservationTypeDetail} />
-
+      <Stack.Screen name="Accidente" component={AccidentObservationTypeDetail} />
     </Stack.Navigator>
 )};
 
