@@ -22,7 +22,7 @@ import RadioButtonRN from 'radio-buttons-react-native';
 
 import { useForm, Controller } from "react-hook-form";
 
-const UserForm = ({preloadedValues, onSubmit}) => {
+const UserForm = ({preloadedValues, onSubmit, onDelete}) => {
     // const [user, setUser] = useState(null);
 
     const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
@@ -36,6 +36,9 @@ const UserForm = ({preloadedValues, onSubmit}) => {
         // password: "",
         // passwordConfirmation: "",
         gender: Number(preloadedValues?.gender),
+        age: Number(preloadedValues?.age),
+        twitterProfile: preloadedValues?.twitterProfile,
+        instagraProfile: preloadedValues?.instagraProfile,
         professionalOrientation: Number(preloadedValues?.professionalOrientation),
         snowEducationLevel: Number(preloadedValues?.snowEducationLevel),
         snowExperienceLevel: Number(preloadedValues?.snowExperienceLevel),
@@ -73,9 +76,16 @@ const UserForm = ({preloadedValues, onSubmit}) => {
         {label: 'Mujer'},
         {label: 'Hombre'},
         {label: 'No binario'},
+        {label: 'Prefiero no decirlo'}
     ]
     const [gender, setGender] = useState(false);
 
+    const ageOptions = [
+        {label: '15-30'},
+        {label: '30-45'},
+        {label: '45-60'},
+        {label: '>60'}
+    ]
      //Activity type:
      const carreerOptions = [
         {label: 'No relacionada con el terreno de aludes'},
@@ -166,10 +176,10 @@ const UserForm = ({preloadedValues, onSubmit}) => {
                   // onPress={showDatepicker}
                 /> */}
               </View>
-              <Text style={[styles.sectionTitle,{marginTop: 40}]}>Datos personales</Text>
+              <Text style={[styles.sectionTitle,{marginTop: 30}]}>Datos personales</Text>
               <View style={styles.spacer}/>
               <View style={{marginTop: 10}}>
-                <Text>Nombre</Text>
+                <Text>Nombre*</Text>
                 <CustomInput
                     name="name"
                     placeholder="Nombre"
@@ -178,7 +188,7 @@ const UserForm = ({preloadedValues, onSubmit}) => {
                     // onPress={showDatepicker}
                 />
         
-                <Text>Apellidos</Text>
+                <Text>Apellidos*</Text>
                 <CustomInput
                     name="lastName"
                     placeholder="Apellidos"
@@ -189,17 +199,43 @@ const UserForm = ({preloadedValues, onSubmit}) => {
 
                 <CustomRadioButton 
                     name="gender"
-                    title="Género:"
+                    title="Género:  (opcional)"
                     control={control}
                     data={genderOptions}
-                    rules={{required: 'Genero is required'}}
+                    // rules={{required: 'Genero is required'}}
                     box={false}
                     textColor={'black'}
                     circleSize={14}
                     
                 />
+
+                <CustomRadioButton 
+                    name="age"
+                    title="Franja de edad: (opcional)"
+                    control={control}
+                    data={ageOptions}
+                    // rules={{required: 'Genero is required'}}
+                    box={false}
+                    textColor={'black'}
+                    circleSize={14}
+                    
+                />
+
+                <Text style={{marginTop: 15}}>Instagram (opcional)</Text>
+                <CustomInput
+                    name="instagraProfile"
+                    placeholder="@Nombre_cuenta"
+                    control={control}
+                />
+
+                <Text>Twitter (opcional)</Text>
+                <CustomInput
+                    name="twitterProfile"
+                    placeholder="@Nombre_cuenta"
+                    control={control}
+                />
                 
-                <Text style={[styles.sectionTitle,{marginTop: 40}]}>Experiencia en terreno de aludes (TA)</Text>
+                <Text style={[styles.sectionTitle,{marginTop: 30}]}>Experiencia en terreno de aludes (TA)</Text>
                 <View style={styles.spacer}/>
                 <CustomRadioButton 
                     name="professionalOrientation"
@@ -222,7 +258,7 @@ const UserForm = ({preloadedValues, onSubmit}) => {
                     box={false}
                     textColor={'black'}
                     circleSize={14}
-                    containerStyle={{marginTop: 50}}
+                    containerStyle={{marginTop: 30}}
                 />
 
                 <CustomRadioButton 
@@ -234,7 +270,7 @@ const UserForm = ({preloadedValues, onSubmit}) => {
                     box={false}
                     textColor={'black'}
                     circleSize={14}
-                    containerStyle={{marginTop: 50}}
+                    containerStyle={{marginTop: 30}}
                 />
 
                 <CustomRadioButton 
@@ -246,10 +282,10 @@ const UserForm = ({preloadedValues, onSubmit}) => {
                     box={false}
                     textColor={'black'}
                     circleSize={14}
-                    containerStyle={{marginTop: 50}}
+                    containerStyle={{marginTop: 30}}
                 />
 
-                <Text style={[styles.sectionTitle,{marginTop: 40}]}>Exposición al riesgo de aludes (RA)</Text>
+                <Text style={[styles.sectionTitle,{marginTop: 30}]}>Exposición al riesgo de aludes (RA)</Text>
                 <View style={styles.spacer}/>
                 <CustomRadioButton 
                     name="terrainType"
@@ -272,13 +308,16 @@ const UserForm = ({preloadedValues, onSubmit}) => {
                     box={false}
                     textColor={'black'}
                     circleSize={14}
-                    containerStyle={{marginTop: 50}}
+                    containerStyle={{marginTop: 30}}
                 />
                
               
             </View>
-            <View style={{marginTop: 50}}>
-                <CustomButton text="Guardar" bgColor={"#62a256"} fgColor='white' iconName={null} onPress={handleSubmit(onSubmit)} />
+            <View style={{marginTop: 30}}>
+                <CustomButton text="Guardar" bgColor={"#62a256"} fColor='white' iconName={null} onPress={handleSubmit(onSubmit)} />
+            </View>
+            <View style={{marginTop: 10}}>
+                <CustomButton text="Cancelar Cuenta" bgColor={"#B00020"} fColor='white' iconName={null} onPress={onDelete} />
             </View>
             </>
     )};

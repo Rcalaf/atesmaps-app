@@ -434,11 +434,11 @@ export default function ObservationDetail({ route, navigation }) {
           <View style={styles.spacer}/>
           <CustomInput
             name="title"
-            placeholder="Titulo"
+            placeholder="Nombre de la salida"
             control={control}
             rules={{required: 'Debes dar un título a la Observación'}}
           />
-          
+          <Text style={[styles.intro,{marginTop:10}]}>Fecha de la salida/observacion:</Text>
           <CustomInput
             name="date"
             placeholder={moment().format('MMMM Do YYYY, HH:mm:ss')}
@@ -456,6 +456,7 @@ export default function ObservationDetail({ route, navigation }) {
             type="custom"
             order="top"
             fColor={locationError ? "red" : "gray"}
+            bgColor={"#fff"}
             onPress={() => {
               navigation.navigate('Ubicación',{index, resetPin: true});
             }} 
@@ -465,6 +466,7 @@ export default function ObservationDetail({ route, navigation }) {
             text={`Fotos (${editingObservation.images ? editingObservation.images.length : 0})`}
             type="custom"
             order="bottom"
+            bgColor={"#fff"}
             fColor="gray"
             onPress={() => {
               console.log('photos library to be called');
@@ -488,10 +490,45 @@ export default function ObservationDetail({ route, navigation }) {
           <View style={{marginTop: 10}}>
               
             <Text style={{marginBottom: 10, fontWeight:'bold'}}>Tipo de observaciones:</Text>
-            <CustomButton text="Rápida" type="custom" order="top" bgColor={"#48a5e9"} fColor='white' iconName={observation.observationTypes?.quick?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Rapida')} />
-            <CustomButton text="Avalancha" type="custom" order="middle" bgColor={"#4062ff"} fColor='white' iconName={observation.observationTypes?.avalanche?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Avalancha')} /> 
-            <CustomButton text="Manto de nieve" type="custom" order="middle" bgColor={"#48a5e9"} fColor='white' iconName={observation.observationTypes?.snowpack?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Manto de nieve')} />
-            <CustomButton text="Accidente" type="custom" order="bottom" bgColor={"#B00020"} fColor='white' iconName={observation.observationTypes?.accident?.status ?  "arrow-forward-ios" : "add-circle"} onPress={() => navigation.navigate('Accidente')} /> 
+            <CustomButton 
+                text="Rápida" 
+                type="custom" 
+                order="top" 
+                // bgColor={"#48a5e9"} 
+                bgColor={"#fff"}
+                fColor="gray"
+                // fColor='white' 
+                iconName={observation.observationTypes?.quick?.status ?  "arrow-forward-ios" : "add-circle"} 
+                leftIconImage={require("../../assets/images/icons/buttonIcons/button-quick.png")}
+                onPress={() => navigation.navigate('Rapida')} />
+            <CustomButton 
+                text="Avalancha" 
+                type="custom" 
+                order="middle" 
+                bgColor={"#fff"} 
+                fColor='gray' 
+                leftIconImage={require("../../assets/images/icons/buttonIcons/button-avalanche.png")}
+                iconName={observation.observationTypes?.avalanche?.status ?  "arrow-forward-ios" : "add-circle"} 
+                onPress={() => navigation.navigate('Avalancha')} /> 
+            <CustomButton 
+                text="Manto de nieve" 
+                type="custom" 
+                order="middle" 
+                bgColor={"#fff"}
+                fColor='gray' 
+                leftIconImage={require("../../assets/images/icons/buttonIcons/button-snow.png")}
+                iconName={observation.observationTypes?.snowpack?.status ?  "arrow-forward-ios" : "add-circle"} 
+                onPress={() => navigation.navigate('Manto de nieve')} />
+            <CustomButton 
+                text="Accidente" 
+                type="custom" 
+                order="bottom" 
+                // bgColor={"#B00020"} 
+                bgColor={"#fff"}
+                fColor='gray' 
+                leftIconImage={require("../../assets/images/icons/buttonIcons/button-accident.png")}
+                iconName={observation.observationTypes?.accident?.status ?  "arrow-forward-ios" : "add-circle"} 
+                onPress={() => navigation.navigate('Accidente')} /> 
             {/* <CustomButton text="Weather" type="custom" order="middle" bgColor={"#f5c144"} fgColor='white' iconName={"add-circle"} onPress={()=>{console.log('seting type Weather')}} />
             <CustomButton text="Incident" type="custom" order="bottom" bgColor={"#e15141"} fgColor='white' iconName={"add-circle"} onPress={()=>{console.log('seting type Incident')}} /> */}
           </View>

@@ -45,7 +45,7 @@ const Login: () => Node = ({navigation}) => {
 
   return(
 
-      <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
+      <SafeAreaView style={{backgroundColor: '#dddddd',flex: 1, justifyContent: 'center'}}>
         <View style={{paddingHorizontal: 25}}>
           {/* <View>
               <Text style={{fontSize: 28, fontWeight: '500', color: '#333', marginBottom: 25}}>Login</Text>
@@ -53,8 +53,8 @@ const Login: () => Node = ({navigation}) => {
 
           <View style={{top: '-15%',justifyContent: 'center',alignItems: 'center'}}>
                 <Image
-                style={{height: 200, width: 235}}
-                 source={require('../../../assets/images/logos/logo-vertical-small.png')}
+                style={{height: 330, width: 330}}
+                 source={require('../../../assets/images/logos/logo-floc.jpg')}
                 /> 
           </View>
 

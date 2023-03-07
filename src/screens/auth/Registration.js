@@ -47,7 +47,7 @@ const Registration: () => Node = () => {
   });
 
   const submit = (data) => {
-    console.log('performing login...');
+    console.log('performing Registration...');
     // console.log(data);
 
     if(data.password != data.passwordConfirmation) {
@@ -88,7 +88,7 @@ const Registration: () => Node = () => {
 
 
   return(
-      <SafeAreaView style={{flex: 1, justifyContent: 'center'}}>
+      <SafeAreaView style={{backgroundColor: '#dddddd',flex: 1, justifyContent: 'center'}}>
         <View style={{paddingHorizontal: 25}}>
           {/* <View>
               <Text style={{fontSize: 28, fontWeight: '500', color: '#333', marginBottom: 25}}>Register</Text>
@@ -96,8 +96,8 @@ const Registration: () => Node = () => {
 
           <View style={{top: '-10%',justifyContent: 'center',alignItems: 'center'}}>
                 <Image
-                style={{height: 200, width: 235}}
-                 source={require('../../../assets/images/logos/logo-vertical-small.png')}
+                style={{height: 335, width: 335}}
+                 source={require('../../../assets/images/logos/logo-floc.jpg')}
                 /> 
           </View>
 

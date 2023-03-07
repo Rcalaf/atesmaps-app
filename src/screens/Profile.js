@@ -8,7 +8,9 @@ import {
     View,
     ScrollView,
     Text,
+    Modal,
     TouchableOpacity,
+    Pressable,
     SafeAreaView,
     ActivityIndicator
   } from 'react-native';
@@ -23,6 +25,8 @@ import UserForm from '../components/UserForm';
 import  Snackbar  from "react-native-snackbar";
 import { Layout } from 'react-native-reanimated';
 
+import CustomButton from "../components/CustomButton";
+
 // const Stack = createNativeStackNavigator();
 
 
@@ -33,6 +37,7 @@ const {logout, userDetails, setUserDetails,updateUser, userToken} = useContext(A
 
 const [user, setUser] = useState(userDetails);
 const [isLoading, setIsLoading] = useState(false);
+const [modalVisible, setModalVisible] = useState(false);
 
 // useLayoutEffect(() => {
 //   console.log('refershing Layout...');
@@ -87,10 +92,22 @@ const sentData = async (id,data) => {
 
 const onSubmit = (data) => {
   // console.log('submit data:')
-  // console.log(data);
+  //console.log(data);
   setUser({...data});
   // let formData = new FormData(data);
   sentData(userDetails._id, data);
+
+};
+
+const handleDelete = () => {
+  // console.log('submit data:')
+  //console.log(data);
+  console.log('deleteing user...')
+  sentData(userDetails._id, {blocked: true})
+  logout();
+  // setUser({...data});
+  // let formData = new FormData(data);
+  // sentData(userDetails._id, data);
 
 };
 
@@ -107,12 +124,33 @@ if( isLoading ) {
 return userDetails ? (
   <SafeAreaView style={styles.safeContainer}>
     <ScrollView style={styles.container}>
-      <UserForm preloadedValues={user} onSubmit={onSubmit}/>
+      <UserForm preloadedValues={user} onSubmit={onSubmit} onDelete={() => setModalVisible(!modalVisible)}/>
       {/*<View>
         <CustomButton text="Logout" bgColor={"#f00"} fgColor='white' iconName={null} onPress={() => {logout()}} />
       </View>*/}
       <View style={styles.space} />
+      
     </ScrollView>
+    <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Estas seguro que quieres cancelar la cuenta? </Text>
+            <View>
+              <CustomButton text="Eliminar" bgColor={"#B00020"} fColor='#fff' iconName={null} onPress={handleDelete} />
+            </View>
+            <View>
+            <CustomButton text="Volver" bgColor={"#48a5e9"} fColor='#fff' iconName={null}  onPress={() => setModalVisible(!modalVisible)} />
+            </View>
+           
+          </View>
+        </View>
+      </Modal>
   </SafeAreaView>
 ) : ( 
       <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>
@@ -136,7 +174,40 @@ const styles = StyleSheet.create({
   },
   space: {
     height: 50,
-  }
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    // alignItems: 'center',
+    // shadowColor: '#000',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 4,
+    // elevation: 5,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  // modelButtonsBox: {
+  //   flexDirection: 'row',
+  // }
 });
 
 export default Profile;

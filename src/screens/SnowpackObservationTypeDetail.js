@@ -58,7 +58,7 @@ const { control, handleSubmit, formState: { errors }, getValues, setValue } = us
         // range_3: snowpackValues.values.altitudeRange?.range_3 ? snowpackValues.values.altitudeRange?.range_3 : null,
         // range_4: snowpackValues.values.altitudeRange?.range_4 ? snowpackValues.values.altitudeRange?.range_4 : null,
         altitude: snowpackValues.values?.altitude ? snowpackValues.values?.altitude : null,
-        geolocationAccuracy: snowpackValues.values?.geolocationAccuracy ? snowpackValues.values?.geolocationAccuracy : null,
+        geoAccuracy: snowpackValues.values?.geoAccuracy ? snowpackValues.values?.geoAccuracy : null,
         altitudeRange1: snowpackValues.values?.altitudeRange?.range_1 ? snowpackValues.values?.altitudeRange?.range_1 : null,
         altitudeRange2: snowpackValues.values?.altitudeRange?.range_2 ? snowpackValues.values?.altitudeRange?.range_2 : null,
         altitudeRange3: snowpackValues.values?.altitudeRange?.range_3 ? snowpackValues.values?.altitudeRange?.range_3 : null,
@@ -152,7 +152,7 @@ const updateData = () => {
     // console.log(values);
     let aux = {values: {}}
 
-    aux['values'].observationType= values.observationType;
+    // aux['values'].observationType= values.observationType;
 
     aux['values'].altitude= values.altitude;
 
@@ -200,12 +200,15 @@ const updateData = () => {
     aux['values'].handTest= values.handTest;
     aux['values'].compresionTest= values.compresionTest;
     aux['values'].extensionTest= values.extensionTest;
+    aux['values'].geoAccuracy= values.geoAccuracy;
+    
     // aux['values'].fractureType= values.fractureType;
     aux['values'].fractureDepth= values.fractureDepth;
     aux['values'].layerHardness= values.layerHardness;
     aux['values'].weakLayerHardness= values.weakLayerHardness;
     aux['values'].layerHumidity= values.layerHumidity;
     aux['values'].comments= values.comments;
+    
 
     aux.status = true;
     
@@ -229,17 +232,17 @@ const updateData = () => {
     navigation.navigate('Observación',{selectedIndex});
 }
 
-const typeOptions = [
-        {label: 'Exacta'},
-        {label: 'Bastante precisa'},
-        {label: 'Poco precisa'},
+const accuracyOptions = [
+        {label: 'Exacta (20-50m)'},
+        {label: 'Bastante precisa (50-500m)'},
+        {label: 'Poco precisa (>500m)'},
     ];
 
-const triggerOptions = [
-        {label: 'Accidental'},
-        {label: 'Natural'},
-        {label: 'Artificial'},
-    ];
+// const triggerOptions = [
+//         {label: 'Accidental'},
+//         {label: 'Natural'},
+//         {label: 'Artificial'},
+//     ];
 
 const booleanOptions = [
         {label: 'Si'},
@@ -324,7 +327,7 @@ return(
                     Rellena solamente aquellos campos de los que tengas informacion precisa </Text> 
                     <Text style={styles.introSubtext}>* campos obligatorios</Text>
                 </View>
-                <View style={styles.formContainer} >
+                {/* <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
                      <CustomRadioButton 
                         name="observationType"
@@ -336,14 +339,14 @@ return(
                         textColor={'black'}
                         circleSize={14}
                     />
-                </View>
+                </View> */}
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
                     <CustomRadioButton 
-                        name="geolocatioAccuracy"
+                        name="geoAccuracy"
                         title="La geolocalización de la observación es precisa?"
                         control={control}
-                        data={typeOptions}
+                        data={accuracyOptions}
                         // rules={{required: 'Campo obligatorio'}}
                         box={false}
                         textColor={'black'}
@@ -364,8 +367,8 @@ return(
                         }
                         ]}
                     > */}
-                    <Text>Franja altitudinal:</Text>
-                    <View style={styles.formGroup}>
+                     <Text>Franja altitudinal:</Text>
+                    {/*<View style={styles.formGroup}>
                         <CustomCheckbox name="altitudeRange1"
                                         title="< 2.000m" 
                                         control={control}  
@@ -385,16 +388,16 @@ return(
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
-                        {/* <CustomCheckbox name="altitudeRange4" 
+                        <CustomCheckbox name="altitudeRange4" 
                                         title="superior a 2.400 m"
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
-                        /> */}
+                        />
                        
-                    </View>  
+                    </View>   */}
                     <CustomInput
                         name="altitude"
-                        placeholder="Cota altimetrica zona de salida (m)"
+                        placeholder="Cota altimetrica donde se ha realizado el test (si la sabes)"
                         control={control}
                         // rules={{required: 'Title is required'}}
                     />      
@@ -506,7 +509,7 @@ return(
                     <View style={styles.spacer}/>
                     <CustomRadioButton 
                         name="cracks"
-                        title="Has observado fisuras en propagación?"
+                        title="Has observado fisuras con propagación?"
                         control={control}
                         data={booleanOptions}
                         // rules={{required: 'Campo obligatorio'}}
@@ -749,7 +752,7 @@ return(
 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}></View>
-                    <Text>Tipo de grano:</Text>
+                    <Text>Tipo de grano de la capa debil:</Text>
                     <CustomInput
                         name="snowType"
                         placeholder="Describe el tipo de copo"

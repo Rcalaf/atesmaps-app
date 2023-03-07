@@ -34,6 +34,7 @@ const { control, handleSubmit, formState: { errors }, getValues, setValue } = us
     defaultValues: {
         date: avalancheValues.values?.date,
         when: avalancheValues.values?.when,
+        geoAccuracy: avalancheValues.values?.geoAccuracy,
         amount: avalancheValues.values?.amount,
         obsType: avalancheValues.values?.obsType,
         windExposure: avalancheValues.values?.windExposure,
@@ -152,7 +153,6 @@ const updateData = () => {
     ///console.log(values);
 
     let aux = {values: {}}
-    aux.status = true;
     aux['values']['dangerLevel'] = {
         'level_1': values.deepPowder,
         'level_2': values.crusty,
@@ -160,7 +160,7 @@ const updateData = () => {
         'level_4': values.heavy,
         'level_5': values.heavy,
     }
-
+   
     aux['values']['avalancheType'] = {
         'type_1': values.avalancheType1,
         'type_2': values.avalancheType2,
@@ -200,6 +200,7 @@ const updateData = () => {
     aux.values.amount = values.amount;
     aux.values.windExposure = values.windExposure;
     aux.values.obsType = values.obsType;
+    aux.values.geoAccuracy = values.geoAccuracy;
 
     aux.status = true;
     // console.log("----------------");
@@ -242,11 +243,16 @@ const obsTypeOptions = [
 ];
 
 const whenOptions = [
-        {label: '< 12 horas'},
-        {label: '12 - 24 horas'},
-        {label: '24 - 48 horas'},
-        {label: '> 48 horas'},
+        {label: 'Del mismo dia'},
+        {label: 'Del dia anterior'},
+        {label: 'Mas de dos días'},
     ];
+
+const accuracyOptions = [
+    {label: 'Exacta (20-50m)'},
+    {label: 'Bastante precisa (50-500m)'},
+    {label: 'Poco precisa (>500m)'},
+];
 
 const amountOptions = [
         {label: '1'},
@@ -290,6 +296,20 @@ return(
                         circleSize={14}
                     />
                 </View>
+                <View style={styles.formContainer} >
+                    <View style={styles.spacer}/>
+                     <CustomRadioButton 
+                        name="geoAccuracy"
+                        title="La geolocalización de la observación es precisa?"
+                        control={control}
+                        data={accuracyOptions}
+                        // rules={{required: 'Campo obligatorio'}}
+                        box={false}
+                        textColor={'black'}
+                        circleSize={14}
+                    />
+                </View>
+                
 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
@@ -388,7 +408,7 @@ return(
                     > */}
 
                     
-                    <Text>Tipología de avalancha:</Text>
+                    <Text>Tipología de alud:</Text>
                     <Text style={{fontSize:12, color: 'gray', padding:5}}>Si dudas entre dos tipos, puedes marcar las dos</Text>        
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="avalancheType1"
@@ -467,7 +487,7 @@ return(
                        
                         <CustomInput
                             name="depth"
-                            placeholder="Profundidad (cm)"
+                            placeholder="Profundidad de la fractura (cm)"
                             control={control}
                             customStyles={{width:"100%"}}
                             //   rules={{required: 'Email is required'}}

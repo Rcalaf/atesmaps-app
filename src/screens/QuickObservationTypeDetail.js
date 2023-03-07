@@ -57,7 +57,9 @@ const { control, handleSubmit, formState: { errors }, getValues, setValue, reset
         warmDay: quickValues.values.dayType?.warm ? quickValues.values.dayType?.warm : null,
         foggyDay:quickValues.values.dayType?.foggy ? quickValues.values.dayType?.foggy : null,
         cloudyDay: quickValues.values.dayType?.cloudy ? quickValues.values.dayType?.cloudy : null,
-        stormyDay: quickValues.values.dayType?.stormy ? quickValues.values.dayType?.stormy : null,
+        // stormyDay: quickValues.values.dayType?.stormy ? quickValues.values.dayType?.stormy : null,
+        intenseSnowDay: quickValues.values.dayType?.intenseSnow ? quickValues.values.dayType?.intenseSnow : null,
+        weakSnowDay: quickValues.values.dayType?.weakSnow ? quickValues.values.dayType?.weakSnow : null,
         windyDay: quickValues.values.dayType?.windy ? quickValues.values.dayType?.windy : null,
         coldDay: quickValues.values.dayType?.cold  ? quickValues.values.dayType?.cold : null,
         wetDay: quickValues.values.dayType?.wet ? quickValues.values.dayType?.wet : null,
@@ -153,7 +155,8 @@ const updateData = () => {
         'warm': values.warmDay,
         'foggy': values.foggyDay,
         'cloudy': values.cloudyDay,
-        'stormy': values.stormyDay,
+        'intenseSnow': values.intenseSnowDay,
+        'weakSnow': values.weakSnowDay,
         'windy': values.windyDay,
         'cold': values.coldDay,
         'wet': values.wetDay, 
@@ -215,72 +218,6 @@ const removeData = () => {
     navigation.navigate('Observación',{selectedIndex});
 }
 
-//Snow conditions:
-// const [deepPowder, setDeepPowder] = useState(quickValues.values?.snowConditions?.deepPowder);
-// const [crusty, setCrusty] = useState(quickValues.values?.snowConditions?.crusty);
-// const [wet, setWet] = useState(quickValues.values?.snowConditions?.wet);
-// const [heavy, setHeavy] = useState(quickValues.values?.snowConditions?.heavy);
-// // const [powder, setPowder] = useState(quickValues.values?.snowConditions?.powder);
-// const [windAffected, setWindAffected] = useState(quickValues.values?.snowConditions?.windAffected);
-// const [hard, setHard] = useState(quickValues.values?.snowConditions?.hard);
-
-
-
-//ridden slopes:
-// const [rodeMellow, setRodeMellow] = useState(quickValues.values?.rodeSlopeTypes?.mellow);
-// const [rodeAlpine, setRodeAlpine] = useState(quickValues.values?.rodeSlopeTypes?.alpine);
-// const [rodeClear, setRodeClear] = useState(quickValues.values?.rodeSlopeTypes?.clear);
-// const [rodeDense, setRodeDense] = useState(quickValues.values?.rodeSlopeTypes?.dense);
-// const [rodeSteep, setRodeSteep] = useState(quickValues.values?.rodeSlopeTypes?.steep);
-// const [rodeOpen, setRodeOpen] = useState(quickValues.values?.rodeSlopeTypes?.open);
-// const [rodeShade, setRodeShade] = useState(quickValues.values?.rodeSlopeTypes?.shade);
-// const [rodeSunny, setRodeSunny] = useState(quickValues.values?.rodeSlopeTypes?.sunnys);
-
-
-//avoided slopes 
-// const [avoidAlpine, setAvoidAlpine] = useState(quickValues.values?.avoidedSlopeTypes?.alpine);
-// const [avoidDense, setAvoidDense] = useState(quickValues.values?.avoidedSlopeTypes?.dense);
-// const [avoidSteep, setAvoidSteep] = useState(quickValues.values?.avoidedSlopeTypes?.steep);
-// const [avoidOpen, setAvoidOpen] = useState(quickValues.values?.avoidedSlopeTypes?.openTrees);
-// const [avoidCut, setAvoidCut] = useState(quickValues.values?.avoidedSlopeTypes?.cut);
-// const [avoidSunny, setAvoidSunny] = useState(quickValues.values?.avoidedSlopeTypes?.sunny);
-
-// useEffect(()=>{
-//     let conditions = quickValues;
-//     conditions.values['avoidedSlopeTypes'] = {
-//         'alpine': avoidAlpine,
-//         'dense': avoidDense,
-//         'steep': avoidSteep,
-//         'openTrees': avoidOpen,
-//         'cut': avoidCut,
-//         'sunny': avoidSunny
-//     }
-//     setQuickValues(conditions);
-//     // console.log(quickValues);
-// },[avoidAlpine,avoidDense,avoidSteep,avoidOpen,avoidCut,avoidSunny]);
-
-
-//weather conditions
-// const [warmDay, setWarmDay] = useState(quickValues.values?.dayType?.warm);
-// const [foggyDay, setFoggyDay] = useState(quickValues.values?.dayType?.foggy);
-// const [cloudyDay, setCloudyDay] = useState(quickValues.values?.dayType?.cloudy);
-// const [stormyDay, setStormyDay] = useState(quickValues.values?.dayType?.stormy);
-// const [windyDay, setWindyDay] = useState(quickValues.values?.dayType?.windy);
-// const [wetDay, setWetDay] = useState(quickValues.values?.dayType?.wet);
-// const [coldDay, setColdDay] = useState(quickValues.values?.dayType?.cold);
-// const [sunnyDay, setSunnyDay] = useState(quickValues.values?.dayType?.sunny);
-
-//avalanche conditions:
-// const [newConditions, setNewConditions] = useState(quickValues.values?.avalancheConditions?.newConditions);
-// const [avalanches, setAvalanches] = useState(quickValues.values?.avalancheConditions?.slabs);
-// const [sounds, setSounds] = useState(quickValues.values?.avalancheConditions?.sounds);
-// const [tempChanges, setTempChanges] = useState(quickValues.values?.avalancheConditions?.tempChanges);
-// const [snowAccumulation, setSnowAccumulation] = useState(quickValues.values?.avalancheConditions?.setSnowAccumulation);
-
-//comments 
-// const [comments, setComments] = useState(quickValues.values?.otherComments);
-
-
 //Riding conditions:
 const data = [
     {label: 'Muy buenas condiciones'},
@@ -290,13 +227,6 @@ const data = [
 ];
 
 const [ridingQuality, setRidingQuality] = useState(quickValues.values?.ridingQuality);
-// useEffect(()=>{
-//     let conditions = quickValues;
-//     conditions.values['ridingQuality'] = ridingQuality
-//     //conditions.status = true;
-//     setQuickValues(conditions);
-//    // console.log('Riding quality triggered...');
-// },[ridingQuality]);
 
 //Activity type:
 const activityData = [
@@ -309,15 +239,6 @@ const activityData = [
 ]
 
 const [activityType, setActivityType] = useState();
-// useEffect(()=>{
-//     let conditions = quickValues;
-//     conditions.values['activityType'] = activityType
-//     //conditions.status = true;
-//     setQuickValues(conditions);
-//    // console.log('Riding quality triggered...');
-// },[activityType]);
-
-
 
 
 return(
@@ -406,7 +327,7 @@ return(
                                         // rules={{required: 'Campo obligatorio'}}
                         />
                         <CustomCheckbox name="windAffected" 
-                                        title="Ventnada"
+                                        title="Venteada"
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
@@ -501,7 +422,7 @@ return(
                     <Text>El tiempo:</Text>
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="warmDay"
-                                        title="Cáildo" 
+                                        title="Caluroso" 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
@@ -526,7 +447,7 @@ return(
                     </View> 
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="windyDay"
-                                        title="Ventnado" 
+                                        title="Venteado" 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
@@ -543,15 +464,20 @@ return(
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
-                        <CustomCheckbox name="stormyDay" 
-                                        title="Tormenta"
+                        <CustomCheckbox name="rainyDay" 
+                                        title="Lluvia"
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
                     </View> 
                     <View style={styles.formGroup}>
-                        <CustomCheckbox name="rainyDay"
-                                        title="Lluvia" 
+                        <CustomCheckbox name="weakSnowDay" 
+                                        title="Nevada leve"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                        <CustomCheckbox name="intenseSnowDay"
+                                        title="Nevada intensa" 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
@@ -578,7 +504,7 @@ return(
                     <Text>Señales de alerta:</Text>
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="newConditions"
-                                        title="Carga por nieve nueva (+30cm), viento o lluvia durante las últimas 48 horas." 
+                                        title="Carga de nieve nueva (más de 30cm en 48h)" 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
@@ -587,7 +513,7 @@ return(
 
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="avalanches"
-                                        title="Indicios de alud de placa, del mismo dia o del dia antes." 
+                                        title="Aludes de placa recientes" 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
@@ -596,7 +522,7 @@ return(
                   
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="sounds"
-                                        title="Indicios de inestabilidad? Woumfs, crujidos o efecto tambor." 
+                                        title="Woumfs o fisuras con propagación" 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
@@ -604,7 +530,7 @@ return(
                     </View> 
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="tempChanges"
-                                        title="Sobrecarga por humidificacion o fusión." 
+                                        title="Sobrecarga por fusión o lluvia" 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
@@ -612,7 +538,7 @@ return(
                     </View> 
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="snowAccumulation"
-                                        title="Accumulaciones recientes por nieve." 
+                                        title="Acumulaciones recientes por viento" 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />

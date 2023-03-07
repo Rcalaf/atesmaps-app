@@ -40,9 +40,8 @@ export const AuthProvider = ({children}) => {
             setUserToken(response.data.accessToken);
             setUserDetails(user);
         } catch (e) {
-            console.log(e);
             Snackbar.show({
-                text: 'Password o email incorrectos',
+                text: e.response.status == 409 ? e.response.data.message : 'Password o email incorrectos',
                 duration: Snackbar.LENGTH_SHORT,
                 numberOfLines: 2,
                 textColor: "#fff",
@@ -67,9 +66,9 @@ export const AuthProvider = ({children}) => {
             setUserDetails(user);
         } catch (e) {
             console.log('error:')
-            console.log(e);
+            // console.log(e.response.status);
             Snackbar.show({
-                text: e.response.status,
+                text: e.response.status == 409 ? e.response.data.message : 'Password o email incorrectos',
                 duration: Snackbar.LENGTH_SHORT,
                 numberOfLines: 2,
                 textColor: "#fff",

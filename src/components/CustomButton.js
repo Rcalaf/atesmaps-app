@@ -1,8 +1,18 @@
 import React from 'react';
-import {View, Text, StyleSheet, Pressable} from 'react-native';
+import {View, Image, Text, StyleSheet, Pressable} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const CustomButton = ({onPress, order, text, type = 'primary', bgColor , fColor, iconName = 'arrow-forward-ios', customStyle = {}}) => {
+const CustomButton = ({
+  onPress, 
+  order,
+  text, 
+  type = 'primary', 
+  bgColor,
+  fColor,
+  iconName = 'arrow-forward-ios',
+  leftIconImage,
+  customStyle = {}
+}) => {
   return (
     <Pressable
       onPress={onPress}
@@ -13,11 +23,19 @@ const CustomButton = ({onPress, order, text, type = 'primary', bgColor , fColor,
         bgColor ? {backgroundColor: bgColor} : {},
         customStyle,
       ]}>
+      {leftIconImage && (
+        <Image
+        style={styles.LeftImage}
+        source={leftIconImage}
+        />
+      )}
       <Text
         style={[
           styles.text,
           styles[`text_${type}`],
           fColor ? {color: fColor} : {},
+          leftIconImage ? { width: '75%',} : {},
+          
         ]}>
         {text}
       </Text>
@@ -27,8 +45,8 @@ const CustomButton = ({onPress, order, text, type = 'primary', bgColor , fColor,
           name={iconName} 
           size={20} 
           color={fColor ? fColor : 'gray'} 
-          style={{marginRight: 5, width: '10%'}}/>)
-      }
+          style={{marginRight: 5, width: '10%'}}/>
+      )}
     </Pressable>
   );
 };
@@ -94,6 +112,12 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 5,
     borderBottomRightRadius: 5
   },
+  LeftImage: {
+    // marginTop: 5,
+    marginRight: 10,
+    height: 20,
+    width: 40,
+},
 });
 
 export default CustomButton;

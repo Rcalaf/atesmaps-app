@@ -43,7 +43,8 @@ const { control, handleSubmit, formState: { errors }, getValues, setValue, reset
         numOfInjured: accidentValues.values.numOfInjured ? accidentValues.values.numOfInjured : null,
         numOfSeverlyInjured: accidentValues.values.numOfSeverlyInjured ? accidentValues.values.numOfSeverlyInjured : null,
         numOfDead: accidentValues.values.numOfDead ? accidentValues.values.numOfDead : null,
-        terrainType: accidentValues.values.terrainType ? accidentValues.values.terrainType : null,
+        // terrainType: accidentValues.values.terrainType ? accidentValues.values.terrainType : null,
+        crackDepth: accidentValues.values.crackDepth ? accidentValues.values.crackDepth : null,
         terrainTraps: accidentValues.values.terrainTraps ? accidentValues.values.terrainTraps : null,
         avalancheSize1: accidentValues.values.avalancheSize?.size_1 ? accidentValues.values.avalancheSize?.size_1 : null,
         avalancheSize2: accidentValues.values.avalancheSize?.size_2 ? accidentValues.values.avalancheSize?.size_2 : null,
@@ -51,6 +52,7 @@ const { control, handleSubmit, formState: { errors }, getValues, setValue, reset
         avalancheSize4: accidentValues.values.avalancheSize?.size_4 ? accidentValues.values.avalancheSize?.size_4 : null,
         avalancheSize5: accidentValues.values.avalancheSize?.size_5 ? accidentValues.values.avalancheSize?.size_5 : null,
         comments: accidentValues.values.comments ? accidentValues.values.comments : null,
+        contactMe: accidentValues.values.contactMe ? accidentValues.values.contactMe : null,
     }
 });
 
@@ -138,7 +140,9 @@ const updateData = () => {
             'size_5': values.avalancheSize5,
         }
 
+        aux['values'].crackDepth = values.crackDepth
         aux['values'].comments = values.comments
+        aux['values'].contactMe = values.contactMe
         
         aux.status = true;
     
@@ -209,9 +213,10 @@ return(
         <ScrollView >
             <View style={styles.container}>
                 <View style={styles.introContainer} >
-                    <Text style={styles.intro}>Realiza un breve análisis de tu actividad y las condiciones observadas. 
-                    Cualquier informacion puede ser útil a otros usuarios o profesionales. Solo la primera pregunta es obligada, 
-                    no respondas aquellas de las que no estés seguro/a. Puedes añadir más detalles en los apartados Avalancha, Manto, Meteo y Accidente.</Text> 
+                    <Text style={styles.intro}>Has provocado o presenciado un accidente de alud? Aqui puedes dar algunos datos al respecto. 
+                    La informacion que introduzcas se guardará en la base de datos de Atesmaps,
+                     así como en la de ACNA (Asociació pel Coneixement de la Neu i les Allaus), 
+                     la del ICGC (Cataluña), el CENMA (Andorra) y el CLA (Val d’Aran).</Text> 
                     <Text style={styles.introSubtext}>* campos obligatorios</Text>
                 </View>
 
@@ -303,6 +308,18 @@ return(
                 </View>
 
                 <View style={styles.formContainer} >
+                <Text>Profundidad de la cicatriz:</Text>
+                <View style={styles.spacer}></View>
+                <CustomInput
+                    name="crackDepth"
+                    placeholder="(cm)"
+                    control={control}
+                    customStyles={{width:"100%"}}
+                    // rules={{required: 'Email is required'}}
+                    // onPress={showDatepicker}
+                    />
+                </View> 
+                {/* <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
                     <CustomRadioButton 
                         name="terrainType"
@@ -314,7 +331,7 @@ return(
                         textColor={'black'}
                         circleSize={14}
                     />
-                </View>
+                </View> */}
                 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}></View>
@@ -388,8 +405,11 @@ return(
                     />
 
                 </View>
+                <View style={styles.spacer}></View>
+               
+               
                 <View style={styles.formContainer} >
-                    <View style={styles.spacer}></View>
+                    
                     <Text>Otras observaciones:</Text>
                 
                     <CustomInput
@@ -400,6 +420,16 @@ return(
                         customStyles={styles.inputContainer}
                         placeholder="1000 letras max"
                         />
+                       <View style={{width:'100%',flexDirection: 'row'}}>
+                            <CustomCheckbox name="contactMe" 
+                                            title="Marcar si quieres ser contactado para aportar más información sobre el accidente. Añade un método de contacto en observaciones."
+                                            control={control}  
+                                            // customStyles={styles.inputContainer}
+                                            // rules={{required: 'Campo obligatorio'}}
+                            />
+                      </View> 
+                      <Text>Los datos de contacto se tratarán con confidencialidad y solo con la finalidad de contactar con los/las implicados/as para el registro y estudio posterior de los aludes. </Text>
+
                         <View style={{marginTop: 30}}>
                             <CustomButton text="Guardar" bgColor={"#62a256"} fgColor='white' iconName={null} onPress={handleSubmit(updateData)} />
                         </View>
@@ -407,8 +437,6 @@ return(
                             <CustomButton text="Borrar datos" bgColor={"#B00020"} fgColor='white' iconName={null} onPress={removeData} />
                         </View>
                 </View>
-
-
             </View>
             <View style={styles.space} />
         </ScrollView>
