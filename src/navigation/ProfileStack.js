@@ -30,6 +30,17 @@ return(
         options={{
           headerShown: true ,
         //headerTitle: () => <Text>Title...</Text>,
+          // headerLeft: () => (
+          //   <Button
+          //     onPress={() => {
+          //       console.log('update details triggered...');
+          //       logout();
+          //       }
+          //     }
+          //     title="Guardar"
+           
+          //   />
+          // ),
            headerRight: () => (
              <Button
               onPress={() => {

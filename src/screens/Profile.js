@@ -64,7 +64,7 @@ const sentData = async (id,data) => {
       // console.log(response.data.status);
       setIsLoading(false);
       Snackbar.show({
-        text: 'Los datos se actualizaron correctamente.',
+        text: data.blocked ? 'Cuenta eliminada correctamente' : 'Los datos se actualizaron correctamente.',
         duration: Snackbar.LENGTH_SHORT,
         numberOfLines: 2,
         textColor: "#fff",
@@ -85,6 +85,8 @@ const sentData = async (id,data) => {
   }
 };
 
+
+
 // useEffect(()=>{
 //   console.log('user data updeted...');
 // },[user]);
@@ -102,7 +104,6 @@ const onSubmit = (data) => {
 const handleDelete = () => {
   // console.log('submit data:')
   //console.log(data);
-  console.log('deleteing user...')
   sentData(userDetails._id, {blocked: true})
   logout();
   // setUser({...data});
