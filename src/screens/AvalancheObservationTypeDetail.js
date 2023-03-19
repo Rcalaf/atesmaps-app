@@ -361,6 +361,8 @@ return(
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
+                    </View>
+                    <View style={styles.formGroup}>
                         <CustomCheckbox name="dangerLevel2" 
                                         title="2-Puede enterrar, herir o matar a una persona."
                                         control={control}  
@@ -374,6 +376,8 @@ return(
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
+                    </View>
+                    <View style={styles.formGroup}>
                         <CustomCheckbox name="dangerLevel4" 
                                         title="4-Puede enterrar o destruir un vagon de tren."
                                         control={control}  

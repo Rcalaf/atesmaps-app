@@ -193,6 +193,7 @@ const updateData = () => {
     aux['values'].depth= values.depth;
     aux['values'].woumpfs= values.woumpfs;
     aux['values'].sounds= values.sounds;
+    aux['values'].cracks= values.cracks;
     aux['values'].snowType= values.snowType;
     aux['values'].footPenetration= values.footPenetration;
     aux['values'].skiPenetration= values.skiPenetration;
