@@ -195,6 +195,7 @@ const updateData = () => {
     aux['values'].sounds= values.sounds;
     aux['values'].cracks= values.cracks;
     aux['values'].snowType= values.snowType;
+    aux['values'].snowHumidity= values.snowHumidity;
     aux['values'].footPenetration= values.footPenetration;
     aux['values'].skiPenetration= values.skiPenetration;
 
@@ -207,7 +208,6 @@ const updateData = () => {
     aux['values'].fractureDepth= values.fractureDepth;
     aux['values'].layerHardness= values.layerHardness;
     aux['values'].weakLayerHardness= values.weakLayerHardness;
-    aux['values'].layerHumidity= values.layerHumidity;
     aux['values'].comments= values.comments;
     
 
