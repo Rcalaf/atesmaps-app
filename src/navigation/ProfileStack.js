@@ -13,6 +13,7 @@ import {
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthContext } from '../context/AuthContext';
+import { ObservationContext } from '../context/ObservationContext';
 import Profile from '../screens/Profile';
 
 
@@ -21,6 +22,7 @@ const Stack = createNativeStackNavigator();
 const ProfileStack: () => Node = ({ navigation, route }) => {
 
   const {logout} = useContext(AuthContext);
+  const {setCurrentPage} = useContext(ObservationContext);
 
 return(
     <Stack.Navigator> 
@@ -46,6 +48,7 @@ return(
               onPress={() => {
                 console.log('LogOut triggered...');
                 logout();
+                setCurrentPage(1);
                 }
               }
               title="Logout"

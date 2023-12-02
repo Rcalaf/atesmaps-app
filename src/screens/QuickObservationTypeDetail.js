@@ -248,7 +248,7 @@ return(
                 <View style={styles.introContainer} >
                     <Text style={styles.intro}>Realiza un breve análisis de tu actividad y las condiciones observadas. 
                     Cualquier informacion puede ser útil a otros usuarios o profesionales. Solo la primera pregunta es obligada, 
-                    no respondas aquellas de las que no estés seguro/a. Puedes añadir más detalles en los apartados Avalancha, Manto, Meteo y Accidente.</Text> 
+                    no respondas aquellas de las que no estés seguro/a. Puedes añadir más detalles en los apartados Avalancha, Manto y Accidente.</Text> 
                     <Text style={styles.introSubtext}> * campos obligatorios</Text>
                 </View>
 

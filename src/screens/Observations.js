@@ -4,8 +4,10 @@ import {
   Text, 
   View, 
   FlatList, 
+  Linking, 
   RefreshControl,
   Pressable,
+  ActivityIndicator,
   Button,
    } from 'react-native';
 
@@ -22,13 +24,15 @@ import Loading from '../components/Loading';
 
 export default function ObservationDetail({ navigation }) {
     const {currentLocation, getOneTimeLocation} = useContext(LocationContext);
-    const {isLoading, lastIndex, observations, historicObservations, newObservation, getData} = useContext(ObservationContext);
+    const {isLoading, lastIndex, observations, historicObservations, newObservation,currentPage, setCurrentPage, setLastPage, lastPage, getData} = useContext(ObservationContext);
     const {userDetails} = useContext(AuthContext);
 
     //const [user, setUser] = useState(userDetails);
     const [drafts, setDrafts] = useState(observations);
     const [uploaded, setUplodaded] = useState(historicObservations);
     const [refreshing, setRefreshing] = useState(false);
+    
+  
 
     useLayoutEffect(() => {
       navigation.setOptions({
@@ -91,7 +95,25 @@ export default function ObservationDetail({ navigation }) {
 
     const handleRefreshing = () => {
       setRefreshing(true);
+      // setCurrentPage(1);
+      getData(1);
+      setLastPage(false);
+    
+    }
+
+    const renderLoader = () => {
+       return (
+        (!lastPage && 
+        <View style={{marginVertical:16, flex:1, justifyContent: 'center', alignItems:'center'}}>
+           <ActivityIndicator size={'small'}/> 
+        </View>)
+       )
+    }
+
+    const laoadMoreObservations = () => {
+      if (!lastPage){
       getData();
+      }
     }
 
     if( isLoading &&  uploaded.length < 1 ) {
@@ -198,8 +220,12 @@ export default function ObservationDetail({ navigation }) {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={handleRefreshing} />
         }
+        ListFooterComponent={renderLoader}
+        onEndReached={laoadMoreObservations}
+        onEndReachedThreshold={0}
         />
     }
+
 
     return (
         <View style={styles.listContainer}>
@@ -230,14 +256,29 @@ export default function ObservationDetail({ navigation }) {
               <View style={styles.spacer}/>
             </View>
             {draftList}
-            <View style={[styles.formContainer,{marginTop: 15}]}>
-              <Text style={styles.sectionTitle}>Observaciones realizadas</Text>
+            <View style={[styles.formContainer,{ marginTop: 15}]}>
+              <View style={{flexDirection: 'row',justifyContent: 'space-between'}}>
+              <Text style={[styles.sectionTitle,{ justifyContent: 'flex-start'}]}>Observaciones realizadas</Text>
+              <Pressable
+                  style={{ justifyContent: 'flex-end'}}
+                  onPress={async ()  => {
+                    
+                    Linking.openURL('https://atesmaps.org/geovisor.html');
+                    }}
+                >
+                
+                  <MaterialCommunityIcons size={25} 
+                                        color={'#307df6'} 
+                                        name="open-in-new"/>
+                </Pressable>
+              </View>
               <View style={styles.spacer}/>
             </View>
             {uploadedList}
             
         </View>
-    );r
+       
+    );
 
 }
 

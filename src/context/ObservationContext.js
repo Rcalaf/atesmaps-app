@@ -21,6 +21,8 @@ export const ObservationProvider = ({children}) => {
 
     const [lastIndex, setLastIndex] = useState(null);
     const [selectedIndex, setSelectedIndex] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [lastPage, setLastPage] = useState(false);
     
 
     const sentRequest = async (url, method, data) => {
@@ -39,16 +41,34 @@ export const ObservationProvider = ({children}) => {
         }
     };
 
-    const getData = async () => {
+    const getData = async (page = currentPage) => {
         setIsLoading(true);
         try{
             let response = null
-            if (userDetails)  response = await sentRequest(`/observations/user/${userDetails?._id}`, "get", '');
+            // console.log(page)
+            if (userDetails)  response = await sentRequest(`/observations/user/${userDetails?._id}?page=${page}`, "get", '');
             //TODO: Sync local data with new data
             if(response && response.status != 200){
-                if (userDetails) logout();
+                if (userDetails){ 
+                    setCurrentPage(1);
+                    logout();
+                }
             } else if (response && response.data) {
-                setHistoricObservations(response.data);
+                if(page === 1){
+            
+                    setHistoricObservations(response.data);
+                    setCurrentPage(2);
+                }else{
+                    if (response.data.length > 0){
+                        let aux = historicObservations;
+                        aux = aux.concat(response.data)
+                        setCurrentPage(currentPage + 1);
+                        setHistoricObservations(aux);
+
+                    }else{
+                        setLastPage(true)
+                    }
+                }            
             }
             
         } catch (err){
@@ -177,7 +197,11 @@ export const ObservationProvider = ({children}) => {
                 updateSelectedIndex,
                 sentRequest,
                 getData,
+                setCurrentPage,
+                setLastPage,
+                lastPage,
                 isLoading, 
+                currentPage,
                 observations,
                 historicObservations,
                 editingObservation,

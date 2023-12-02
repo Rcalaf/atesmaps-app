@@ -279,8 +279,8 @@ return(
         <ScrollView >
             <View style={styles.container}>
                 <View style={styles.introContainer} >
-                    <Text style={styles.intro}>Si tienes informacion sobre una avalancha o una situacion de condiciones generalizada, 
-                    aqui puedes detallar informacion al respecto. Rellena solamente aquellos campos de los que tengas informacion precisa </Text> 
+                    <Text style={styles.intro}>Si tienes información sobre una avalancha o una situación de condiciones generalizada, 
+                    aquí puedes detallar información al respecto. Rellena solamente aquellos campos de los que tengas información precisa. </Text> 
                     <Text style={styles.introSubtext}> * campos obligatorios</Text>
                 </View>
                 <View style={styles.formContainer} >

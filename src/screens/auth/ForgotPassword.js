@@ -22,12 +22,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import CustomButton from "../../components/CustomButton";
 import CustomInput from "../../components/CustomInput";
+import Loading from '../../components/Loading';
 import  Snackbar  from "react-native-snackbar";
 
 const Stack = createNativeStackNavigator();
 
 const ForgotPassword: () => Node = ({navigation}) => {
   const [email, setEmail] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   
   const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
@@ -38,9 +40,11 @@ const ForgotPassword: () => Node = ({navigation}) => {
   });
 
   const resetPassword = async (data) => {
-    //  console.log('Email sent: '+data.email);
+    console.log('Email sent: '+data.email);
     try{
+      setIsLoading(true);
       let response = await axios.post(`${BASE_URL}/auth/request-new-password`,{'email': data.email});
+      setIsLoading(false);
       Snackbar.show({
         text: 'Se envió un email a tu cuenta de correo.',
         duration: Snackbar.LENGTH_SHORT,
@@ -51,6 +55,7 @@ const ForgotPassword: () => Node = ({navigation}) => {
       navigation.goBack(null)
       // console.log(response);
     }catch (err){
+      setIsLoading(false);
       console.log(err);
       Snackbar.show({
         text: 'Ooops, algo fue mal.',
@@ -61,6 +66,13 @@ const ForgotPassword: () => Node = ({navigation}) => {
       });
     }
     
+    
+  }
+
+  if( isLoading ) {
+    return(
+        <Loading />
+    )
   }
 
   return(

@@ -26,7 +26,7 @@ import  Snackbar  from "react-native-snackbar";
 
 export default function ObservationDetail({ route, navigation }) {
  
-    const {editingObservation,setEditingObservation, newObservation, selectedIndex, observations, getData, deleteObservation, updateObservations } = useContext(ObservationContext);
+    const {editingObservation,setEditingObservation, newObservation, selectedIndex, observations,setCurrentPage, setLastPage, getData, deleteObservation, updateObservations } = useContext(ObservationContext);
     const {userDetails,userToken} = useContext(AuthContext);
     const {currentLocation, LATITUDE_DELTA,LONGITUDE_DELTA,getOneTimeLocation } = useContext(LocationContext)
 
@@ -154,7 +154,10 @@ export default function ObservationDetail({ route, navigation }) {
               uploadFile(image);
             });
             // console.log('cleaning local storage');
-            getData();
+            // getData();
+            getData(1);
+            setLastPage(false);
+            setCurrentPage(1);
             setObservation({});
             // setObservation({
             //   title: 'Has no title',
@@ -429,7 +432,7 @@ export default function ObservationDetail({ route, navigation }) {
         <ScrollView style={styles.container}>
           <View style={styles.introContainer} >
             <Text style={styles.intro}>Intrduce la información básica de la salida: Un título que la haga reconocible, fecha y geolocalización. 
-            El momento de publicación de la SCOPE y alguna foto serán de gran utilidad para toda la comunidad.</Text> 
+            El momento de publicación y alguna foto serán de gran utilidad para toda la comunidad.</Text> 
           </View>
           <View style={styles.spacer}/>
           <CustomInput

@@ -19,6 +19,7 @@ import axios from 'axios';
 import { BASE_URL } from '../config';
 
 import { AuthContext } from '../context/AuthContext';
+import { ObservationContext } from '../context/ObservationContext';
 
 import UserForm from '../components/UserForm';
 // import { AccessControlTranslationFilterSensitiveLog } from '@aws-sdk/client-s3';
@@ -34,6 +35,7 @@ import CustomButton from "../components/CustomButton";
 const Profile: () => Node = () => {
 
 const {logout, userDetails, setUserDetails,updateUser, userToken} = useContext(AuthContext);
+const {setCurrentPage} = useContext(ObservationContext);
 
 const [user, setUser] = useState(userDetails);
 const [isLoading, setIsLoading] = useState(false);
@@ -106,6 +108,7 @@ const handleDelete = () => {
   //console.log(data);
   sentData(userDetails._id, {blocked: true})
   logout();
+  setCurrentPage(1);
   // setUser({...data});
   // let formData = new FormData(data);
   // sentData(userDetails._id, data);

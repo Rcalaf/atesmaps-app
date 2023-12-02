@@ -6,6 +6,7 @@ import {
     StatusBar,
     StyleSheet,
     useColorScheme,
+    KeyboardAvoidingView,
     View,
     Text,
     TextInput,
@@ -46,6 +47,7 @@ const Login: () => Node = ({navigation}) => {
   return(
 
       <SafeAreaView style={{backgroundColor: '#dddddd',flex: 1, justifyContent: 'center'}}>
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
         <View style={{paddingHorizontal: 25}}>
           {/* <View>
               <Text style={{fontSize: 28, fontWeight: '500', color: '#333', marginBottom: 25}}>Login</Text>
@@ -92,6 +94,7 @@ const Login: () => Node = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </View>
+        </KeyboardAvoidingView>
       </SafeAreaView>
  
 )};

@@ -127,7 +127,7 @@ def nativeArchitectures = project.getProperties().get("reactNativeDebugArchitect
 
 android {
     //react-native-image-crop-picker required config
-        compileSdkVersion 31
+        compileSdkVersion 33
 
     //ndkVersion rootProject.ext.ndkVersion
 
@@ -146,8 +146,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         //targetSdkVersion 31
         ndkVersion = "21.4.7075529"
-        versionCode 15
-        versionName "1.4"
+        versionCode 17
+        versionName "1.6"
         //react-native-image-crop-picker required config
             vectorDrawables.useSupportLibrary = true
     }
