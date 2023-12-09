@@ -6,11 +6,14 @@ import {
     StatusBar,
     StyleSheet,
     useColorScheme,
+    KeyboardAvoidingView,
+    TouchableWithoutFeedback,
     View,
     Text,
     Image,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    Keyboard,
   } from 'react-native';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -88,13 +91,15 @@ const Registration: () => Node = () => {
 
 
   return(
-      <SafeAreaView style={{backgroundColor: '#dddddd',flex: 1, justifyContent: 'center'}}>
-        <View style={{paddingHorizontal: 25}}>
+      // <SafeAreaView style={{backgroundColor: '#dddddd',flex: 1, justifyContent: 'center'}}>
+      <KeyboardAvoidingView  style={{backgroundColor: '#dddddd',flex: 1, justifyContent: 'center'}} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}  >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{top: '-25%',paddingHorizontal: 25}}>
           {/* <View>
               <Text style={{fontSize: 28, fontWeight: '500', color: '#333', marginBottom: 25}}>Register</Text>
           </View> */}
 
-          <View style={{top: '-10%',justifyContent: 'center',alignItems: 'center'}}>
+          <View style={{top: '10%',justifyContent: 'center',alignItems: 'center'}}>
                 <Image
                 style={{height: 335, width: 335}}
                  source={require('../../../assets/images/logos/logo-floc.jpg')}
@@ -179,7 +184,9 @@ const Registration: () => Node = () => {
             </TouchableOpacity>
           </View> */}
         </View>
-      </SafeAreaView>
+        </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      // </SafeAreaView>
  
 )};
 

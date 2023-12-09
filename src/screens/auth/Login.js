@@ -7,11 +7,13 @@ import {
     StyleSheet,
     useColorScheme,
     KeyboardAvoidingView,
+    TouchableWithoutFeedback,
     View,
     Text,
     TextInput,
     Image,
-    TouchableOpacity
+    TouchableOpacity,
+    Keyboard,
   } from 'react-native';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -46,14 +48,15 @@ const Login: () => Node = ({navigation}) => {
 
   return(
 
-      <SafeAreaView style={{backgroundColor: '#dddddd',flex: 1, justifyContent: 'center'}}>
-        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
-        <View style={{paddingHorizontal: 25}}>
+      // <SafeAreaView style={{backgroundColor: '#dddddd',flex: 1, justifyContent: 'center'}}>
+        <KeyboardAvoidingView style={{backgroundColor: '#dddddd',flex: 1, justifyContent: 'center'}} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{top: '-15%',paddingHorizontal: 25}}>
           {/* <View>
               <Text style={{fontSize: 28, fontWeight: '500', color: '#333', marginBottom: 25}}>Login</Text>
           </View> */}
 
-          <View style={{top: '-15%',justifyContent: 'center',alignItems: 'center'}}>
+          <View style={{top: '0%',justifyContent: 'center',alignItems: 'center'}}>
                 <Image
                 style={{height: 330, width: 330}}
                  source={require('../../../assets/images/logos/logo-floc.jpg')}
@@ -84,7 +87,7 @@ const Login: () => Node = ({navigation}) => {
                 <CustomButton text="Login" bgColor={"#3098CF"} fgColor='white' iconName={null} onPress={handleSubmit(submit)} />
           </View>
 
-          <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom: 30}}>
+          <View style={{flexDirection: 'row', justifyContent: 'center', marginBottom:100}}>
             <Text> Crear una cuenta:</Text>
             <TouchableOpacity onPress={() => {
               //navigation.popToTop();
@@ -94,8 +97,9 @@ const Login: () => Node = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </View>
+        </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
-      </SafeAreaView>
+      // </SafeAreaView>
  
 )};
 
