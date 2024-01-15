@@ -39,47 +39,42 @@ const {lastIndex, selectedIndex} = useContext(ObservationContext);
 
 return(
     <Stack.Navigator> 
-      <Stack.Screen 
-        name="Lista de Observaciones" 
-        component={Observations} 
-      />
-      <Stack.Screen 
-        name="Observación" 
-        component={ObservationDetail}
-        options={{
-          headerShown: true,
-      }} />
-      <Stack.Screen name="Detalles" component={ShowObservation} />
-      <Stack.Screen name="Imagenes" component={ObservationImageList} />
-
-      <Stack.Screen 
-          name="Ubicación" 
-          component={LocationPicker} 
-          // options={{
-          //   headerRight: () => (
-          //     <Button
-          //       onPress={() => {
-          //         let index = selectedIndex;
-          //         navigation.navigate('Observación', {index, update:true})
-          //       }}
-          //       title="Save"
-          //     />
-          //   )}}
-          />
-      <Stack.Screen name="Rapida" component={QuickObservationTypeDetail} />
-      <Stack.Screen name="Avalancha" component={AvalancheObservationTypeDetail} />
-      <Stack.Screen name="Manto de nieve" component={SnowpackObservationTypeDetail} />
-      <Stack.Screen name="Accidente" component={AccidentObservationTypeDetail} />
+      <Stack.Group>
+        <Stack.Screen 
+          name="Mis Observaciones" 
+          component={Observations} 
+        />
+        <Stack.Screen 
+          name="Observación" 
+          component={ObservationDetail}
+          options={{
+            headerShown: true,
+        }} />
+        <Stack.Screen name="Detalles" component={ShowObservation} />
+        <Stack.Screen name="Imagenes" component={ObservationImageList} />
+        <Stack.Screen 
+            name="Ubicación" 
+            component={LocationPicker} 
+            // options={{
+            //   headerRight: () => (
+            //     <Button
+            //       onPress={() => {
+            //         let index = selectedIndex;
+            //         navigation.navigate('Observación', {index, update:true})
+            //       }}
+            //       title="Save"
+            //     />
+            //   )}}
+            />
+        <Stack.Screen name="Rapida" component={QuickObservationTypeDetail} />
+        <Stack.Screen name="Avalancha" component={AvalancheObservationTypeDetail} />
+        <Stack.Screen name="Manto de nieve" component={SnowpackObservationTypeDetail} />
+        <Stack.Screen name="Accidente" component={AccidentObservationTypeDetail} />
+      </Stack.Group>
+      
     </Stack.Navigator>
 )};
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-    }
-  });
+
 
 export default ObservationStack;

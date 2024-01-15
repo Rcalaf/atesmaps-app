@@ -52,6 +52,9 @@ export const AuthProvider = ({children}) => {
         setIsLoading(false);
     }
 
+
+    
+
     const signUp = async (userName, password, email) => {
         try {
            // console.log(userName + ', '+email+', '+password);

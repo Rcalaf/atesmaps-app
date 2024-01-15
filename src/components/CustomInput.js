@@ -16,6 +16,7 @@ const CustomInput = forwardRef(({
   customStyles={},
   blurOnTap=false,
 },ref) => {
+  console.log(multiline);
   if(blurOnTap && ref?.current) ref.current.blur(); 
   return (
     <Controller
@@ -67,14 +68,16 @@ const styles = StyleSheet.create({
   },
   input: {
     borderColor: "gray",
+    
     width: "100%",
     paddingTop: 10,
     paddingBottom: 10,
   },
   textArea: {
     borderColor: "gray",
+    
     width: "100%",
-    height:'20%',
+    height:'100%',
   },
 });
 

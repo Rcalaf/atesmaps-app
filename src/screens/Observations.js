@@ -6,6 +6,7 @@ import {
   FlatList, 
   Linking, 
   RefreshControl,
+  Platform,
   Pressable,
   ActivityIndicator,
   Button,
@@ -110,7 +111,8 @@ export default function ObservationDetail({ navigation }) {
        )
     }
 
-    const laoadMoreObservations = () => {
+    const loadMoreObservations = () => {
+      // console.log('calling load more fucntion... reached end of list');
       if (!lastPage){
       getData();
       }
@@ -221,8 +223,8 @@ export default function ObservationDetail({ navigation }) {
           <RefreshControl refreshing={refreshing} onRefresh={handleRefreshing} />
         }
         ListFooterComponent={renderLoader}
-        onEndReached={laoadMoreObservations}
-        onEndReachedThreshold={0}
+        onEndReached={loadMoreObservations}
+        onEndReachedThreshold={Platform.OS === 'ios' ? 0 : 1}
         />
     }
 
@@ -261,7 +263,7 @@ export default function ObservationDetail({ navigation }) {
               <Text style={[styles.sectionTitle,{ justifyContent: 'flex-start'}]}>Observaciones realizadas</Text>
               <Pressable
                   style={{ justifyContent: 'flex-end'}}
-                  onPress={async ()  => {
+                  onPress={()  => {
                     
                     Linking.openURL('https://atesmaps.org/geovisor.html');
                     }}

@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import VersionCheck from 'react-native-version-check';
 
 import {
+    SafeAreaView,
     StatusBar,
     useColorScheme,
     Alert, 
@@ -33,26 +34,7 @@ const AppNav: () => Node = () => {
     },[])
 
     const checkForUpdates = async () => {
-
-      try {
-        
-        // const OsVer = Platform.constants['Release'];
-        // Alert.alert(
-        //   'Version:',
-        //   ''+VersionCheck.getCurrentVersion()+'/'+OsVer,
-        //   [
-        //     {
-        //       text: 'update',
-        //       onPress: () => {
-        //         // // Open the app store URL for updating
-               
-        //       // Linking.openURL('https://apps.apple.com/es/app/floc/id6444729278');
-        //       },
-        //     },
-        //   ],
-        //   { cancelable: false }
-        // );
-        
+      try {        
           VersionCheck.getLatestVersion({
             forceUpdate: true,
             provider: () => fetch(BASE_URL+(Platform.OS === 'ios' ? '/ios-version' : '/play-version'))
@@ -65,24 +47,31 @@ const AppNav: () => Node = () => {
               currentVersion: VersionCheck.getCurrentVersion(),
               latestVersion: latestVersion
             }).then(res => {
-              console.log(VersionCheck.getCurrentVersion())
-              console.log(latestVersion)
-              console.log(res.isNeeded);  // true
-              console.log('storeURL:')
-              console.log(res.storeUrl)
-             if(res.isNeeded) showUpdateAlert(res.storeUrl);
+              if(Platform.OS === 'ios'){
+                VersionCheck.getAppStoreUrl({ country:'ES', appID: '6444729278' }).then(url => {
+                  console.log(VersionCheck.getCurrentVersion())
+                  console.log(latestVersion)
+                  console.log(res.isNeeded);  // true
+                  console.log('storeURL:')
+                  console.log(url)
+                  if(res.isNeeded) { showUpdateAlert(url)};
+                })
+              }else{
+                VersionCheck.getPlayStoreUrl({ country:'ES', packageName: 'com.atesmapsapp'  }).then(url => {
+                  console.log(VersionCheck.getCurrentVersion())
+                  console.log(latestVersion)
+                  console.log(res.isNeeded);  // true
+                  console.log('storeURL:')
+                  console.log(url)
+                  if(res.isNeeded) { showUpdateAlert(url)};
+                })
+              }
+         
+    
+             
+             
             });
           });
-        
-       // const latestVersion = await VersionCheck.needUpdate(); // Check for updates using react-native-version-check
-        //console.log(latestVersion)
-        // if (latestVersion.isNeeded) {
-        //   // New version available
-        //   showUpdateAlert();
-        // } else {
-        //   // No new version
-        //   console.log('No updates available');
-        // }
       } catch (error) {
         console.error('Error checking for updates:', error);
       }
@@ -97,10 +86,24 @@ const AppNav: () => Node = () => {
             text: 'Update',
             onPress: () => {
               // // Open the app store URL for updating
-               VersionCheck.getStoreUrl().then(res => {
-                 console.log(res);  // true
-                 Linking.openURL(res);
-              });
+              //  VersionCheck.getStoreUrl().then(res => {
+              //    console.log(res);  // true
+               
+              // });
+
+              // console.log(VersionCheck.getAppStoreUrl({ appID: '6444729278' }));
+              // Linking.openURL(
+              //   Platform.OS === 'ios'
+              //     ? VersionCheck.getAppStoreUrl({ appID: '6444729278' })
+              //     : VersionCheck.getPlayStoreUrl({ packageName: 'com.atesmapsapp' })
+              // );
+          //     const url = Platform.OS === 'android' ?
+          //     'https://play.google.com/store/apps/details?id=com.atesmapsapp'   
+          //  :  'https://apps.apple.com/es/app/floc/id6444729278'
+              console.log(url)
+              Linking.canOpenURL(url).then(supported => {
+                supported && Linking.openURL(url);
+              }, (err) => console.log(err));
              
             },
           },
@@ -125,9 +128,11 @@ const AppNav: () => Node = () => {
     
     return (
       <NavigationContainer>
-       <StatusBar barStyle={'dark-content'} hidden={false} />
-        {/* TODO: check update needed... */}
-        { userToken !== null ? <BottomTabs /> : <AuthStack />}
+        {/* <SafeAreaView > */}
+          <StatusBar barStyle={'dark-content'} hidden={false} />
+          {/* TODO: check update needed... */}
+          { userToken !== null ? <BottomTabs /> : <AuthStack />}
+        {/* </SafeAreaView> */}
       </NavigationContainer>
     );
   };

@@ -150,7 +150,7 @@ return(
     <View style={styles.container}>
         <MapView
           // provider={this.props.provider}
-          provider={Platform.OS == "android" ?  "google" : null}
+          provider={Platform.OS == "android" ?  "google" : undefined}
           style={styles.map}
           showsUserLocation = {true}
           // mapType= {Platform.OS == "android" ? "terrain" : "satellite"}
@@ -171,7 +171,9 @@ return(
                * The url template of the tile server. The patterns {x} {y} {z} will be replaced at runtime
                * For example, http://c.tile.openstreetmap.org/{z}/{x}/{y}.png
                */
-              urlTemplate={"https://4umaps.atesmaps.org/{z}/{x}/{y}.png"}
+              // urlTemplate={"https://4umaps.atesmaps.org/{z}/{x}/{y}.png"}
+              
+              urlTemplate={"https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=0a7d6a77a3f34d94a359058bd54f0857"}
               /**
               * The maximum zoom level for this tile overlay. Corresponds to the maximumZ setting in
               * MKTileOverlay. iOS only.

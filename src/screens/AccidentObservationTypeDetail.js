@@ -417,7 +417,7 @@ return(
                         control={control}
                         multiline={true}
                         numberOfLines={4}
-                        customStyles={styles.inputContainer}
+                        customStyles={[styles.inputContainer, {height: '20%'}]}
                         placeholder="1000 letras max"
                         />
                        <View style={{width:'100%',flexDirection: 'row'}}>

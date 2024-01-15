@@ -336,12 +336,6 @@ export default function ObservationDetail({ route, navigation }) {
       setShow(!show);
     };
 
-    // useEffect(()=>{
-    //   console.log('Context location changed....')
-    //   console.log(currentLocation)
-    //   setLocation(currentLocation)
-    // },[currentLocation])
-
     if( isLoading ) {
       return(
           <View style={{flex:1, justifyContent: 'center', alignItems:'center'}}>

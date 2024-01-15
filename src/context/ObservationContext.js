@@ -1,4 +1,5 @@
 import React, {createContext, useContext, useState, useEffect} from 'react';
+import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
@@ -15,7 +16,8 @@ export const ObservationProvider = ({children}) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const [observations, setObservations] = useState([]);
-    const [historicObservations, setHistoricObservations] = useState([]);
+    const [historicObservations, setHistoricObservations] = useState([{"_id":"-1", "status": -1}]);
+    const [allObservations, setAllObservations] = useState([]);
     
     const [editingObservation, setEditingObservation] = useState({});
 
@@ -41,6 +43,42 @@ export const ObservationProvider = ({children}) => {
         }
     };
 
+    const showUpdateAlert = () => {
+        Alert.alert(
+          'Error Loading Data',
+          'You might not have Network access.',
+          [
+            {
+              text: 'Ok',
+              onPress: () => {
+                console.log("Error Acknowladged");  // true       
+              },
+            },
+          ],
+          { cancelable: false }
+        );
+      };
+
+    const getAllObservations = async (filter = 7) =>{
+        console.log(filter)
+        try{
+            let response = null
+            response = await sentRequest(`/observations?filter=${filter}`, "get", '');
+            if(response && response.status != 200){
+                if (userDetails){ 
+                    showUpdateAlert();
+                }else{
+                    console.log("Error no valid Token");
+                    logout();
+                }
+            } else if (response && response.data) {
+                setAllObservations(response.data);
+            }
+        } catch (err){
+            console.log(err);
+        }
+    }
+
     const getData = async (page = currentPage) => {
         setIsLoading(true);
         try{
@@ -51,12 +89,18 @@ export const ObservationProvider = ({children}) => {
             if(response && response.status != 200){
                 if (userDetails){ 
                     setCurrentPage(1);
+                    showUpdateAlert();
+                    
+                }else{
+                    console.log("Error no valid Token");
+                    setCurrentPage(1);
                     logout();
                 }
             } else if (response && response.data) {
                 if(page === 1){
-            
-                    setHistoricObservations(response.data);
+                    let aux = [{"_id":"-1", "status": -1}];
+                    aux = aux.concat(response.data)
+                    setHistoricObservations(aux);
                     setCurrentPage(2);
                 }else{
                     if (response.data.length > 0){
@@ -197,6 +241,8 @@ export const ObservationProvider = ({children}) => {
                 updateSelectedIndex,
                 sentRequest,
                 getData,
+                getAllObservations,
+                allObservations,
                 setCurrentPage,
                 setLastPage,
                 lastPage,
