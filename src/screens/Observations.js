@@ -20,6 +20,7 @@ import { AuthContext } from '../context/AuthContext';
 import { ObservationContext } from '../context/ObservationContext';
 import { LocationContext } from '../context/LocationContext';
 
+
 import Item from '../components/ObservationItem';
 import Loading from '../components/Loading';
 
@@ -37,7 +38,7 @@ export default function ObservationDetail({ navigation }) {
 
     useLayoutEffect(() => {
       navigation.setOptions({
-        // title: value === '' ? 'No title' : value,
+        // title: 'lolObservaciones',
         headerRight: userDetails.status ? () => (
                 <Pressable
                   onPress={async ()  => {

@@ -59,11 +59,13 @@ export const ObservationProvider = ({children}) => {
         );
       };
 
-    const getAllObservations = async (filter = 7) =>{
-        console.log(filter)
+    const getAllObservations = async (filter = {}) =>{
+        setIsLoading(true);
+        // console.log(`API call to get observations with filter values Days: ${filter.days} and location:`);
+        // console.log(filter.location);
         try{
             let response = null
-            response = await sentRequest(`/observations?filter=${filter}`, "get", '');
+            response = await sentRequest(`/observations?days=${filter.days}&long=${filter.location.longitude}&lat=${filter.location.latitude}`, "get", '');
             if(response && response.status != 200){
                 if (userDetails){ 
                     showUpdateAlert();
@@ -74,8 +76,10 @@ export const ObservationProvider = ({children}) => {
             } else if (response && response.data) {
                 setAllObservations(response.data);
             }
+            setIsLoading(false);
         } catch (err){
             console.log(err);
+            setIsLoading(false);
         }
     }
 

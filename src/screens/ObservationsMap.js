@@ -1,4 +1,4 @@
-import React, {Node, useState, useEffect, useLayoutEffect, useContext } from 'react';
+import React, {Node, useState, useEffect, useRef, useLayoutEffect, useContext } from 'react';
 import {
     SafeAreaView,
     ScrollView,
@@ -9,13 +9,15 @@ import {
     Text,
     TouchableOpacity,
     Dimensions,
-  Platform,
-  } from 'react-native';
+    Platform,
+} from 'react-native';
+
+import { SelectList } from 'react-native-dropdown-select-list'
 
 import MapView, {Marker, UrlTile} from 'react-native-maps';
-import Geolocation from 'react-native-geolocation-service';
+// import Geolocation from 'react-native-geolocation-service';
 import moment from 'moment';
-import Svg from 'react-native-svg';
+// import Svg from 'react-native-svg';
 import Loading from '../components/Loading';
 
 import { PULIC_BUCKET_URL } from '../config';
@@ -24,6 +26,7 @@ import { LocationContext } from '../context/LocationContext';
 import { ObservationContext } from '../context/ObservationContext';
 
 import CustomButton from "../components/CustomButton";
+import {locationsData, locationsNames, filterNames, filterData} from './data/MapFilterData';
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 220;
@@ -31,52 +34,52 @@ const CARD_WIDTH = width * 0.8;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
 const ObservationsMap: () => Node = ({ navigation  }) => {
-    const {LATITUDE_DELTA,LONGITUDE_DELTA} = useContext(LocationContext);
-    const {getAllObservations, allObservations,} = useContext(ObservationContext);
+    const {LATITUDE_DELTA,LONGITUDE_DELTA, currentLocation} = useContext(LocationContext);
+    const {isLoading, getAllObservations, allObservations,} = useContext(ObservationContext);
 
-    const [newDelta, setNewDelta]=useState({latitude: 0.0470, longitude: 0.0470})
+    const [newDelta, setNewDelta]=useState({longitudeDelta: 0.7470, latitudeDelta: 0.7470})
     const [newRegion, setNewRegion]=useState({}); 
-    const [isLoading, setIsLoading] = useState(true);
-    const [filter, setFilter] = useState(7);
+    // const [locationIsLoading, setLocationIsLoading] = useState(false);
     const [flying, setFlying] = useState(false);
     const [mapIndex, setMapIndex] = useState(0);
 
+    const [dayFilter, setDayFilter] = useState(3);
+    const [locationFilter, setLocationFilter] = useState(currentLocation)
+    const [selectedLocation, setSelectedLocation] = useState(0);
+    const [selectedDay, setSelectedDay] = useState(0);
 
-    // let mapIndex = 0;
-    // let flying = false;
+  
     //NOTE: This is React Native integrated animated library:
     let mapAnimation = new Animated.Value(0);
-
     //TODO: use React Reanimated library instead.
     //const mapAnimation = useSharedValue(0);
-
-    
-    const _map = React.useRef(null);
-    const _scrollView = React.useRef(null);
+    const _map = useRef(null);
+    const _scrollView = useRef(null);
     
   
     useEffect(()=>{
-      Geolocation.getCurrentPosition(
-        //Will give you the current location
-        (position) => {
-          const newLocation = { ...position.coords, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA }
-          setNewRegion(newLocation);
-          //setEditingObservation({...editingObservation, location: newLocation })     
-          getAllObservations(2);     
-          setIsLoading(false);
-        },
-        (error) => {
-          console.log(error)
-          setIsLoading(false);
-        },
-        {
-          enableHighAccuracy: false,
-          timeout: 3000,
-          maximumAge: 1000
-        },
-      );
-  },[]) 
+      console.log('Calling initial location set up');
+      const newLocation = { latitude: currentLocation.latitude, longitude:currentLocation.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA }
+      setNewRegion(newLocation)
+      // setLocationFilter(newLocation);
+    },[]) 
 
+  useEffect(()=>{
+    console.log('calling getObservations');
+    let location;
+    if (selectedLocation == 0){
+      location = currentLocation
+    }else{
+      location = locationsData[selectedLocation];
+    }
+    // console.log(location);
+    const days = filterData[selectedDay];
+    // console.log(days)
+    getAllObservations({days: days,location: location});
+    // console.log(allObservations.length);
+  },[selectedLocation,selectedDay]);
+
+ 
   useEffect(() => {
     mapAnimation.addListener(({ value }) => {
       // let index = 0;
@@ -88,7 +91,6 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
         index = 0;
       }
   
-
       clearTimeout(regionTimeout);
 
       const regionTimeout = setTimeout(() => {;
@@ -101,23 +103,15 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
               {
                 latitude: coordinates[1] ,
                 longitude: coordinates[0],
-                latitudeDelta: 0.0470 ,
-                longitudeDelta: 0.0470 ,
+                latitudeDelta: 0.1170 ,
+                longitudeDelta: 0.1170 ,
               },
               350
             );
-            // flying = false;
             setFlying(false);
           }
         }else{
-          // console.log(typeof index);
-          // console.log(typeof mapIndex)
-          // console.log(`index: ${index}`);
-          // console.log(`mapIndex: ${mapIndex}`);
-          // console.log(index !== mapIndex)
-          // console.log("------- Shit -------")
           if (index !== mapIndex) {
-            // console.log(index);
             setMapIndex(index);
             const { coordinates } = allObservations[index].location;
             _map.current.animateToRegion(
@@ -155,81 +149,126 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
     
     const markerID = mapEventData._targetInst.return.key;
     //console.log(allObservations[markerID]);
-
     let x = (markerID * CARD_WIDTH) + (markerID * 20); 
     if (Platform.OS === 'ios') {
       x = x - SPACING_FOR_CARD_INSET;
     } 
-
     // mapIndex = Number(markerID);
     setMapIndex( Number(markerID))
     setFlying(true);
     // flying = true;
     _scrollView.current.scrollTo({x: x, y: 0, animated: true});
-  
   }
-
 
   const getMapRegion = () => {       
     return {latitude: newRegion.latitude, 
             longitude: newRegion.longitude, 
-            latitudeDelta: newDelta.latitude,//pickedLocation.latitudeDelta ? pickedLocation.latitudeDelta : location?.latitudeDelta,
-            longitudeDelta: newDelta.longitude//pickedLocation.longitudeDelta ? pickedLocation.longitudeDelta : location?.longitudeDelta,
+            latitudeDelta: newDelta.latitudeDelta,
+            longitudeDelta: newDelta.longitudeDelta
           }
   };
 
 
-  if( isLoading ) {
-    return(
-      <Loading />
-    )
-  }
+  // if( isLoading ) {
+  //   return(
+  //     <Loading />
+  //   )
+  // }
 
     return(
         <SafeAreaView style={styles.safeContainer}>
             <View style={styles.container}>
-              <MapView
-                ref={_map}
-                // provider={this.props.provider}
-                provider={Platform.OS == "android" ?  "google" : undefined}
-                style={styles.map}
-                showsUserLocation = {true}
-                onRegionChangeComplete={(region) => {
-                  setNewDelta({latitudeDelta: region.latitudeDelta, longitudeDelta:region.longitudeDelta })
-                  setNewRegion({latitude: region.latitude, longitude:region.longitude })}
-                }
-                region={getMapRegion()}>
-                 
-                  {allObservations.map((marker, index)=>{
-                    //TODO: use React Reanimated library instead.
-                    // const scaleStyle = useAnimatedStyle(() => ({
-                    //     transform:  {scale: interpolations[index].scale} 
-                    // }));
-                    //NOTE: This is React Native integrated animated library:
-                    const scaleStyle = {
-                      transform: [
-                        {
-                          scale: interpolations[index].scale,
-                        },
-                      ],
-                    };
-                    return(
-                      <Marker
-                        key={index}
-                        style={[styles.pin]}
-                        coordinate={{latitude:Number(marker.location?.coordinates[1]),longitude:Number(marker.location?.coordinates[0])}}
-                        onPress={(e)=>onMarkerPress(e)}
-                      >
-                        
-                        <Animated.Image style={[styles.pin,scaleStyle]}
-                            source={require('../../assets/images/pins/atesmaps-blue.png')}
-                        /> 
-                      </Marker>
-                    )
-                  })}
-            
-              </MapView>
-              <ScrollView
+              {isLoading ?
+                (<Loading />)
+                :
+                (<>
+                  <MapView
+                    ref={_map}
+                    // provider={this.props.provider}
+                    provider={Platform.OS == "android" ?  "google" : undefined}
+                    style={styles.map}
+                    showsUserLocation = {true}
+                    onRegionChangeComplete={(region) => {
+                      setNewDelta({latitudeDelta: region.latitudeDelta, longitudeDelta:region.longitudeDelta })
+                      setNewRegion({latitude: region.latitude, longitude:region.longitude })}
+                    }
+                    region={getMapRegion()}>
+                    
+                      {allObservations.map((marker, index)=>{
+                        //TODO: use React Reanimated library instead.
+                        // const scaleStyle = useAnimatedStyle(() => ({
+                        //     transform:  {scale: interpolations[index].scale} 
+                        // }));
+                        //NOTE: This is React Native integrated animated library:
+                        const scaleStyle = {
+                          transform: [
+                            {
+                              scale: interpolations[index].scale,
+                            },
+                          ],
+                        };
+                        return(
+                          <Marker
+                            key={index}
+                            style={[styles.pin]}
+                            coordinate={{latitude:Number(marker.location?.coordinates[1]),longitude:Number(marker.location?.coordinates[0])}}
+                            onPress={(e)=>onMarkerPress(e)}
+                          >
+                            
+                            <Animated.Image style={[styles.pin,scaleStyle]}
+                                source={require('../../assets/images/pins/atesmaps-blue.png')}
+                            /> 
+                          </Marker>
+                        )
+                      })}
+                
+                  </MapView>
+                  </> 
+                  )}
+                  <View style={{position: 'absolute',left:10, top: 10}}>
+                    <SelectList 
+                      // onSelect={() => {
+                      //   console.log(`set Selected ${selected}`)
+                      //   const location = locationsData[selected];
+                      //  // console.log(location);
+                      //   setLocationFilter(location);
+                      //   //getAllObservations(3);
+                      //   console.log('onSelected for days being called...');
+                      // }}
+                      setSelected={(val) => {
+                        setSelectedLocation(val)
+                      }}
+                      data={locationsNames} 
+                      placeholder="Cerca de mi"
+                      save="key"
+                    // defaultOption={{ key:'0', value:'Cerca de mi' }}
+                      search={false}
+                      boxStyles={{ backgroundColor: '#FFF',  height: 40, borderWidth: 0, minWidth: 210}}
+                      dropdownStyles={{backgroundColor: '#FFF',borderWidth: 0,  maxWidth:200}}
+                    />
+                    </View>
+                    <View style={{position: 'absolute', right:10, top: 10}}>
+                    <SelectList 
+                      // onSelect={() => {
+                      //  // console.log(`set days ${selectedDay}`)
+                      //   const days = filterData[selectedDay];
+                      //   //console.log(days)
+                      //   setDayFilter(days);
+                      // // getAllObservations(3);
+                      // }}
+                      setSelected={(val) => {
+                        setSelectedDay(val)}} 
+                      data={filterNames} 
+                      placeholder="3 días"
+                      search={false}
+                      //defaultOption={{ key:'0', value:'3 días' }}
+                      save="key"
+                      boxStyles={{border:'none', height: 40, borderWidth: 0, backgroundColor: '#FFF', minWidth: 150}}
+                      dropdownStyles={{backgroundColor: '#FFF',borderWidth: 0,  maxWidth:150}}
+                    />
+                  </View>
+             
+              {/* <ScrollView
                 horizontal
                 scrollEventThrottle={1}
                 showsHorizontalScrollIndicator={false}
@@ -247,22 +286,25 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
                 }}
               >
                 <TouchableOpacity key={1} style={styles.chipsItem}>
-                  {/* {category.icon} */}
+                 {category.icon} 
                   <Text>7 dias</Text>
                 </TouchableOpacity>
                 <TouchableOpacity key={2} style={styles.chipsItem}>
-                  {/* {category.icon} */}
+                  {category.icon} 
                   <Text>15 dias</Text>
                 </TouchableOpacity>
                 <TouchableOpacity key={3} style={styles.chipsItem}>
-                  {/* {category.icon} */}
+                  {category.icon} 
                   <Text>30 dias</Text>
                 </TouchableOpacity>
                 <TouchableOpacity key={4} style={styles.chipsItem}>
-                  {/* {category.icon} */}
+                  {category.icon} 
                   <Text>60 dias</Text>
                 </TouchableOpacity>
-              </ScrollView>
+              </ScrollView> */}
+              {!isLoading &&
+             
+              (
               <Animated.ScrollView
                 ref={_scrollView}
                 horizontal
@@ -274,7 +316,7 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
                 snapToAlignment="center"
                 style={styles.scrollView}
                 onContentSizeChange={(width, height) => {
-                  console.log(width, height);
+                  // console.log(width, height);
                 }}
                 contentInset={{
                   top: 0,
@@ -371,6 +413,7 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
                   ))}
 
               </Animated.ScrollView>
+            )}
             </View>
         </SafeAreaView>
         
@@ -455,8 +498,14 @@ const styles = StyleSheet.create({
     color: "#444",
   },
   chipsScrollView: {
+    flex: 1,
+    flexDirection: 'row',
+    width:'100%',
     position:'absolute', 
     top:Platform.OS === 'ios' ? 10 : 10, 
+    backgroundColor: 'red',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal:10
   },
   chipsItem: {

@@ -40,10 +40,7 @@ const {lastIndex, selectedIndex} = useContext(ObservationContext);
 return(
     <Stack.Navigator> 
       <Stack.Group>
-        <Stack.Screen 
-          name="Mis Observaciones" 
-          component={Observations} 
-        />
+        <Stack.Screen name="Observaciones" component={Observations} />
         <Stack.Screen 
           name="Observación" 
           component={ObservationDetail}
@@ -52,20 +49,7 @@ return(
         }} />
         <Stack.Screen name="Detalles" component={ShowObservation} />
         <Stack.Screen name="Imagenes" component={ObservationImageList} />
-        <Stack.Screen 
-            name="Ubicación" 
-            component={LocationPicker} 
-            // options={{
-            //   headerRight: () => (
-            //     <Button
-            //       onPress={() => {
-            //         let index = selectedIndex;
-            //         navigation.navigate('Observación', {index, update:true})
-            //       }}
-            //       title="Save"
-            //     />
-            //   )}}
-            />
+        <Stack.Screen name="Ubicación" component={LocationPicker} />
         <Stack.Screen name="Rapida" component={QuickObservationTypeDetail} />
         <Stack.Screen name="Avalancha" component={AvalancheObservationTypeDetail} />
         <Stack.Screen name="Manto de nieve" component={SnowpackObservationTypeDetail} />

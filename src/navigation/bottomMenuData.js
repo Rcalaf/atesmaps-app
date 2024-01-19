@@ -6,7 +6,7 @@ import MapStack from './MapStack';
 
 const bottomMenuData = [
   {
-    name: 'Observaciones',
+    name: 'Mis Observaciones',
     component: ObservationStack,
     icon: 'eye',
   },
