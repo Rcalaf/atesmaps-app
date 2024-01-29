@@ -63,12 +63,12 @@ export default function ShowObservation({ route, navigation }) {
             <View style={styles.spacer}/> 
             <View style={styles.linkContainer}>
               <Text style={styles.link}>Actividad:</Text>
-              { item.observationTypes.accident.values.activityType === 0 && (<Text style={styles.description}>Esqui de montaña / Splitboard</Text>)}
-              { item.observationTypes.accident.values.activityType === 1 && (<Text style={styles.description}>Raquetas de nieve</Text>)}
-              { item.observationTypes.accident.values.activityType === 2 && (<Text style={styles.description}>Escalada/Alpinismo</Text>)}
-              { item.observationTypes.accident.values.activityType === 3 && (<Text style={styles.description}>Esqui/Snowboard (Pista)</Text>)}
-              { item.observationTypes.accident.values.activityType === 4 && (<Text style={styles.description}>Trekking</Text>)}
-              { item.observationTypes.accident.values.activityType === 5 && (<Text style={styles.description}>{item.observationTypes.accident.values.customActivityType}</Text>)}
+              { item.observationTypes.accident.values.activityType === 1 && (<Text style={styles.description}>Esqui de montaña / Splitboard</Text>)}
+              { item.observationTypes.accident.values.activityType === 2 && (<Text style={styles.description}>Raquetas de nieve</Text>)}
+              { item.observationTypes.accident.values.activityType === 3 && (<Text style={styles.description}>Escalada/Alpinismo</Text>)}
+              { item.observationTypes.accident.values.activityType === 4 && (<Text style={styles.description}>Esqui/Snowboard (Pista)</Text>)}
+              { item.observationTypes.accident.values.activityType === 5 && (<Text style={styles.description}>Trekking</Text>)}
+              { item.observationTypes.accident.values.activityType === 6 && (<Text style={styles.description}>{item.observationTypes.accident.values.customActivityType}</Text>)}
             </View>
           
             {/* <View style={styles.spacer}/> */}
@@ -112,11 +112,11 @@ export default function ShowObservation({ route, navigation }) {
 
             <View style={[styles.linkContainer,{marginTop:5}]}>
               <Text style={styles.link}>Trampas del terreno:</Text>
-              {!item.observationTypes.accident.values.terrainTraps === 0 && (<Text style={styles.description}>Sin apariencia</Text>)}
-              { item.observationTypes.accident.values.terrainTraps === 1 && (<Text style={styles.description}>Corto/zanja</Text>)}
-              { item.observationTypes.accident.values.terrainTraps === 2 && (<Text style={styles.description}>Desnivel/Cambio de pendiente</Text>)}
-              { item.observationTypes.accident.values.terrainTraps === 3 && (<Text style={styles.description}>Árboles</Text>)}
-              { item.observationTypes.accident.values.terrainTraps === 4 && (<Text style={styles.description}>Barranco</Text>)}
+              {!item.observationTypes.accident.values.terrainTraps === 1 && (<Text style={styles.description}>Sin apariencia</Text>)}
+              { item.observationTypes.accident.values.terrainTraps === 2 && (<Text style={styles.description}>Corto/zanja</Text>)}
+              { item.observationTypes.accident.values.terrainTraps === 3 && (<Text style={styles.description}>Desnivel/Cambio de pendiente</Text>)}
+              { item.observationTypes.accident.values.terrainTraps === 4 && (<Text style={styles.description}>Árboles</Text>)}
+              { item.observationTypes.accident.values.terrainTraps === 5 && (<Text style={styles.description}>Barranco</Text>)}
             </View>
 
          
@@ -460,12 +460,12 @@ export default function ShowObservation({ route, navigation }) {
            
             <View style={styles.linkContainer}>
               <Text style={styles.link}>Actividad:</Text>
-              { item.observationTypes.quick.values.activityType === 0 && (<Text style={styles.description}>Esqui de montaña / Splitboard</Text>)}
-              { item.observationTypes.quick.values.activityType === 1 && (<Text style={styles.description}>Raquetas de nieve</Text>)}
-              { item.observationTypes.quick.values.activityType === 2 && (<Text style={styles.description}>Alpinismo</Text>)}
-              { item.observationTypes.quick.values.activityType === 3 && (<Text style={styles.description}>Esquí/Snowboard (Pista)</Text>)}
-              { item.observationTypes.quick.values.activityType === 4 && (<Text style={styles.description}>Esquí de fondo</Text>)}
-              { item.observationTypes.quick.values.activityType === 5 && (<Text style={styles.description}>Sin Actividad</Text>)}
+              { item.observationTypes.quick.values.activityType === 1 && (<Text style={styles.description}>Esqui de montaña / Splitboard</Text>)}
+              { item.observationTypes.quick.values.activityType === 2 && (<Text style={styles.description}>Raquetas de nieve</Text>)}
+              { item.observationTypes.quick.values.activityType === 3 && (<Text style={styles.description}>Alpinismo</Text>)}
+              { item.observationTypes.quick.values.activityType === 4 && (<Text style={styles.description}>Esquí/Snowboard (Pista)</Text>)}
+              { item.observationTypes.quick.values.activityType === 5 && (<Text style={styles.description}>Esquí de fondo</Text>)}
+              { item.observationTypes.quick.values.activityType === 6 && (<Text style={styles.description}>Sin Actividad</Text>)}
             </View>
         
             {/* <View style={styles.spacer}/> */}
@@ -474,10 +474,10 @@ export default function ShowObservation({ route, navigation }) {
             </View>
             <View style={styles.linkContainer}>
               <Text style={styles.link}></Text>
-              { item.observationTypes.quick.values.ridingQuality === 0 && (<Text style={styles.description}>Muy buenas condiciones</Text>)}
-              { item.observationTypes.quick.values.ridingQuality === 1 && (<Text style={styles.description}>Buenas condiciones</Text>)}
-              { item.observationTypes.quick.values.ridingQuality === 2 && (<Text style={styles.description}>Condiciones aceptables</Text>)}
-              { item.observationTypes.quick.values.ridingQuality === 3 && (<Text style={styles.description}>Malas condiciones</Text>)}
+              { item.observationTypes.quick.values.ridingQuality === 1 && (<Text style={styles.description}>Muy buenas condiciones</Text>)}
+              { item.observationTypes.quick.values.ridingQuality === 2 && (<Text style={styles.description}>Buenas condiciones</Text>)}
+              { item.observationTypes.quick.values.ridingQuality === 3 && (<Text style={styles.description}>Condiciones aceptables</Text>)}
+              { item.observationTypes.quick.values.ridingQuality === 4 && (<Text style={styles.description}>Malas condiciones</Text>)}
             </View>
 
             <View style={[styles.linkContainer,{marginTop:5}]}>

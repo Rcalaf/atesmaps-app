@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>BUNDLE_ID</key>
+	<string>org.atesmaps.pyrscope</string>
+	<key>CLIENT_ID</key>
+	<string>700806496723-icb53pqd5n0nanhpmkaqklcpi0f8jcag.apps.googleusercontent.com</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<false/>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.700806496723-icb53pqd5n0nanhpmkaqklcpi0f8jcag</string>
+</dict>
+</plist>

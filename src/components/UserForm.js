@@ -150,13 +150,21 @@ const UserForm = ({preloadedValues, onSubmit, onDelete}) => {
                   // onPress={showDatepicker}
                 />
 
+                {preloadedValues?.email.includes('privaterelay.appleid.com') && (
+                    <Text>Email privado</Text>
+                )}
+            
                 <CustomInput
                   name="email"
                   placeholder="Email"
                   control={control}
                   rules={{required: 'Email is required'}}
+                  secureTextEntry={preloadedValues?.email.includes('privaterelay.appleid.com')}
+                  selectTextOnFocus={false}
+                  editable={false}
                   // onPress={showDatepicker}
                 />
+               
     
                 {/* <CustomInput
                   name="password"
@@ -185,6 +193,7 @@ const UserForm = ({preloadedValues, onSubmit, onDelete}) => {
                     placeholder="Nombre"
                     control={control}
                     rules={{required: 'Name is required'}}
+                   
                     // onPress={showDatepicker}
                 />
         

@@ -14,6 +14,7 @@ import {
 
 import { SelectList } from 'react-native-dropdown-select-list'
 
+
 import MapView, {Marker, UrlTile} from 'react-native-maps';
 // import Geolocation from 'react-native-geolocation-service';
 import moment from 'moment';
@@ -28,9 +29,13 @@ import { ObservationContext } from '../context/ObservationContext';
 import CustomButton from "../components/CustomButton";
 import {locationsData, locationsNames, filterNames, filterData} from './data/MapFilterData';
 
+const bluePin = require('../../assets/images/pins/atesmaps-blue.png');
+const redPin = require('../../assets/images/pins/atesmaps-red.png')
+
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 220;
 const CARD_WIDTH = width * 0.8;
+const CARD_MARGIN = (width * 0.2)/2;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
 const ObservationsMap: () => Node = ({ navigation  }) => {
@@ -48,6 +53,8 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
     const [selectedLocation, setSelectedLocation] = useState(0);
     const [selectedDay, setSelectedDay] = useState(0);
 
+    const [scrollWidth, setScrollWidth] = useState(0);
+
   
     //NOTE: This is React Native integrated animated library:
     let mapAnimation = new Animated.Value(0);
@@ -59,7 +66,7 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
   
     useEffect(()=>{
       console.log('Calling initial location set up');
-      const newLocation = { latitude: currentLocation.latitude, longitude:currentLocation.longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA }
+      const newLocation = { latitude: currentLocation.latitude, longitude:currentLocation.longitude, latitudeDelta: newDelta.latitudeDelta, longitudeDelta: newDelta.longitudeDelta }
       setNewRegion(newLocation)
       // setLocationFilter(newLocation);
     },[]) 
@@ -72,83 +79,132 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
     }else{
       location = locationsData[selectedLocation];
     }
-    // console.log(location);
     const days = filterData[selectedDay];
-    // console.log(days)
     getAllObservations({days: days,location: location});
-    // console.log(allObservations.length);
   },[selectedLocation,selectedDay]);
 
+  useEffect(()=>{
+    if (selectedLocation == 0){
+      location = currentLocation
+    }else{
+      location = locationsData[selectedLocation];
+    }
+
+    //console.log(location)
+
+    if(allObservations.length > 0){
+      console.log('setting location to first obs...')
+      setMapIndex(0);
+      const { coordinates } = allObservations[0].location;
+      setNewRegion({
+        latitude:coordinates[1], 
+        longitude:coordinates[0],
+        latitudeDelta:0.042,
+        longitudeDelta:0.042
+      })
+      setNewDelta({latitudeDelta:0.042,
+        longitudeDelta:0.042})
+    }else{
+      console.log('reset Location to centroid.');
+      setNewRegion({
+        latitude:location.latitude, 
+        longitude:location.longitude,
+        latitudeDelta:0.717,
+        longitudeDelta:0.717
+      })
+
+      setNewDelta({latitudeDelta:0.717,
+        longitudeDelta:0.717})
+    }
+  },[allObservations])
  
-  useEffect(() => {
-    mapAnimation.addListener(({ value }) => {
-      // let index = 0;
-      let index = Math.floor((value-mapIndex*20) / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
-      if (index >= allObservations.length) {
-        index = allObservations.length - 1;
-      }
-      if (index <= 0) {
-        index = 0;
-      }
+  // useEffect(() => {
+  //   mapAnimation.addListener(({ value }) => {
+  //     // let index = 0;
+  //    // let index = Math.floor((value-mapIndex*20) / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
+
+  //     //console.log('value:', value);
+     
+      
+  //   //   console.log(Math.ceil(value / CARD_WIDTH));
+  //   //  // console.log(index);
+  //   //   console.log(CARD_WIDTH + 20);
+  //     let index = Math.floor(value / CARD_WIDTH);
+  //     if (index > allObservations.length) {
+  //       console.log('Reset..')
+  //       index = allObservations.length - 1;
+  //     }
+  //     if (index < 0) {
+  //       console.log('Reset..')
+  //       index = 0;
+  //     }
   
-      clearTimeout(regionTimeout);
+  //     clearTimeout(regionTimeout);
 
-      const regionTimeout = setTimeout(() => {;
-        if(flying){
-          // console.log('saltant...');
-          if (index === mapIndex) {
-            // console.log(`On saltem? ${index}`)
-            const { coordinates } = allObservations[index].location;
-            _map.current.animateToRegion(
-              {
-                latitude: coordinates[1] ,
-                longitude: coordinates[0],
-                latitudeDelta: 0.1170 ,
-                longitudeDelta: 0.1170 ,
-              },
-              350
-            );
-            setFlying(false);
-          }
-        }else{
-          if (index !== mapIndex) {
-            setMapIndex(index);
-            const { coordinates } = allObservations[index].location;
-            _map.current.animateToRegion(
-              {
-                latitude: coordinates[1] ,
-                longitude: coordinates[0],
-                latitudeDelta: 0.1170 ,
-                longitudeDelta: 0.1170 ,
-              },
-              350
-            );
-          }
-        }
-      }, 10);
-    });
-  });
+  //     const regionTimeout = setTimeout(() => {
+  //       if(flying){
+  //         // console.log('saltant...');
+  //         if (index === mapIndex) {
+  //           // console.log(`On saltem? ${index}`)
+  //           const { coordinates } = allObservations[index].location;
+  //           _map.current.animateToRegion(
+  //             {
+  //               latitude: coordinates[1] ,
+  //               longitude: coordinates[0],
+  //               latitudeDelta: 0.1170 ,
+  //               longitudeDelta: 0.1170 ,
+  //             },
+  //             350
+  //           );
+  //           setFlying(false);
+  //         }
+  //       }else{
+  //         if (index !== mapIndex) {
+  //           setMapIndex(index);
+  //           const { coordinates } = allObservations[index].location;
+  //           _map.current.animateToRegion(
+  //             {
+  //               latitude: coordinates[1] ,
+  //               longitude: coordinates[0],
+  //               latitudeDelta: 0.1170 ,
+  //               longitudeDelta: 0.1170 ,
+  //             },
+  //             350
+  //           );
+  //         }
+  //       }
+  //     }, 10);
+  //   });
+  // });
 
-  const interpolations = allObservations.map((marker, index) => {
-    const inputRange = [
-      (index - 1) * (CARD_WIDTH + 20) ,
-      index * (CARD_WIDTH + 20),
-      ((index + 1) * (CARD_WIDTH + 20)),
-    ];
-    //NOTE: This is React Native integrated animated library:
-    const scale = mapAnimation.interpolate({
-      inputRange,
-      outputRange: [1, 1.5, 1],
-      extrapolate: "clamp"
-    });
-
-    return { scale };
-  });
+  // const interpolations = allObservations.map((marker, index) => {
+  //   const inputRange = [
+  //     (index - 1) * (CARD_WIDTH + 20) ,
+  //     index * (CARD_WIDTH + 20),
+  //     ((index + 1) * (CARD_WIDTH + 20)),
+  //   ];
+  //   //NOTE: This is React Native integrated animated library:
+  //   let scale;
+  //   if(Platform.OS === 'ios'){
+  //     scale = mapAnimation.interpolate({
+  //       inputRange,
+  //       outputRange: [1, 1.5, 1],
+  //       extrapolate: "clamp"
+  //     });
+  //   }else{
+  //     scale = mapAnimation.interpolate({
+  //       inputRange,
+  //       outputRange: [0.5, 0.75, 0.5],
+  //       extrapolate: "clamp"
+  //     });
+  //   }
+  //   return { scale };
+  // });
 
   const onMarkerPress = (mapEventData) => {
     
     const markerID = mapEventData._targetInst.return.key;
-    //console.log(allObservations[markerID]);
+   
     let x = (markerID * CARD_WIDTH) + (markerID * 20); 
     if (Platform.OS === 'ios') {
       x = x - SPACING_FOR_CARD_INSET;
@@ -201,9 +257,22 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
                         // }));
                         //NOTE: This is React Native integrated animated library:
                         const scaleStyle = {
+                          ...Platform.select({
+                            ios: {
+                           
+                            },
+                            android: {
+                              width: 51,
+                              height: 60,
+                              marginBottom: 0,
+                            }
+                          }),
+                          // backgroundColor: (index === mapIndex ? 'red' : 'transparent'),
                           transform: [
                             {
-                              scale: interpolations[index].scale,
+                              //scale: 0.75
+                              //scale: interpolations,
+                               scale: (Platform.OS === 'ios' ? (index === mapIndex ? 1 : 0.75) : (index === mapIndex ? 0.80 : 0.5)),
                             },
                           ],
                         };
@@ -214,9 +283,9 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
                             coordinate={{latitude:Number(marker.location?.coordinates[1]),longitude:Number(marker.location?.coordinates[0])}}
                             onPress={(e)=>onMarkerPress(e)}
                           >
-                            
+                             
                             <Animated.Image style={[styles.pin,scaleStyle]}
-                                source={require('../../assets/images/pins/atesmaps-blue.png')}
+                                source={(index === mapIndex ? redPin : bluePin)}
                             /> 
                           </Marker>
                         )
@@ -225,16 +294,8 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
                   </MapView>
                   </> 
                   )}
-                  <View style={{position: 'absolute',left:10, top: 10}}>
+                  <View style={{position: 'absolute', left:10, top: 10}}>
                     <SelectList 
-                      // onSelect={() => {
-                      //   console.log(`set Selected ${selected}`)
-                      //   const location = locationsData[selected];
-                      //  // console.log(location);
-                      //   setLocationFilter(location);
-                      //   //getAllObservations(3);
-                      //   console.log('onSelected for days being called...');
-                      // }}
                       setSelected={(val) => {
                         setSelectedLocation(val)
                       }}
@@ -243,28 +304,22 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
                       save="key"
                     // defaultOption={{ key:'0', value:'Cerca de mi' }}
                       search={false}
-                      boxStyles={{ backgroundColor: '#FFF',  height: 40, borderWidth: 0, minWidth: 210}}
-                      dropdownStyles={{backgroundColor: '#FFF',borderWidth: 0,  maxWidth:200}}
+                      boxStyles={{ backgroundColor: '#FFF',  height: 40, borderWidth: 0, minWidth: 190}}
+                      dropdownStyles={{backgroundColor: '#FFF',borderWidth: 0,  maxWidth:190}}
                     />
                     </View>
                     <View style={{position: 'absolute', right:10, top: 10}}>
                     <SelectList 
-                      // onSelect={() => {
-                      //  // console.log(`set days ${selectedDay}`)
-                      //   const days = filterData[selectedDay];
-                      //   //console.log(days)
-                      //   setDayFilter(days);
-                      // // getAllObservations(3);
-                      // }}
                       setSelected={(val) => {
-                        setSelectedDay(val)}} 
+                        setSelectedDay(val)
+                      }} 
                       data={filterNames} 
                       placeholder="3 días"
                       search={false}
                       //defaultOption={{ key:'0', value:'3 días' }}
                       save="key"
-                      boxStyles={{border:'none', height: 40, borderWidth: 0, backgroundColor: '#FFF', minWidth: 150}}
-                      dropdownStyles={{backgroundColor: '#FFF',borderWidth: 0,  maxWidth:150}}
+                      boxStyles={{border:'none', height: 40, borderWidth: 0, backgroundColor: '#FFF', minWidth: 120}}
+                      dropdownStyles={{backgroundColor: '#FFF',borderWidth: 0,  maxWidth:120}}
                     />
                   </View>
              
@@ -311,13 +366,62 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
                 pagingEnabled
                 scrollEventThrottle={16}
                 decelerationRate={0}
-                showsHorizontalScrollIndicator={false}
+                showsHorizontalScrollIndicator={true}
                 snapToInterval={CARD_WIDTH + 20}
-                snapToAlignment="center"
+                snapToAlignment={Platform.OS === 'android' ? "start" : "center"}
                 style={styles.scrollView}
                 onContentSizeChange={(width, height) => {
-                  // console.log(width, height);
+                   setScrollWidth(width);
+                  //  if(allObservations.length > 0){
+                  //   console.log(mapIndex);
+                  //   const { coordinates } = allObservations[mapIndex].location;
+                  //   console.log('new region coordenates')
+                  //   _map.current.animateToRegion(
+                  //     {
+                  //       latitude: coordinates.latitude,
+                  //       longitude: coordinates.longitude,
+                  //       latitudeDelta: 0.1170,
+                  //       longitudeDelta: 0.1170,
+                  //     },
+                  //     350
+                  //   );
+                  // }
                 }}
+                onMomentumScrollEnd={(event)=>{
+                  // console.log('momentum ended')
+                  // console.log('numberof cards on the scroll view: ',(scrollWidth/ (CARD_WIDTH + 20)));
+                  // console.log('number of observations found: ',allObservations.length);
+
+                  // console.log('current scroll position after snap',scrollWidth);
+                  // console.log('hipotetical selected mark:',(Math.ceil((scrollWidth-SPACING_FOR_CARD_INSET) / (CARD_WIDTH + 20)) - Math.ceil((scrollWidth-SPACING_FOR_CARD_INSET - event.nativeEvent.contentOffset.x) / (CARD_WIDTH + 20))) )
+                  let index;
+                  if(Platform.os === 'ios'){
+                    index = (1+Math.ceil(scrollWidth / (CARD_WIDTH + 20)) - Math.ceil((scrollWidth - event.nativeEvent.contentOffset.x) / (CARD_WIDTH + 20))) ;
+                  }else{
+                    index = (Math.ceil((scrollWidth-SPACING_FOR_CARD_INSET) / (CARD_WIDTH + 20)) - Math.ceil((scrollWidth-SPACING_FOR_CARD_INSET - event.nativeEvent.contentOffset.x) / (CARD_WIDTH + 20))) ;
+                  }
+                   
+                  if (index !== mapIndex) {
+                    setMapIndex(index);
+                    const { coordinates } = allObservations[index].location;
+                    _map.current.animateToRegion(
+                      {
+                        latitude: coordinates[1] ,
+                        longitude: coordinates[0],
+                        latitudeDelta: 0.042,
+                        longitudeDelta: 0.042,
+                      },
+                      350
+                    );
+                  }
+                  //console.log((scrollWidth-(SPACING_FOR_CARD_INSET*2) / CARD_WIDTH) - (scrollWidth - event.nativeEvent.contentOffset.x) / (CARD_WIDTH))
+                  //console.log(Math.ceil((scrollWidth-(SPACING_FOR_CARD_INSET*2) / CARD_WIDTH) - (scrollWidth - event.nativeEvent.contentOffset.x) / (CARD_WIDTH)));
+
+            
+                }}
+                // onScroll={(event)=>{
+                //   console.log(event.nativeEvent.contentOffset.y)
+                // }}
                 contentInset={{
                   top: 0,
                   left: SPACING_FOR_CARD_INSET,
@@ -357,10 +461,9 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
                         resizeMode="cover"
                       /> 
                     )}
-                      
                       <View style={styles.textContent}>
                         <View style={[styles.obsIcons, {justifyContent: 'space-between'}]}>
-                          <Text numberOfLines={1} style={styles.cardtitle}>{marker.title}-{index}</Text>
+                          <Text numberOfLines={1} style={styles.cardtitle}>{marker.title}</Text>
                           <Text style={styles.cardDescription}>{moment(marker.date).format('Do MMMM YY')}</Text>
                         </View> 
                         <View style={styles.obsIcons}>
@@ -382,7 +485,13 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
                                 style={styles.obsIcon}
                                 resizeMode="cover"
                           />
-                        )}                                                                                            
+                        )}     
+                        {marker.observationTypes.avalanche.status == true && (
+                          <Image source={require("../../assets/images/icons/buttonIcons/button-avalanche.png")}
+                                style={styles.obsIcon}
+                                resizeMode="cover"
+                          />
+                        )}                                                                                          
                         </View>
                        
                         <CustomButton text="Ver"  
@@ -503,7 +612,7 @@ const styles = StyleSheet.create({
     width:'100%',
     position:'absolute', 
     top:Platform.OS === 'ios' ? 10 : 10, 
-    backgroundColor: 'red',
+  
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal:10
@@ -525,11 +634,12 @@ const styles = StyleSheet.create({
   pin: {
       ...Platform.select({
         ios: {
-          width: 34,
-          height: 40,
+          width: 51,
+          height: 60,
           marginBottom: 55,
         },
         android: {
+      
           marginBottom: 0,
         },
         default: {

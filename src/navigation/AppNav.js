@@ -1,7 +1,8 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 import VersionCheck from 'react-native-version-check';
+import axios from 'axios';
 
 import {
     SafeAreaView,
@@ -26,52 +27,64 @@ import { BASE_URL } from '../config';
 
 
 const AppNav: () => Node = () => {
-    const isDarkMode = useColorScheme() === 'dark';
+   // const isDarkMode = useColorScheme() === 'dark';
     const {isLoading, userToken} = useContext(AuthContext);
-
+  
     useEffect(()=>{
+      // console.log(VersionCheck.getCountry());            // KR
+      // console.log(VersionCheck.getPackageName());        // com.reactnative.app
+      // console.log(VersionCheck.getCurrentBuildNumber()); // 10
+      console.log(VersionCheck.getCurrentVersion());  
       checkForUpdates();
     },[])
 
-    const checkForUpdates = async () => {
-      try {        
-          VersionCheck.getLatestVersion({
-            forceUpdate: true,
-            provider: () => fetch(BASE_URL+(Platform.OS === 'ios' ? '/ios-version' : '/play-version'))
-              .then(r => r.json())
-              .then(({version}) => version),   // You can get latest version from your own api.
-          }).then(latestVersion =>{
+    const getLatestVersion = async () => {
+       try {
            
-            console.log(latestVersion);
-            VersionCheck.needUpdate({
-              currentVersion: VersionCheck.getCurrentVersion(),
-              latestVersion: latestVersion
-            }).then(res => {
-              if(Platform.OS === 'ios'){
-                VersionCheck.getAppStoreUrl({ country:'ES', appID: '6444729278' }).then(url => {
-                  console.log(VersionCheck.getCurrentVersion())
-                  console.log(latestVersion)
-                  console.log(res.isNeeded);  // true
-                  console.log('storeURL:')
-                  console.log(url)
-                  if(res.isNeeded) { showUpdateAlert(url)};
-                })
-              }else{
-                VersionCheck.getPlayStoreUrl({ country:'ES', packageName: 'com.atesmapsapp'  }).then(url => {
-                  console.log(VersionCheck.getCurrentVersion())
-                  console.log(latestVersion)
-                  console.log(res.isNeeded);  // true
-                  console.log('storeURL:')
-                  console.log(url)
-                  if(res.isNeeded) { showUpdateAlert(url)};
-                })
-              }
-         
-    
-             
-             
-            });
-          });
+            let response = await axios.get(BASE_URL+(Platform.OS === 'ios' ? '/ios-version' : '/play-version'));
+            console.log(response.data)
+
+            return response.data.version
+        } catch (error) {
+          console.error('Error checking for updates:', error.message);
+          //console.log(error);
+        } 
+    }
+
+    const checkForUpdates = async() => {
+
+     const latestVersion = await getLatestVersion();
+     
+      try {        
+        VersionCheck.needUpdate({
+          currentVersion: VersionCheck.getCurrentVersion(),
+          latestVersion: latestVersion//latestVersion
+        }).then(res => {
+          // console.log('Does it need update?')
+          // console.log(res);
+          if(Platform.OS === 'ios'){
+           
+            if(res.isNeeded) { showUpdateAlert('itms-apps://apps.apple.com/es/app/floc/id6444729278')};
+            // VersionCheck.getAppStoreUrl({ country:'ES', appID: '6444729278' }).then(url => {
+            //   console.log(VersionCheck.getCurrentVersion())
+            //   console.log(latestVersion)
+            //   console.log(res.isNeeded);  // true
+            //   console.log('storeURL:')
+            //   console.log(url)
+            //   if(res.isNeeded) { showUpdateAlert(url)};
+            // })
+          }else{
+            // VersionCheck.getPlayStoreUrl({ country:'ES', packageName: 'com.atesmapsapp'  }).then(url => {
+            //   console.log(VersionCheck.getCurrentVersion())
+            //   console.log(latestVersion)
+            //   console.log(res.isNeeded);  // true
+            //   console.log('storeURL:')
+            //   console.log(url)
+            //   if(res.isNeeded) { showUpdateAlert(url)};
+            // })
+            if(res.isNeeded) { showUpdateAlert('https://play.google.com/store/apps/details?id=com.atesmapsapp')};
+          }
+        });
       } catch (error) {
         console.error('Error checking for updates:', error);
       }
@@ -100,7 +113,7 @@ const AppNav: () => Node = () => {
           //     const url = Platform.OS === 'android' ?
           //     'https://play.google.com/store/apps/details?id=com.atesmapsapp'   
           //  :  'https://apps.apple.com/es/app/floc/id6444729278'
-              console.log(url)
+              //console.log(url)
               Linking.canOpenURL(url).then(supported => {
                 supported && Linking.openURL(url);
               }, (err) => console.log(err));
@@ -113,9 +126,9 @@ const AppNav: () => Node = () => {
     };
   
     //console.log(`Auth Context userTokenm value: ${userToken}`);
-    const backgroundStyle = {
-      backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-    };
+    // const backgroundStyle = {
+    //   backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    // };
 
     if( isLoading ) {
         return(

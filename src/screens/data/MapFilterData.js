@@ -45,8 +45,9 @@ export const filterData = [3,7,15,30,60];
 
 export const locationsData = 
 [
-    //Andorra centre
+    
     {},
+    //Andorra centre
     {latitude: 42.53510694555712, longitude: 1.5529746979350716, latitudeDelta: 0.7170, longitudeDelta: 0.7170 },
     //Andorra Nord
     {latitude: 42.58508140442987, longitude: 1.6121730217316999, latitudeDelta: 0.7170, longitudeDelta: 0.7170 },

@@ -12,11 +12,13 @@ const CustomInput = forwardRef(({
   numberOfLines=1,
   keyboardType='default',
   onPress,
+  editable = true,
+  selectTextOnFocus = true, 
   customError=false,
   customStyles={},
   blurOnTap=false,
 },ref) => {
-  console.log(multiline);
+  //console.log(multiline);
   if(blurOnTap && ref?.current) ref.current.blur(); 
   return (
     <Controller
@@ -45,6 +47,8 @@ const CustomInput = forwardRef(({
               secureTextEntry={secureTextEntry} 
               placeholderTextColor="#000" 
               ref={ref}
+              editable={editable}
+              selectTextOnFocus={selectTextOnFocus}
             />
           </View>
           {error && (

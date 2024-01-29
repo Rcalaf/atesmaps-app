@@ -173,7 +173,7 @@ export default function ObservationDetail({ route, navigation }) {
             //   submitted: false,
             // });
             setIsLoading(false);
-            navigation.navigate('Lista de Observaciones');
+            navigation.navigate('Observaciones');
             deleteObservation();
             
             Snackbar.show({
@@ -242,7 +242,7 @@ export default function ObservationDetail({ route, navigation }) {
               // handleSubmit(onSave)();
               // let index = route.params?.index;
               // setEditingObservation({...editingObservation, location:pickedLocation});
-              navigation.navigate('Lista de Observaciones');
+              navigation.navigate('Observaciones');
             }}
             title="Guardar"
           />
@@ -555,7 +555,7 @@ export default function ObservationDetail({ route, navigation }) {
                   //   images: [],
                   //   submitted: false,
                   // });
-                  navigation.navigate('Lista de Observaciones');
+                  navigation.navigate('Observaciones');
                 }} />
           </View>
        

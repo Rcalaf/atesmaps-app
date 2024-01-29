@@ -12,6 +12,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		277005082B4E5E1500330729 /* swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277005072B4E5E1500330729 /* swift.swift */; };
+		27CCD1CE2B6369D0009B1F51 /* GoogleService-Info.plist in Sources */ = {isa = PBXBuildFile; fileRef = 27CCD1CD2B6369CF009B1F51 /* GoogleService-Info.plist */; };
 		27D1B67B2B4E40D1000ECA83 /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27D1B66D2B4E40D0000ECA83 /* Roboto-Medium.ttf */; };
 		27D1B67C2B4E40D1000ECA83 /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27D1B66E2B4E40D0000ECA83 /* Roboto-Black.ttf */; };
 		27D1B67D2B4E40D1000ECA83 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27D1B66F2B4E40D0000ECA83 /* Roboto-Regular.ttf */; };
@@ -55,6 +56,8 @@
 		1CCC3D6446110EA377BBFF44 /* Pods-atesmapsApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-atesmapsApp.release.xcconfig"; path = "Target Support Files/Pods-atesmapsApp/Pods-atesmapsApp.release.xcconfig"; sourceTree = "<group>"; };
 		277005062B4E5E1400330729 /* atesmapsApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "atesmapsApp-Bridging-Header.h"; sourceTree = "<group>"; };
 		277005072B4E5E1500330729 /* swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = swift.swift; sourceTree = "<group>"; };
+		27CCD1CD2B6369CF009B1F51 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "atesmapsApp/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		27CCD1CF2B636E4B009B1F51 /* atesmapsApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = atesmapsApp.entitlements; path = atesmapsApp/atesmapsApp.entitlements; sourceTree = "<group>"; };
 		27D1B66D2B4E40D0000ECA83 /* Roboto-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Medium.ttf"; path = "../assets/fonts/Roboto-Medium.ttf"; sourceTree = "<group>"; };
 		27D1B66E2B4E40D0000ECA83 /* Roboto-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Black.ttf"; path = "../assets/fonts/Roboto-Black.ttf"; sourceTree = "<group>"; };
 		27D1B66F2B4E40D0000ECA83 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Roboto-Regular.ttf"; path = "../assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
@@ -117,6 +120,8 @@
 		13B07FAE1A68108700A75B9A /* atesmapsApp */ = {
 			isa = PBXGroup;
 			children = (
+				27CCD1CF2B636E4B009B1F51 /* atesmapsApp.entitlements */,
+				27CCD1CD2B6369CF009B1F51 /* GoogleService-Info.plist */,
 				27D1B66C2B4E4017000ECA83 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -461,6 +466,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27CCD1CE2B6369D0009B1F51 /* GoogleService-Info.plist in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				277005082B4E5E1500330729 /* swift.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
@@ -484,6 +490,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 5RWQ925M98;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -500,7 +507,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = org.atesmaps.pyrscope;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/atesmapsApp.app/atesmapsApp";
 			};
@@ -513,6 +520,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 5RWQ925M98;
 				INFOPLIST_FILE = atesmapsAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -525,7 +533,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = org.atesmaps.pyrscope;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/atesmapsApp.app/atesmapsApp";
 			};
@@ -537,6 +545,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = atesmapsApp/atesmapsApp.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5RWQ925M98;
 				ENABLE_BITCODE = NO;
@@ -545,14 +556,15 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.7;
+				MARKETING_VERSION = 1.1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = org.atesmaps.pyrscope;
 				PRODUCT_NAME = atesmapsApp;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "atesmapsApp-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -566,6 +578,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = atesmapsApp/atesmapsApp.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5RWQ925M98;
 				INFOPLIST_FILE = atesmapsApp/Info.plist;
@@ -573,14 +588,15 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.7;
+				MARKETING_VERSION = 1.1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = org.atesmaps.pyrscope;
 				PRODUCT_NAME = atesmapsApp;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "atesmapsApp-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -656,7 +672,10 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -724,7 +743,10 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

@@ -11,6 +11,7 @@ const CustomButton = ({
   fColor,
   iconName = 'arrow-forward-ios',
   leftIconImage,
+  leftIconStyles = {},
   customStyle = {}
 }) => {
   return (
@@ -25,7 +26,7 @@ const CustomButton = ({
       ]}>
       {leftIconImage && (
         <Image
-        style={styles.LeftImage}
+        style={[styles.LeftImage, leftIconStyles]}
         source={leftIconImage}
         />
       )}
@@ -35,7 +36,6 @@ const CustomButton = ({
           styles[`text_${type}`],
           fColor ? {color: fColor} : {},
           leftIconImage ? { width: '75%',} : {},
-          
         ]}>
         {text}
       </Text>

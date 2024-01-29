@@ -11,6 +11,8 @@ import {
     Text,
   } from 'react-native';
 
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthContext } from '../context/AuthContext';
 import { ObservationContext } from '../context/ObservationContext';
@@ -44,16 +46,28 @@ return(
           //   />
           // ),
            headerRight: () => (
-             <Button
-              onPress={() => {
-                console.log('LogOut triggered...');
-                logout();
-                setCurrentPage(1);
-                }
-              }
-              title="Logout"
-              color="red"
-            />
+            <Pressable
+                    onPress={async ()  => {
+                      console.log('LogOut triggered...');
+                      logout();
+                      setCurrentPage(1);
+                    }}>
+                  <MaterialCommunityIcons size={25} 
+                                        color={'red'} 
+                                        name="logout-variant"/>
+                </Pressable>
+            //  <Button
+            //   onPress={() => {
+            //     console.log('LogOut triggered...');
+            //     logout();
+            //     setCurrentPage(1);
+            //     }
+            //   }
+            //   // Logout
+              
+            //   title="Logout"
+            //   color="red"
+            // />
         )
       }}/>
     </Stack.Navigator>

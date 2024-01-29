@@ -1,7 +1,10 @@
 //export const BASE_URL = 'http://10.0.2.2:3500';
-//export const BASE_URL = 'http://localhost:3500';
+//export const BASE_URL = 'http://rcc.local:3500';
 export const BASE_URL = 'https://api-test.atesmaps.org';
 export const PULIC_BUCKET_URL = 'https://atesmaps.ams3.digitaloceanspaces.com';
 export const ENDPOINT = 'https://ams3.digitaloceanspaces.com';
 export const ACCESS_KEY = 'DO00M2AMEDPXB3XUV8DZ';
 export const ACCESS_SECRET = 'DSf8ePnWlKt+Mb3Firs3139Mkkhm98e6wIdS4uH3MSI';
+export const ANDROID_CLIENT_ID = '700806496723-fti4em8r028sfmq83uma9invbijh1iri.apps.googleusercontent.com';
+export const ANDROID_CLIENT_ID_DEBUG = '700806496723-pkmudbn2hrarh4jj1f5h137tkf693oa9.apps.googleusercontent.com';
+export const WEB_CLIENT_ID = '700806496723-qvacg8oo2r0onn0ahbga7ggiovbs9dco.apps.googleusercontent.com';

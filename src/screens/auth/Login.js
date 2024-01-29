@@ -14,7 +14,17 @@ import {
     Image,
     TouchableOpacity,
     Keyboard,
+    Platform,
   } from 'react-native';
+
+import {
+    //GoogleSignin,
+    GoogleSigninButton,
+    //statusCodes,
+} from '@react-native-google-signin/google-signin';
+import { appleAuthAndroid, AppleButton } from '@invertase/react-native-apple-authentication';
+
+
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useForm, Controller } from "react-hook-form";
@@ -31,7 +41,10 @@ const Login: () => Node = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
 
-  const {login} = useContext(AuthContext);
+  const {login, 
+         googleLogin, 
+         appleLogin
+  } = useContext(AuthContext);
   const { control, handleSubmit, formState: { errors }, getValues, setValue } = useForm({
     //defaultValues: preloadedValues
     defaultValues: {
@@ -56,12 +69,38 @@ const Login: () => Node = ({navigation}) => {
               <Text style={{fontSize: 28, fontWeight: '500', color: '#333', marginBottom: 25}}>Login</Text>
           </View> */}
 
-          <View style={{top: '0%',justifyContent: 'center',alignItems: 'center'}}>
+          <View style={{top: '7%',justifyContent: 'center',alignItems: 'center'}}>
                 <Image
-                style={{height: 330, width: 330}}
+                 style={{height: 330, width: 330}}
                  source={require('../../../assets/images/logos/logo-floc.jpg')}
                 /> 
           </View>
+
+          <CustomButton 
+            text="Login con Google" 
+            //bgColor={"white"} 
+            fColor='black'
+            type='custom'
+            customStyle={{ paddingLeft: '30%', marginVertical: 5,}}
+            leftIconStyles={{marginTop: 1, width:12,height:15}}
+            leftIconImage={require("../../../assets/images/icons/buttonIcons/google.png")}
+            iconName={null} 
+            onPress={googleLogin} 
+          />
+          {/* {appleAuthAndroid.isSupported || Platform.OS === 'ios' && ( */}
+            <CustomButton 
+              text="Login con Apple" 
+              fColor='black'
+              type='custom'
+              customStyle={{ paddingLeft: '30%', marginVertical: 5,alignItems:'center'}}
+              leftIconStyles={{marginTop: 0, width:12,height:15}}
+              leftIconImage={require("../../../assets/images/icons/buttonIcons/apple.png")}
+              iconName={null} 
+              onPress={appleLogin} 
+            /> 
+          {/* )} */}
+
+          <View style={styles.spacer}/>
 
           <CustomInput
             name="email"
@@ -109,7 +148,14 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-    }
+    },
+    spacer: {
+      width: '100%',
+      marginTop: 10,
+      marginBottom: 10,
+      backgroundColor: 'gray',
+      height: 1,
+  },
   });
 
 export default Login;
