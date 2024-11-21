@@ -36,6 +36,7 @@ const { control, handleSubmit, formState: { errors }, getValues, setValue, reset
     //defaultValues: preloadedValues
     defaultValues: {
         activityType: accidentValues.values.activityType ? accidentValues.values.activityType : null,
+        accidentOrigin: accidentValues.values.accidentOrigin ? accidentValues.values.accidentOrigin : null,
         customActivityType: accidentValues.values.customActivityType ? accidentValues.values.customActivityType : null,
         numOfPeople: accidentValues.values.numOfPeople ? accidentValues.values.numOfPeople : null,
         numOfBuried: accidentValues.values.numOfBuried ? accidentValues.values.numOfBuried : null,
@@ -122,6 +123,8 @@ const updateData = () => {
         let aux = {values: {}}
 
         aux['values'].activityType = values.activityType
+        aux['values'].accidentOrigin = values.accidentOrigin
+        
         aux['values'].customActivityType = values.customActivityType
         aux['values'].numOfPeople = values.numOfPeople
         aux['values'].numOfBuried = values.numOfBuried
@@ -206,6 +209,10 @@ const terrainTrapOptions = [
     {label: 'Barranco'},
 ]
 
+const accidentOriginOptions = [
+    {label: 'Natural'},
+    {label: 'Accidental'},
+]
 
 
 return(
@@ -241,6 +248,20 @@ return(
                             // rules={getValues('activityType') == 6 ? {required: 'Indica actividad'} : null}
                             // onPress={showDatepicker}
                             />
+                </View>
+                <View style={styles.formContainer} >
+                    <View style={styles.spacer}/>
+                     <CustomRadioButton 
+                        name="accidentOrigin"
+                        title="Desencadenamiento*:"
+                        control={control}
+                        data={accidentOriginOptions}
+                        rules={{required: 'Campo obligatorio'}}
+                        box={false}
+                        textColor={'black'}
+                        circleSize={14}
+                    />
+                   
                 </View>
                 <View style={styles.formContainer} >
                 <Text>Información sobre el grupo y los afectados:</Text>
@@ -348,6 +369,7 @@ return(
 
                     
                     <Text>Tamaño alud:</Text>
+                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Puedes marcar multiples opciones</Text>    
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="avalancheSize1"
                                         title="1-Peligro de enterramiento mínimo (peligro de caída)" 
@@ -406,8 +428,7 @@ return(
 
                 </View>
                 <View style={styles.spacer}></View>
-               
-               
+                
                 <View style={styles.formContainer} >
                     
                     <Text>Otras observaciones:</Text>

@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect} from "react";
+import React, {useState, useLayoutEffect, useEffect, useContext} from "react";
 import { 
   SafeAreaView,
   ScrollView, 
@@ -16,6 +16,7 @@ import moment from 'moment';
 import { PULIC_BUCKET_URL } from '../config';
 import MapView, {Marker, UrlTile} from 'react-native-maps';
 import Svg from 'react-native-svg';
+import { ObservationContext } from '../context/ObservationContext';
 
 
 const { width, height } = Dimensions.get("window");
@@ -32,22 +33,160 @@ moment.locale('es', {
 );
 
 export default function ShowObservation({ route, navigation }) {  
-    console.log(route.params)
-    console.log(navigation)
+  
+    //console.log(navigation)
     const [item, setItem] = useState(route.params?.item);
+    const [userName, setUserName] = useState('');
+    const {getObservationUserDetails} = useContext(ObservationContext);
+
    
     useLayoutEffect( () => {
       navigation.setOptions({
         // title: item.title === '' ? 'No title' : item.title,
         title: 'Observación',
         headerLeft: (props) => (
-          <HeaderBackButton labelVisible={true} onPress={()=>{
+          <HeaderBackButton labelVisible={false} onPress={()=>{
             navigation.goBack();
           }}></HeaderBackButton>
         )
       });
     })
-    // console.log(item);
+    useEffect(()=>{
+      
+      const getUserDetais = async (id) => {
+        const user = await getObservationUserDetails(id);
+        // console.log("--------");
+        // console.log(user);
+        setUserName(user.username);
+      }
+      // console.log(route.params?.modal)
+      if (route.params?.modal){
+        setUserName(item.user.username);
+      }else{
+        getUserDetais(item.user);
+      }
+
+     
+     
+      
+    },[])
+  
+    const weatherObs = () => {
+      if (item.observationTypes.weather.status == true) {
+        return (
+          <View style={[styles.obsCard]}>
+            <View style={{flexDirection:'row', marginTop: 10, marginBottom: 10}}>
+            <Image
+                style={styles.rightImage}
+                source={require("../../assets/images/icons/buttonIcons/button-meteo.png")}
+              />
+              <Text style={styles.subtitle}>Meteo</Text>
+            </View>
+            <View style={styles.spacer}/> 
+
+            <View style={styles.linkContainer}>
+              <Text style={styles.link}>Estado del cielo:</Text>
+              { item.observationTypes.weather.values.skyCondition === 1 && (<Text style={styles.description}>Despejado (0/8)</Text>)}
+              { item.observationTypes.weather.values.skyCondition === 2 && (<Text style={styles.description}>Pocas nubes (1/8-2/8)</Text>)}
+              { item.observationTypes.weather.values.skyCondition === 3 && (<Text style={styles.description}>Nubes dispersas (2/8-4/8)</Text>)}
+              { item.observationTypes.weather.values.skyCondition === 4 && (<Text style={styles.description}>Nubes rotas (5/8-7/8)</Text>)}
+              { item.observationTypes.weather.values.skyCondition === 5 && (<Text style={styles.description}>Nublado (8/8)</Text>)}
+              { item.observationTypes.weather.values.skyCondition === 6 && (<Text style={styles.description}>Niebla</Text>)}
+            </View>
+
+            <View style={styles.linkContainer}>
+              <Text style={styles.link}>Tipo de precipitación:</Text>
+              { item.observationTypes.weather.values.precipitationType === 1 && (<Text style={styles.description}>Nieve</Text>)}
+              { item.observationTypes.weather.values.precipitationType === 2 && (<Text style={styles.description}>Lluvia</Text>)}
+              { item.observationTypes.weather.values.precipitationType === 3 && (<Text style={styles.description}>Aguanieve</Text>)}
+              { item.observationTypes.weather.values.precipitationType === 4 && (<Text style={styles.description}>Ninguna</Text>)}
+            </View>
+
+            <View style={styles.linkContainer}>
+              <Text style={styles.link}>Intensidad precipitacion - Nieve (cm/hora):</Text>
+              { item.observationTypes.weather.values.snowIntensity === 1 && (<Text style={styles.description}>>1</Text>)}
+              { item.observationTypes.weather.values.snowIntensity === 2 && (<Text style={styles.description}>1-5</Text>)}
+              { item.observationTypes.weather.values.snowIntensity === 3 && (<Text style={styles.description}>5-10</Text>)}
+              { item.observationTypes.weather.values.snowIntensity === 4 && (<Text style={styles.description}>>10</Text>)}
+            </View>
+            
+
+            <View style={styles.linkContainer}>
+              <Text style={styles.link}>Intensidad precipitación - Lluvia:</Text>
+              { item.observationTypes.weather.values.rainIntensity === 1 && (<Text style={styles.description}>Llovizna</Text>)}
+              { item.observationTypes.weather.values.rainIntensity === 2 && (<Text style={styles.description}>Chubasco (abrupto)</Text>)}
+              { item.observationTypes.weather.values.rainIntensity === 3 && (<Text style={styles.description}>Lluvia(constante)</Text>)}
+              { item.observationTypes.weather.values.rainIntensity === 4 && (<Text style={styles.description}>Diluvio</Text>)}
+            </View>
+
+            <View style={[styles.linkContainer,{marginTop:5}]}>
+              <Text style={styles.link}>Temperatura en el momento de la observación:</Text><Text style={styles.description}>{item.observationTypes.weather.values.temp}</Text>
+            </View>
+
+            <View style={[styles.linkContainer,{marginTop:5}]}>
+              <Text style={styles.link}>Temperatura máxima en las últimas 24h:</Text><Text style={styles.description}>{item.observationTypes.weather.values.maxTemp}</Text>
+            </View>
+
+            <View style={[styles.linkContainer,{marginTop:5}]}>
+              <Text style={styles.link}>Temperatura mínima en las últimas 24h:</Text><Text style={styles.description}>{item.observationTypes.weather.values.minTemp}</Text>
+            </View>
+
+            <View style={styles.linkContainer}>
+              <Text style={styles.link}>Describe como la temperatura cambió en las últimas 3h:</Text>
+              { item.observationTypes.weather.values.tempChange === 1 && (<Text style={styles.description}>Cayó</Text>)}
+              { item.observationTypes.weather.values.tempChange === 2 && (<Text style={styles.description}>Constante</Text>)}
+              { item.observationTypes.weather.values.tempChange === 3 && (<Text style={styles.description}>Subió</Text>)}
+            </View>
+
+            <View style={[styles.linkContainer,{marginTop:5}]}>
+              <Text style={styles.link}>Cantidad de nieve en las últimas 24h (cm):</Text><Text style={styles.description}>{item.observationTypes.weather.values.snowAccumulation}</Text>
+            </View>
+
+            <View style={[styles.linkContainer,{marginTop:5}]}>
+              <Text style={styles.link}>Combinación de lluvia y nieve total en las últimas 24h (mm):</Text><Text style={styles.description}>{item.observationTypes.weather.values.rainAccumulation24}</Text>
+            </View>
+
+            <View style={[styles.linkContainer,{marginTop:5}]}>
+              <Text style={styles.link}>Cantidad de nieve de la nevada más reciente (cm):</Text><Text style={styles.description}>{item.observationTypes.weather.values.snowAccumulation24}</Text>
+            </View>
+
+            <View style={[styles.linkContainer,{marginTop:5}]}>
+              <Text style={styles.link}>Fecha del inicio de la tormenta:</Text><Text style={styles.description}>{item.observationTypes.weather.values.stormDate}</Text>
+            </View>
+
+            <View style={styles.linkContainer}>
+              <Text style={styles.link}>Velocidad del viento:</Text>
+              { item.observationTypes.weather.values.windSpeed === 1 && (<Text style={styles.description}>Calma</Text>)}
+              { item.observationTypes.weather.values.windSpeed === 2 && (<Text style={styles.description}>Suave (1-25km/h)</Text>)}
+              { item.observationTypes.weather.values.windSpeed === 3 && (<Text style={styles.description}>Moderado (26-40km/h)</Text>)}
+              { item.observationTypes.weather.values.windSpeed === 4 && (<Text style={styles.description}>Fuerte (41-60km/h)</Text>)}
+              { item.observationTypes.weather.values.windSpeed === 5 && (<Text style={styles.description}>Extrem (>60km/h)</Text>)}
+            </View>
+
+            <View style={[styles.linkContainer,{marginTop:5}]}>
+              <Text style={styles.link}>Orientación:</Text>
+            </View>
+            
+              { item.observationTypes.weather.values.orientation?.N && (<View style={styles.linkContainer}><Text style={styles.link}></Text><Text style={[styles.description, {maxWidth:250}]}>N</Text></View>)}
+              { item.observationTypes.weather.values.orientation?.NE && (<View style={styles.linkContainer}><Text style={styles.link}></Text><Text style={[styles.description, {maxWidth:250}]}>NE</Text></View>)}
+              { item.observationTypes.weather.values.orientation?.E && (<View style={styles.linkContainer}><Text style={styles.link}></Text><Text style={[styles.description, {maxWidth:250}]}>E</Text></View>)}
+              { item.observationTypes.weather.values.orientation?.SE && (<View style={styles.linkContainer}><Text style={styles.link}></Text><Text style={[styles.description, {maxWidth:250}]}>SE</Text></View>)}
+              { item.observationTypes.weather.values.orientation?.S && (<View style={styles.linkContainer}><Text style={styles.link}></Text><Text style={[styles.description, {maxWidth:250}]}>S</Text></View>)}
+              { item.observationTypes.weather.values.orientation?.SO && (<View style={styles.linkContainer}><Text style={styles.link}></Text><Text style={[styles.description, {maxWidth:250}]}>SO</Text></View>)}
+              { item.observationTypes.weather.values.orientation?.O && (<View style={styles.linkContainer}><Text style={styles.link}></Text><Text style={[styles.description, {maxWidth:250}]}>O</Text></View>)}
+              { item.observationTypes.weather.values.orientation?.NO && (<View style={styles.linkContainer}><Text style={styles.link}></Text><Text style={[styles.description, {maxWidth:250}]}>NO</Text></View>)}        
+            
+            <View style={styles.linkContainer}>
+              <Text style={styles.link}>Transporte de nive por viento:</Text>
+              { item.observationTypes.weather.values.windCarry === 1 && (<Text style={styles.description}>No</Text>)}
+              { item.observationTypes.weather.values.windCarry === 2 && (<Text style={styles.description}>Suave </Text>)}
+              { item.observationTypes.weather.values.windCarry === 3 && (<Text style={styles.description}>Moderado</Text>)}
+              { item.observationTypes.weather.values.windCarry === 4 && (<Text style={styles.description}>Intensa</Text>)}
+            </View>
+          </View>
+        )
+      }
+    }
 
     const accidentObs = () => {
       if (item.observationTypes.accident.status == true) {
@@ -70,6 +209,13 @@ export default function ShowObservation({ route, navigation }) {
               { item.observationTypes.accident.values.activityType === 5 && (<Text style={styles.description}>Trekking</Text>)}
               { item.observationTypes.accident.values.activityType === 6 && (<Text style={styles.description}>{item.observationTypes.accident.values.customActivityType}</Text>)}
             </View>
+
+            <View style={[styles.linkContainer,{marginTop:5}]}>
+              <Text style={styles.link}>Desencadenante:</Text>
+              { item.observationTypes.accident.values.accidentOrigin === 1 && (<Text style={styles.description}>Natural</Text>)}
+              { item.observationTypes.accident.values.accidentOrigin === 2 && (<Text style={styles.description}>Accidental</Text>)}
+            </View>
+
           
             {/* <View style={styles.spacer}/> */}
             <View style={[styles.linkContainer,{marginTop:5}]}>
@@ -163,7 +309,7 @@ export default function ShowObservation({ route, navigation }) {
           
 
             <View style={[styles.linkContainer,{marginTop:5}]}>
-              <Text style={styles.link}>La observación fué hace:</Text>
+              <Text style={styles.link}>La actividad de avalancha fue:</Text>
               { item.observationTypes.avalanche.values.when === 1 && (<Text style={styles.description}>Del mismo día</Text>)}
               { item.observationTypes.avalanche.values.when === 2 && (<Text style={styles.description}>Del día anterior</Text>)}
               { item.observationTypes.avalanche.values.when === 3 && (<Text style={styles.description}>Mas de dos días</Text>)}
@@ -208,16 +354,16 @@ export default function ShowObservation({ route, navigation }) {
               
             </View>
             <View style={[styles.linkContainer,{marginLeft: 15}]}>
-              <Text style={styles.link}>Profundidad de la fractura (cm):</Text>
-              <Text style={styles.description}>{item.observationTypes.avalanche.values.depth}</Text>
+              <Text style={styles.link}>Profundidad de la fractura (en avalanchas de placa):</Text>
+              <Text style={styles.description}>{item.observationTypes.avalanche.values.depth} cm</Text>
             </View>
             <View style={[styles.linkContainer,{marginLeft: 15}]}>
-              <Text style={styles.link}>Ancho (m):</Text>
-              <Text style={styles.description}>{item.observationTypes.avalanche.values.width}</Text>
+              <Text style={styles.link}>Ancho (en avalanchas de placa):</Text>
+              <Text style={styles.description}>{item.observationTypes.avalanche.values.width} m</Text>
             </View>
             <View style={[styles.linkContainer,{marginLeft: 15}]}>
-              <Text style={styles.link}>Largo (m):</Text>
-              <Text style={styles.description}>{item.observationTypes.avalanche.values.length}</Text>
+              <Text style={styles.link}>Largo (en avalanchas de placa y puntuales):</Text>
+              <Text style={styles.description}>{item.observationTypes.avalanche.values.length} m</Text>
             </View>
 
             <View style={[styles.linkContainer,{marginTop:5}]}>
@@ -320,8 +466,8 @@ export default function ShowObservation({ route, navigation }) {
               { item.observationTypes.snowpack.values.orientation?.NO && (<View style={styles.linkContainer}><Text style={styles.link}></Text><Text style={[styles.description, {maxWidth:250}]}>NO</Text></View>)}        
             
             <View style={[styles.linkContainer,{marginTop: 5}]}>
-              <Text style={styles.link}>Profundidad del manto (cm):</Text>
-              <Text style={styles.description}>{item.observationTypes.snowpack.values.depth}</Text>
+              <Text style={styles.link}>Profundidad del manto:</Text>
+              <Text style={styles.description}>{item.observationTypes.snowpack.values.depth} cm</Text>
             </View>
 
             <View style={[styles.linkContainer,{marginTop:5}]}>
@@ -349,13 +495,13 @@ export default function ShowObservation({ route, navigation }) {
 
            
             <View style={[styles.linkContainer,{marginTop: 5}]}>
-              <Text style={styles.link}>Penetración pie (cm):</Text>
-              <Text style={styles.description}>{item.observationTypes.snowpack.values.footPenetration}</Text>
+              <Text style={styles.link}>Penetración pie:</Text>
+              <Text style={styles.description}>{item.observationTypes.snowpack.values.footPenetration}cm</Text>
             </View>
 
             <View style={[styles.linkContainer,{marginTop: 5}]}>
-              <Text style={styles.link}>Penetración esquí (cm):</Text>
-              <Text style={styles.description}>{item.observationTypes.snowpack.values.skiPenetration}</Text>
+              <Text style={styles.link}>Penetración esquí:</Text>
+              <Text style={styles.description}>{item.observationTypes.snowpack.values.skiPenetration}cm</Text>
             </View>
 
             <View style={[styles.linkContainer,{marginTop:5}]}>
@@ -373,6 +519,22 @@ export default function ShowObservation({ route, navigation }) {
               { item.observationTypes.snowpack.values.compresionTest === 2 && (<Text style={styles.description}>11 a 20 golpes</Text>)}
               { item.observationTypes.snowpack.values.compresionTest === 3 && (<Text style={styles.description}>21 a 30 golpes</Text>)}
               { item.observationTypes.snowpack.values.compresionTest === 4 && (<Text style={styles.description}>No concluyente</Text>)}
+            </View>
+
+            <View style={[styles.linkContainer,{marginTop:5}]}>
+              <Text style={styles.link}>Tipo de fractura:</Text>
+            </View>
+            
+              { item.observationTypes.snowpack.values.fractureTypeCt?.type_1 && (<View style={styles.linkContainer}><Text style={styles.link}></Text><Text style={[styles.description, {maxWidth:250}]}>Colapso súbito</Text></View>)}
+              { item.observationTypes.snowpack.values.fractureTypeCt?.type_2 && (<View style={styles.linkContainer}><Text style={styles.link}></Text><Text style={[styles.description, {maxWidth:250}]}>Planar súbito</Text></View>)}
+              { item.observationTypes.snowpack.values.fractureTypeCt?.type_3 && (<View style={styles.linkContainer}><Text style={styles.link}></Text><Text style={[styles.description, {maxWidth:250}]}>Planar resistente</Text></View>)}
+              { item.observationTypes.snowpack.values.fractureTypeCt?.type_4 && (<View style={styles.linkContainer}><Text style={styles.link}></Text><Text style={[styles.description, {maxWidth:250}]}>Colapso progresivo</Text></View>)}
+              { item.observationTypes.snowpack.values.fractureTypeCt?.type_5 && (<View style={styles.linkContainer}><Text style={styles.link}></Text><Text style={[styles.description, {maxWidth:250}]}>Rotura (break)</Text></View>)}
+             
+
+            <View style={[styles.linkContainer,{marginTop: 5}]}>
+              <Text style={styles.link}>Profundida de la fractura:</Text>
+              <Text style={styles.description}>{item.observationTypes.snowpack.values.fractureDepthCt}cm</Text>
             </View>
 
             <View style={[styles.linkContainer,{marginTop:5}]}>
@@ -394,8 +556,8 @@ export default function ShowObservation({ route, navigation }) {
              
 
             <View style={[styles.linkContainer,{marginTop: 5}]}>
-              <Text style={styles.link}>Profundida de la fractura (cm):</Text>
-              <Text style={styles.description}>{item.observationTypes.snowpack.values.fractureDepth}</Text>
+              <Text style={styles.link}>Profundida de la fractura:</Text>
+              <Text style={styles.description}>{item.observationTypes.snowpack.values.fractureDepth}cm</Text>
             </View>
 
             <View style={[styles.linkContainer,{marginTop:5}]}>
@@ -437,7 +599,7 @@ export default function ShowObservation({ route, navigation }) {
               <Text style={styles.link}>Otras observaciones:</Text>
             </View>
             <View style={styles.linkContainer}>
-              <Text style={[styles.description,{paddingVertical: 5, maxWidth:'100%', textAlign:'left'}]}>Lorem ipsum very long text about the observation to see how this displays.{item.observationTypes.snowpack.values.comments}</Text>
+              <Text style={[styles.description,{paddingVertical: 5, maxWidth:'100%', textAlign:'left'}]}>{item.observationTypes.snowpack.values.comments}</Text>
             </View>
           </View>
         )
@@ -466,6 +628,7 @@ export default function ShowObservation({ route, navigation }) {
               { item.observationTypes.quick.values.activityType === 4 && (<Text style={styles.description}>Esquí/Snowboard (Pista)</Text>)}
               { item.observationTypes.quick.values.activityType === 5 && (<Text style={styles.description}>Esquí de fondo</Text>)}
               { item.observationTypes.quick.values.activityType === 6 && (<Text style={styles.description}>Sin Actividad</Text>)}
+              { item.observationTypes.quick.values.activityType === 7 && (<Text style={styles.description}>{item.observationTypes.quick.values.customActivityType}</Text>)}
             </View>
         
             {/* <View style={styles.spacer}/> */}
@@ -558,11 +721,11 @@ export default function ShowObservation({ route, navigation }) {
       )  
     }
     const getMapRegion = () => {       
-      return {latitude: Number(item.location?.coordinates[1]),
+      return {latitude: Number(item.location?.coordinates[1])+0.004,
               longitude: Number(item.location?.coordinates[0]),
               latitudeDelta: 0.0170,
               longitudeDelta: 0.0170
-            }
+            }   
       
     };
 
@@ -574,6 +737,7 @@ export default function ShowObservation({ route, navigation }) {
         { item.status === 0 && (<Text style={{fontSize: 12}}>Tomada: Durante la salida (sobre el terreno)</Text>)}
         { item.status === 1 && (<Text style={{fontSize: 12}}>Tomada: Immediatamente después de la salida (parquing)</Text>)}
         { item.status === 2 && (<Text style={{fontSize: 12}}>Tomada: Posteriormente (casa/refugio)</Text>)}
+        <Text style={{fontSize: 12}}>Usuario: {userName}</Text> 
       </View>
       )
     }
@@ -656,6 +820,7 @@ export default function ShowObservation({ route, navigation }) {
             {avalancheObs()}
             {snowObs()}
             {accidentObs()}
+            {weatherObs()}
           </View>
         </ScrollView>
         </SafeAreaView>

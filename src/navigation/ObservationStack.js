@@ -16,6 +16,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Observations from '../screens/Observations';
 import ObservationDetail from '../screens/ObservationDetail';
 import QuickObservationTypeDetail from '../screens/QuickObservationTypeDetail';
+import WeatherObservationTypeDetail from '../screens/WeatherObservationTypeDetail';
 import AvalancheObservationTypeDetail from '../screens/AvalancheObservationTypeDetail';
 import SnowpackObservationTypeDetail from '../screens/SnowpackObservationTypeDetail';
 import AccidentObservationTypeDetail from '../screens/AccidentObservationTypeDetail';
@@ -54,6 +55,8 @@ return(
         <Stack.Screen name="Avalancha" component={AvalancheObservationTypeDetail} />
         <Stack.Screen name="Manto de nieve" component={SnowpackObservationTypeDetail} />
         <Stack.Screen name="Accidente" component={AccidentObservationTypeDetail} />
+        <Stack.Screen name="Tiempo" component={WeatherObservationTypeDetail} />
+        
       </Stack.Group>
       
     </Stack.Navigator>

@@ -287,7 +287,7 @@ return(
                     <View style={styles.spacer}/>
                      <CustomRadioButton 
                         name="obsType"
-                        title="Observación singular o síntesis de la salida?*"
+                        title="Observación singular o síntesis del lugar de observación:*"
                         control={control}
                         data={obsTypeOptions}
                         rules={{required: 'Campo obligatorio'}}
@@ -315,7 +315,7 @@ return(
                     <View style={styles.spacer}/>
                     <CustomRadioButton 
                         name="when"
-                        title="La observación fué hace:"
+                        title="La actividad de avalancha fue:"
                         control={control}
                         data={whenOptions}
                         // rules={{required: 'Campo obligatorio'}}
@@ -354,7 +354,7 @@ return(
 
                     
                     <Text>Medida:</Text>
-                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Si dudas entre dos tipos, puedes marcar las dos</Text>        
+                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Puedes marcar multiples opciones</Text>        
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="dangerLevel1"
                                         title="1-Peligro de enterramiento mínimo (peligro de caída)" 
@@ -413,7 +413,7 @@ return(
 
                     
                     <Text>Tipología de alud:</Text>
-                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Si dudas entre dos tipos, puedes marcar las dos</Text>        
+                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Puedes marcar multiples opciones</Text>            
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="avalancheType1"
                                         title="Placa nieve reciente." 
@@ -491,7 +491,7 @@ return(
                        
                         <CustomInput
                             name="depth"
-                            placeholder="Profundidad de la fractura (cm)"
+                            placeholder=" Profundidad de la fractura (en avalanchas de placa)(cm)"
                             control={control}
                             customStyles={{width:"100%"}}
                             //   rules={{required: 'Email is required'}}
@@ -502,7 +502,7 @@ return(
                         
                             <CustomInput
                                 name="width"
-                                placeholder="Ancho (m)"
+                                placeholder=" Ancho (en avalanchas de placa)(m)"
                                 control={control}
                                 customStyles={{width:"100%"}}
                                 //   rules={{required: 'Email is required'}}
@@ -512,7 +512,7 @@ return(
                
                             <CustomInput
                                 name="length"
-                                placeholder="Largo (m)"
+                                placeholder=" Largo (en avalanchas de placa y puntuales)(m)"
                                 control={control}
                                 customStyles={{width:"100%"}}
                                 //   rules={{required: 'Email is required'}}
@@ -552,7 +552,7 @@ return(
 
                     
                     <Text>Franja altitudinal:</Text>
-                    
+                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Puedes marcar multiples opciones</Text>    
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="heightRange1"
                                         title="<2.000 m" 
@@ -633,6 +633,7 @@ return(
                         ]}
                     > */}
                     <Text>Orientación:</Text>
+                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Puedes marcar multiples opciones</Text>    
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="orientationN"
                                         title="N" 

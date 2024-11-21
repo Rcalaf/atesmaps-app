@@ -83,6 +83,21 @@ export const ObservationProvider = ({children}) => {
         }
     }
 
+    const getObservationUserDetails = async (userId) => {
+        setIsLoading(true);
+        let user = {username: 'Anonymous'};
+        try{
+            let response = null
+            response = await sentRequest(`/users/${userId}`, "get", '');
+            //console.log(response.data);
+            user = response.data;
+        }catch (err){
+            console.log(err);
+        }
+        setIsLoading(false);
+        return user;
+    }
+
     const getData = async (page = currentPage) => {
         setIsLoading(true);
         try{
@@ -246,6 +261,7 @@ export const ObservationProvider = ({children}) => {
                 sentRequest,
                 getData,
                 getAllObservations,
+                getObservationUserDetails,
                 allObservations,
                 setCurrentPage,
                 setLastPage,

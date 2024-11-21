@@ -26,7 +26,7 @@ import Loading from '../components/Loading';
 
 export default function ObservationDetail({ navigation }) {
     const {currentLocation, getOneTimeLocation} = useContext(LocationContext);
-    const {isLoading, lastIndex, observations, historicObservations, newObservation,currentPage, setCurrentPage, setLastPage, lastPage, getData} = useContext(ObservationContext);
+    const {isLoading, lastIndex, observations, historicObservations, newObservation, currentPage, setCurrentPage, setLastPage, lastPage, getData} = useContext(ObservationContext);
     const {userDetails} = useContext(AuthContext);
 
     //const [user, setUser] = useState(userDetails);

@@ -43,7 +43,11 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
     const {isLoading, getAllObservations, allObservations,} = useContext(ObservationContext);
 
     const [newDelta, setNewDelta]=useState({longitudeDelta: 0.7470, latitudeDelta: 0.7470})
-    const [newRegion, setNewRegion]=useState({}); 
+    const [newRegion, setNewRegion]=useState({ 
+      latitude: currentLocation.latitude, 
+      longitude:currentLocation.longitude, 
+      latitudeDelta: LATITUDE_DELTA, 
+      longitudeDelta: LONGITUDE_DELTA}); 
     // const [locationIsLoading, setLocationIsLoading] = useState(false);
     const [flying, setFlying] = useState(false);
     const [mapIndex, setMapIndex] = useState(0);
@@ -64,15 +68,15 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
     const _scrollView = useRef(null);
     
   
-    useEffect(()=>{
-      console.log('Calling initial location set up');
-      const newLocation = { latitude: currentLocation.latitude, longitude:currentLocation.longitude, latitudeDelta: newDelta.latitudeDelta, longitudeDelta: newDelta.longitudeDelta }
-      setNewRegion(newLocation)
-      // setLocationFilter(newLocation);
-    },[]) 
+  // useEffect(()=>{
+  //   // console.log('Calling initial location set up');
+  //   const newLocation = { latitude: currentLocation.latitude, longitude:currentLocation.longitude, latitudeDelta: newDelta.latitudeDelta, longitudeDelta: newDelta.longitudeDelta }
+  //   setNewRegion(newLocation)
+  //   // setLocationFilter(newLocation);
+  // },[]) 
 
   useEffect(()=>{
-    console.log('calling getObservations');
+    // console.log('calling getObservations');
     let location;
     if (selectedLocation == 0){
       location = currentLocation
@@ -93,30 +97,43 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
     //console.log(location)
 
     if(allObservations.length > 0){
-      console.log('setting location to first obs...')
+      // console.log('setting location to first obs...')
       setMapIndex(0);
       const { coordinates } = allObservations[0].location;
       setNewRegion({
         latitude:coordinates[1], 
         longitude:coordinates[0],
-        latitudeDelta:0.042,
-        longitudeDelta:0.042
+        latitudeDelta:newDelta.latitudeDelta,
+        longitudeDelta:newDelta.longitudeDelta
       })
-      setNewDelta({latitudeDelta:0.042,
-        longitudeDelta:0.042})
+      // setNewDelta({latitudeDelta:0.717,
+      //   longitudeDelta:0.717})
     }else{
-      console.log('reset Location to centroid.');
+      // console.log('reset Location to centroid.');
       setNewRegion({
         latitude:location.latitude, 
         longitude:location.longitude,
-        latitudeDelta:0.717,
-        longitudeDelta:0.717
+        latitudeDelta:newDelta.latitudeDelta,
+        longitudeDelta:newDelta.longitudeDelta
       })
 
-      setNewDelta({latitudeDelta:0.717,
-        longitudeDelta:0.717})
+      // setNewDelta({latitudeDelta:0.717,
+      //   longitudeDelta:0.717})
     }
   },[allObservations])
+
+  // useEffect(()=>{
+  //   console.log('New region has been set...');
+  //   // _map.current.animateToRegion(
+  //   //   {
+  //   //     latitude: Number(coordinates[1]),
+  //   //     longitude: Number(coordinates[0]),
+  //   //     latitudeDelta: newDelta.latitudeDelta,
+  //   //     longitudeDelta: newDelta.longitudeDelta,
+  //   //   },
+  //   //   100
+  //   // );
+  // },[newRegion])
  
   // useEffect(() => {
   //   mapAnimation.addListener(({ value }) => {
@@ -214,9 +231,32 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
     setFlying(true);
     // flying = true;
     _scrollView.current.scrollTo({x: x, y: 0, animated: true});
+
+
+    const { coordinates } = allObservations[Number(markerID)].location;
+    
+
+    _map.current.animateToRegion(
+      {
+        latitude: Number(coordinates[1]),
+        longitude: Number(coordinates[0]),
+        latitudeDelta: newDelta.latitudeDelta,
+        longitudeDelta: newDelta.longitudeDelta,
+      },
+      350
+    );
+
+    setNewRegion({
+      latitude: Number(coordinates[1]),
+      longitude: Number(coordinates[0]),
+      latitudeDelta: newDelta.latitudeDelta,
+      longitudeDelta: newDelta.longitudeDelta,
+    })
   }
 
-  const getMapRegion = () => {       
+  const getMapRegion = () => {     
+
+    console.log('New region has been set:',newRegion)
     return {latitude: newRegion.latitude, 
             longitude: newRegion.longitude, 
             latitudeDelta: newDelta.latitudeDelta,
@@ -244,11 +284,33 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
                     provider={Platform.OS == "android" ?  "google" : undefined}
                     style={styles.map}
                     showsUserLocation = {true}
+                    initialRegion={{latitude: newRegion.latitude, 
+                      longitude: newRegion.longitude, 
+                      latitudeDelta: newDelta.latitudeDelta,
+                      longitudeDelta: newDelta.longitudeDelta
+                    }}
                     onRegionChangeComplete={(region) => {
                       setNewDelta({latitudeDelta: region.latitudeDelta, longitudeDelta:region.longitudeDelta })
-                      setNewRegion({latitude: region.latitude, longitude:region.longitude })}
+                      setNewRegion({latitude: region.latitude, longitude:region.longitude, latitudeDelta: region.latitudeDelta, longitudeDelta:region.longitudeDelta })}
                     }
-                    region={getMapRegion()}>
+                     // region={newRegion}>
+                     //region={Platform.OS === 'ios' ? getMapRegion() : null}
+                    >
+                       <UrlTile
+                        // urlTemplate={"https://4umaps.atesmaps.org/{z}/{x}/{y}.png"}
+                        urlTemplate={"https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=0a7d6a77a3f34d94a359058bd54f0857"}
+                        /**
+                        * The maximum zoom level for this tile overlay. Corresponds to the maximumZ setting in
+                        * MKTileOverlay. iOS only.
+                        */
+                        maximumZ={19}
+                        /**
+                        * flipY allows tiles with inverted y coordinates (origin at bottom left of map)
+                        * to be used. Its default value is false.
+                        */
+                        flipY={false}
+                      />    
+                   
                     
                       {allObservations.map((marker, index)=>{
                         //TODO: use React Reanimated library instead.
@@ -283,7 +345,7 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
                             coordinate={{latitude:Number(marker.location?.coordinates[1]),longitude:Number(marker.location?.coordinates[0])}}
                             onPress={(e)=>onMarkerPress(e)}
                           >
-                             
+                             {/* <Text>{index}</Text> */}
                             <Animated.Image style={[styles.pin,scaleStyle]}
                                 source={(index === mapIndex ? redPin : bluePin)}
                             /> 
@@ -364,28 +426,14 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
                 ref={_scrollView}
                 horizontal
                 pagingEnabled
-                scrollEventThrottle={16}
+                scrollEventThrottle={12}
                 decelerationRate={0}
                 showsHorizontalScrollIndicator={true}
                 snapToInterval={CARD_WIDTH + 20}
                 snapToAlignment={Platform.OS === 'android' ? "start" : "center"}
                 style={styles.scrollView}
-                onContentSizeChange={(width, height) => {
+                onContentSizeChange={(width) => {
                    setScrollWidth(width);
-                  //  if(allObservations.length > 0){
-                  //   console.log(mapIndex);
-                  //   const { coordinates } = allObservations[mapIndex].location;
-                  //   console.log('new region coordenates')
-                  //   _map.current.animateToRegion(
-                  //     {
-                  //       latitude: coordinates.latitude,
-                  //       longitude: coordinates.longitude,
-                  //       latitudeDelta: 0.1170,
-                  //       longitudeDelta: 0.1170,
-                  //     },
-                  //     350
-                  //   );
-                  // }
                 }}
                 onMomentumScrollEnd={(event)=>{
                   // console.log('momentum ended')
@@ -395,28 +443,41 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
                   // console.log('current scroll position after snap',scrollWidth);
                   // console.log('hipotetical selected mark:',(Math.ceil((scrollWidth-SPACING_FOR_CARD_INSET) / (CARD_WIDTH + 20)) - Math.ceil((scrollWidth-SPACING_FOR_CARD_INSET - event.nativeEvent.contentOffset.x) / (CARD_WIDTH + 20))) )
                   let index;
-                  if(Platform.os === 'ios'){
-                    index = (1+Math.ceil(scrollWidth / (CARD_WIDTH + 20)) - Math.ceil((scrollWidth - event.nativeEvent.contentOffset.x) / (CARD_WIDTH + 20))) ;
-                  }else{
-                    index = (Math.ceil((scrollWidth-SPACING_FOR_CARD_INSET) / (CARD_WIDTH + 20)) - Math.ceil((scrollWidth-SPACING_FOR_CARD_INSET - event.nativeEvent.contentOffset.x) / (CARD_WIDTH + 20))) ;
-                  }
-                   
-                  if (index !== mapIndex) {
-                    setMapIndex(index);
-                    const { coordinates } = allObservations[index].location;
-                    _map.current.animateToRegion(
-                      {
-                        latitude: coordinates[1] ,
-                        longitude: coordinates[0],
-                        latitudeDelta: 0.042,
-                        longitudeDelta: 0.042,
-                      },
-                      350
-                    );
-                  }
+                  if(flying){
+                    console.log('jumping to:', mapIndex);
+                    index = mapIndex;
+                    setFlying(false);
+                  }else{ 
+                    if(Platform.os === 'ios'){
+                      index = (1+Math.ceil(scrollWidth / (CARD_WIDTH + 20)) - Math.ceil((scrollWidth - event.nativeEvent.contentOffset.x) / (CARD_WIDTH + 20))) ;
+                    }else{
+                      index = (Math.ceil((scrollWidth-SPACING_FOR_CARD_INSET) / (CARD_WIDTH + 20)) - Math.ceil((scrollWidth-SPACING_FOR_CARD_INSET - event.nativeEvent.contentOffset.x) / (CARD_WIDTH + 20))) ;
+                    }
+                    if (index !== mapIndex) {
+                      // console.log('setting new index and location.')
+                      
+                        const { coordinates } = allObservations[index].location;
+                        _map.current.animateToRegion(
+                          {
+                            latitude: Number(coordinates[1]),
+                            longitude: Number(coordinates[0]),
+                            latitudeDelta: newDelta.latitudeDelta,
+                            longitudeDelta: newDelta.longitudeDelta,
+                          },
+                          350
+                        );
+                        
+                        setNewRegion({
+                          latitude: Number(coordinates[1]),
+                          longitude: Number(coordinates[0]),  
+                          latitudeDelta: newDelta.latitudeDelta,
+                          longitudeDelta: newDelta.longitudeDelta,
+                        })
+                        setMapIndex(Number(index));
+                    }
                   //console.log((scrollWidth-(SPACING_FOR_CARD_INSET*2) / CARD_WIDTH) - (scrollWidth - event.nativeEvent.contentOffset.x) / (CARD_WIDTH))
                   //console.log(Math.ceil((scrollWidth-(SPACING_FOR_CARD_INSET*2) / CARD_WIDTH) - (scrollWidth - event.nativeEvent.contentOffset.x) / (CARD_WIDTH)));
-
+                  }
             
                 }}
                 // onScroll={(event)=>{
@@ -446,6 +507,7 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
                 )}
               >
                  {allObservations.map((marker, index)=>(
+                    
                     <View style={styles.card} key={index}>
                     {marker.images.length > 0 && (
                       <Image 
@@ -463,13 +525,20 @@ const ObservationsMap: () => Node = ({ navigation  }) => {
                     )}
                       <View style={styles.textContent}>
                         <View style={[styles.obsIcons, {justifyContent: 'space-between'}]}>
-                          <Text numberOfLines={1} style={styles.cardtitle}>{marker.title}</Text>
+
+                          <Text numberOfLines={2} style={styles.cardtitle}>{(marker.title.length > 30 ? marker.title.substring(0, 30)+'...' : marker.title)} </Text>
                           <Text style={styles.cardDescription}>{moment(marker.date).format('Do MMMM YY')}</Text>
                         </View> 
                         <View style={styles.obsIcons}>
                         <Text numberOfLines={1} style={styles.cardDescription}>Tipo de observaciones:</Text>
                         {marker.observationTypes.quick.status == true && (
                           <Image source={require("../../assets/images/icons/buttonIcons/button-quick.png")}
+                                style={styles.obsIcon}
+                                resizeMode="cover"
+                          />
+                        )}
+                         {marker.observationTypes.weather.status == true && (
+                          <Image source={require("../../assets/images/icons/buttonIcons/button-meteo.png")}
                                 style={styles.obsIcon}
                                 resizeMode="cover"
                           />

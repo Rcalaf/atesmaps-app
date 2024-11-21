@@ -289,7 +289,8 @@ export default function ObservationDetail({ route, navigation }) {
       }else if(editingObservation.observationTypes.quick?.status ||
         editingObservation.observationTypes.snowpack?.status ||
         editingObservation.observationTypes.avalanche?.status || 
-        editingObservation.observationTypes.accident?.status){
+        editingObservation.observationTypes.accident?.status || 
+        editingObservation.observationTypes.weather?.status){
         //console.log('at least one report...')
        
         let obj = data;
@@ -425,15 +426,15 @@ export default function ObservationDetail({ route, navigation }) {
       <SafeAreaView style={styles.safeContainer}>
         <ScrollView style={styles.container}>
           <View style={styles.introContainer} >
-            <Text style={styles.intro}>Intrduce la información básica de la salida: Un título que la haga reconocible, fecha y geolocalización. 
+            <Text style={styles.intro}>Intrduce la información básica de la salida: Un nombre que la haga reconocible, fecha y geolocalización. 
             El momento de publicación y alguna foto serán de gran utilidad para toda la comunidad.</Text> 
           </View>
           <View style={styles.spacer}/>
           <CustomInput
             name="title"
-            placeholder="Nombre de la salida"
+            placeholder="Lugar de la observación"
             control={control}
-            rules={{required: 'Debes dar un título a la Observación'}}
+            rules={{required: 'Debes indicar donde fue la Observación'}}
           />
           <Text style={[styles.intro,{marginTop:10}]}>Fecha de la salida/observacion:</Text>
           <CustomInput
@@ -481,8 +482,18 @@ export default function ObservationDetail({ route, navigation }) {
                 textColor={'black'}
                 containerStyle={styles.radioButtonCointainer}
                 circleSize={14}
-                
             />
+
+          {/* <CustomButton 
+              text={`Meteorología`}
+              type="custom"
+              order="bottom"
+              bgColor={"#fff"}
+              fColor="gray"
+              onPress={() => {
+                navigation.navigate('Tiempo');
+              }} 
+            /> */}
 
           <View style={{marginTop: 10}}>
               
@@ -498,6 +509,17 @@ export default function ObservationDetail({ route, navigation }) {
                 iconName={observation.observationTypes?.quick?.status ?  "arrow-forward-ios" : "add-circle"} 
                 leftIconImage={require("../../assets/images/icons/buttonIcons/button-quick.png")}
                 onPress={() => navigation.navigate('Rapida')} />
+              <CustomButton 
+                text="Meteo" 
+                type="custom" 
+                order="top" 
+                // bgColor={"#48a5e9"} 
+                bgColor={"#fff"}
+                fColor="gray"
+                // fColor='white' 
+                iconName={observation.observationTypes?.weather?.status ?  "arrow-forward-ios" : "add-circle"} 
+                leftIconImage={require("../../assets/images/icons/buttonIcons/button-meteo.png")}
+                onPress={() => navigation.navigate('Tiempo')} />
             <CustomButton 
                 text="Avalancha" 
                 type="custom" 

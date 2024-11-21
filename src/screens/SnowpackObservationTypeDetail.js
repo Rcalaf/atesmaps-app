@@ -87,6 +87,13 @@ const { control, handleSubmit, formState: { errors }, getValues, setValue } = us
         fractureType4:snowpackValues.values?.fractureType?.type_4 ? snowpackValues.values?.fractureType?.type_4 : null,
         fractureType5:snowpackValues.values?.fractureType?.type_5 ? snowpackValues.values?.fractureType?.type_5 : null,
         fractureType6:snowpackValues.values?.fractureType?.type_6 ? snowpackValues.values?.fractureType?.type_6 : null,
+        fractureType1:snowpackValues.values?.fractureTypeCt?.type_1 ? snowpackValues.values?.fractureTypeCt?.type_1 : null,
+        fractureType2:snowpackValues.values?.fractureTypeCt?.type_2 ? snowpackValues.values?.fractureTypeCt?.type_2 : null,
+        fractureType3:snowpackValues.values?.fractureTypeCt?.type_3 ? snowpackValues.values?.fractureTypeCt?.type_3 : null,
+        fractureType4:snowpackValues.values?.fractureTypeCt?.type_4 ? snowpackValues.values?.fractureTypeCt?.type_4 : null,
+        fractureType5:snowpackValues.values?.fractureTypeCt?.type_5 ? snowpackValues.values?.fractureTypeCt?.type_5 : null,
+        fractureType6:snowpackValues.values?.fractureTypeCt?.type_6 ? snowpackValues.values?.fractureTypeCt?.type_6 : null,
+        fractureDepthCt:snowpackValues.values?.fractureDepthCt ? snowpackValues.values?.fractureDepthCt : null,
         fractureDepth:snowpackValues.values?.fractureDepth ? snowpackValues.values?.fractureDepth : null,
         layerHardness:snowpackValues.values?.layerHardness ? snowpackValues.values?.layerHardness : null,
         weakLayerHardness:snowpackValues.values?.weakLayerHardness ? snowpackValues.values?.weakLayerHardness : null,
@@ -190,6 +197,15 @@ const updateData = () => {
         'type_6': values.fractureType6,
     }
 
+    aux['values']['fractureTypeCt'] = {
+        'type_1': values.fractureType1Ct,
+        'type_2': values.fractureType2Ct,
+        'type_3': values.fractureType3Ct,
+        'type_4': values.fractureType4Ct,
+        'type_5': values.fractureType5Ct,
+        'type_6': values.fractureType6Ct,
+    }
+
     aux['values'].depth= values.depth;
     aux['values'].woumpfs= values.woumpfs;
     aux['values'].sounds= values.sounds;
@@ -206,6 +222,7 @@ const updateData = () => {
     
     // aux['values'].fractureType= values.fractureType;
     aux['values'].fractureDepth= values.fractureDepth;
+    aux['values'].fractureDepthCt= values.fractureDepthCt;
     aux['values'].layerHardness= values.layerHardness;
     aux['values'].weakLayerHardness= values.weakLayerHardness;
     aux['values'].comments= values.comments;
@@ -421,6 +438,7 @@ return(
                         ]}
                     > */}
                     <Text>Orientación:</Text>
+                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Puedes marcar multiples opciones</Text>    
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="orientationN"
                                         title="N" 
@@ -534,6 +552,7 @@ return(
                         circleSize={14}
                     /> */}
                     <Text>Nieve en superfície:</Text>
+                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Puedes marcar multiples opciones</Text>    
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="layerSnowType1"
                                         title="Nueva" 
@@ -594,6 +613,8 @@ return(
                     />   
                 </View>
 
+                
+
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
                     <CustomRadioButton 
@@ -620,7 +641,6 @@ return(
                 </View>
 
                 <View style={styles.formContainer} >
-                    <View style={styles.spacer}/>
                     <CustomRadioButton 
                         name="compresionTest"
                         title="Test Compresión (CT)"
@@ -632,6 +652,62 @@ return(
                         circleSize={14}
                     />
                     
+                </View>
+                <View style={styles.formContainer} >
+                    {/* <CustomRadioButton 
+                        name="fractureType"
+                        title="Tipo de fractura"
+                        control={control}
+                        data={fractureOptions}
+                        // rules={{required: 'Campo obligatorio'}}
+                        box={false}
+                        textColor={'black'}
+                        circleSize={14}
+                    /> */}
+                    <Text>Tipo de fractura (CT):</Text>
+                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Puedes marcar multiples opciones</Text>    
+                    <View style={styles.formGroup}>
+                        <CustomCheckbox name="fractureType1Ct"
+                                        title="Colapso subito" 
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                        <CustomCheckbox name="fractureType2Ct" 
+                                        title="Planar subito"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                    </View> 
+                    <View style={styles.formGroup}>
+                        <CustomCheckbox name="fractureType3Ct"
+                                        title="Planar resistente" 
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                        <CustomCheckbox name="fractureType4Ct" 
+                                        title="Colapso progresivo"
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                    </View> 
+                    <View style={styles.formGroup}>
+                        <CustomCheckbox name="fractureType5Ct"
+                                        title="Rotura (Break)" 
+                                        control={control}  
+                                        // rules={{required: 'Campo obligatorio'}}
+                        />
+                    </View> 
+                </View>
+                <View style={styles.formContainer} >
+               
+                    <Text>Profundidad de fractura (CT):</Text>
+                    <CustomInput
+                        name="fractureDepthCt"
+                        placeholder="cm desde la superfície"
+                        control={control}
+                        // rules={{required: 'Title is required'}}
+                    />   
+                  
                 </View>
 
                 <View style={styles.formContainer} >
@@ -650,7 +726,6 @@ return(
                 </View>
 
                 <View style={styles.formContainer} >
-                    <View style={styles.spacer}/>
                     {/* <CustomRadioButton 
                         name="fractureType"
                         title="Tipo de fractura"
@@ -661,8 +736,8 @@ return(
                         textColor={'black'}
                         circleSize={14}
                     /> */}
-                    <Text>Tipo de fractura:</Text>
-                    <Text style={styles.introSubtext}>Si dudas entre dos tipos, puedes marcar las dos</Text>
+                    <Text>Tipo de fractura (ECT):</Text>
+                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Puedes marcar multiples opciones</Text>    
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="fractureType1"
                                         title="Colapso subito" 
@@ -697,11 +772,11 @@ return(
                 </View>
 
                 <View style={styles.formContainer} >
-                <View style={styles.spacer}></View>
-                    <Text>Profundidad de fractura (cm, desde la superfície):</Text>
+              
+                    <Text>Profundidad de fractura (ECT):</Text>
                     <CustomInput
                         name="fractureDepth"
-                        placeholder="(cm)"
+                        placeholder="cm desde la superfície"
                         control={control}
                         // rules={{required: 'Title is required'}}
                     />   

@@ -30,11 +30,13 @@ const QuickObservationTypeDetail: () => Node = ({ route, navigation }) => {
 
 const { editingObservation, selectedIndex, setEditingObservation, updateObservations  } = useContext(ObservationContext);
 const [ quickValues, setQuickValues ] = useState(editingObservation.observationTypes?.quick ? editingObservation.observationTypes?.quick : {status: false, values: {}});
+const [inputError, setInputError ] = useState(false);
 
 const { control, handleSubmit, formState: { errors }, getValues, setValue, reset } = useForm({
     //defaultValues: preloadedValues
     defaultValues: {
         deepPowder: quickValues.values.snowConditions?.deepPowder ? quickValues.values.snowConditions?.deepPowder : null,
+        customActivityType: quickValues.values.customActivityType ? quickValues.values.customActivityType : null,
         crusty: quickValues.values.snowConditions?.crusty ? quickValues.values.snowConditions?.crusty : null,
         wet: quickValues.values.snowConditions?.wet ? quickValues.values.snowConditions?.wet : null,
         heavy: quickValues.values.snowConditions?.heavy ? quickValues.values.snowConditions?.heavy : null,
@@ -102,6 +104,8 @@ useEffect(() => {
     Snackbar.dismiss();
 },[])
 
+//NOTE: Here we can dynamically change the header of the screen....
+//check documentation here: https://reactnavigation.org/docs/navigation-prop/#setparams
 useLayoutEffect(() => {
     navigation.setOptions({
       // title: value === '' ? 'No title' : value,
@@ -118,8 +122,7 @@ useLayoutEffect(() => {
         />
       )
     });
-    //TODO: Here we can dynamically change the header of the screen....
-    //check documentation here: https://reactnavigation.org/docs/navigation-prop/#setparams
+   
   }, [navigation]);
 
 
@@ -127,73 +130,85 @@ useLayoutEffect(() => {
 const updateData = () => {
     console.log('------Quick report---------');
     const values = getValues();
-    // console.log(values);
+    console.log(values.activityType);
+    if( values.activityType == 7 && (values.customActivityType === null || values.customActivityType == "")){
+        setInputError(true);
+        Snackbar.show({
+            text: 'Por favor, escribe el tipo de actividad.',
+            duration: Snackbar.LENGTH_SHORT,
+            numberOfLines: 2,
+            textColor: "#fff",
+            backgroundColor: "#B00020",
+        });
+    }else{
+        setInputError(false);
+        let aux = {values: {}}
 
-    let aux = {values: {}}
+        aux['values']['snowConditions'] = {
+            'deepPowder': values.deepPowder,
+            'crusty': values.crusty,
+            'wet': values.wet,
+            'heavy': values.heavy,
+            'windAffected': values.windAffected,
+            'hard': values.hard,
+        }
 
-    aux['values']['snowConditions'] = {
-        'deepPowder': values.deepPowder,
-        'crusty': values.crusty,
-        'wet': values.wet,
-        'heavy': values.heavy,
-        'windAffected': values.windAffected,
-        'hard': values.hard,
-    }
+        aux['values']['rodeSlopeTypes'] = {
+            'mellow': values.rodeMellow,
+            'alpine': values.rodeAlpine,
+            'clear': values.rodeClear,
+            'dense': values.rodeDense,
+            'steep':values.rodeSteep,
+            'openTrees': values.rodeOpen,
+            'shade': values.rodeShade,
+            'sunny': values.rodeSunny
+        }
 
-    aux['values']['rodeSlopeTypes'] = {
-        'mellow': values.rodeMellow,
-        'alpine': values.rodeAlpine,
-        'clear': values.rodeClear,
-        'dense': values.rodeDense,
-        'steep':values.rodeSteep,
-        'openTrees': values.rodeOpen,
-        'shade': values.rodeShade,
-        'sunny': values.rodeSunny
-    }
+        aux['values']['dayType'] = {
+            'warm': values.warmDay,
+            'foggy': values.foggyDay,
+            'cloudy': values.cloudyDay,
+            'intenseSnow': values.intenseSnowDay,
+            'weakSnow': values.weakSnowDay,
+            'windy': values.windyDay,
+            'cold': values.coldDay,
+            'wet': values.wetDay, 
+            'sunny': values.sunnyDay,
+            'rainy': values.rainyDay
+        }
 
-    aux['values']['dayType'] = {
-        'warm': values.warmDay,
-        'foggy': values.foggyDay,
-        'cloudy': values.cloudyDay,
-        'intenseSnow': values.intenseSnowDay,
-        'weakSnow': values.weakSnowDay,
-        'windy': values.windyDay,
-        'cold': values.coldDay,
-        'wet': values.wetDay, 
-        'sunny': values.sunnyDay,
-        'rainy': values.rainyDay
-    }
+        aux['values']['avalancheConditions'] = {
+            'newConditions': values.newConditions,
+            'slabs': values.avalanches,
+            'sounds': values.sounds,
+            'tempChanges': values.tempChanges,
+            'snowAccumulation': values.snowAccumulation
+        }
 
-    aux['values']['avalancheConditions'] = {
-        'newConditions': values.newConditions,
-        'slabs': values.avalanches,
-        'sounds': values.sounds,
-        'tempChanges': values.tempChanges,
-        'snowAccumulation': values.snowAccumulation
-    }
+        aux['values'].comments = values.comments
 
-    aux['values'].comments = values.comments
+        aux['values'].ridingQuality = values.ridingQuality
 
-    aux['values'].ridingQuality = values.ridingQuality
+        aux['values'].activityType = values.activityType
+        aux['values'].customActivityType = values.customActivityType
 
-    aux['values'].activityType = values.activityType
-
-    aux.status = true;
- 
-    setQuickValues(aux);
+        aux.status = true;
     
-    let observation = editingObservation;
-    observation.observationTypes['quick'] = aux; 
-    setEditingObservation({...editingObservation, observationTypes: observation.observationTypes['quick']});
-    updateObservations(observation);
-    Snackbar.show({
-        text: 'Tu observación rápida se ha guardado.',
-        duration: Snackbar.LENGTH_SHORT,
-        numberOfLines: 2,
-        textColor: "#fff",
-        backgroundColor: "#62a256",
-    });
-    navigation.navigate('Observación',{selectedIndex});
+        setQuickValues(aux);
+        
+        let observation = editingObservation;
+        observation.observationTypes['quick'] = aux; 
+        setEditingObservation({...editingObservation, observationTypes: observation.observationTypes['quick']});
+        updateObservations(observation);
+        Snackbar.show({
+            text: 'Tu observación rápida se ha guardado.',
+            duration: Snackbar.LENGTH_SHORT,
+            numberOfLines: 2,
+            textColor: "#fff",
+            backgroundColor: "#62a256",
+        });
+        navigation.navigate('Observación',{selectedIndex});
+    }
 }
 
 const removeData = () => {
@@ -236,6 +251,7 @@ const activityData = [
     {label: 'Esquí/Snowboard (Pista)'},
     {label: 'Esquí de fondo'},
     {label: 'Sin actividad'},
+    {label: 'Otra'}
 ]
 
 const [activityType, setActivityType] = useState();
@@ -264,16 +280,25 @@ return(
                         textColor={'black'}
                         circleSize={14}
                     />
+                    <CustomInput
+                            name="customActivityType"
+                            placeholder="Otro tipo de actividad"
+                            control={control}
+                            customError={inputError}
+                            customStyles={{width:"100%"}}
+                            // rules={getValues('activityType') == 6 ? {required: 'Indica actividad'} : null}
+                            // onPress={showDatepicker}
+                            />
                 </View>
                 
                 <View style={styles.formContainer} >
                     <View style={styles.spacer}/>
                     <CustomRadioButton 
                         name="ridingQuality"
-                        title="Evaluación general de la actividad*:"
+                        title="Evaluación general de la actividad:"
                         control={control}
                         data={data}
-                        rules={{required: 'Campo obligatorio'}}
+                        // rules={{required: 'Campo obligatorio'}}
                         box={false}
                         textColor={'black'}
                         circleSize={14}
@@ -295,6 +320,7 @@ return(
 
                     
                     <Text>Condiciones de nieve:</Text>
+                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Puedes marcar multiples opciones</Text>    
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="deepPowder"
                                         title="Polvo" 
@@ -310,22 +336,22 @@ return(
 
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="crusty"
-                                        title="Crosta" 
+                                        title="Costra que se rompe" 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
                         <CustomCheckbox name="hard" 
-                                        title="Dura"
+                                        title="Dura/Hielo"
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
                         />
                     </View> 
                     <View style={styles.formGroup}>
-                        <CustomCheckbox name="heavy"
+                        {/* <CustomCheckbox name="heavy"
                                         title="Pesada" 
                                         control={control}  
                                         // rules={{required: 'Campo obligatorio'}}
-                        />
+                        /> */}
                         <CustomCheckbox name="windAffected" 
                                         title="Venteada"
                                         control={control}  
@@ -351,6 +377,7 @@ return(
                         ]}
                     > */}
                     <Text>Tipo de terreno:</Text>
+                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Puedes marcar multiples opciones</Text>    
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="rodeMellow"
                                         title="Suave" 
@@ -420,6 +447,7 @@ return(
 
                     
                     <Text>El tiempo:</Text>
+                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Puedes marcar multiples opciones</Text>    
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="warmDay"
                                         title="Caluroso" 
@@ -502,6 +530,7 @@ return(
                     > */}
 
                     <Text>Señales de alerta:</Text>
+                    <Text style={{fontSize:12, color: 'gray', padding:5}}>Puedes marcar multiples opciones</Text>    
                     <View style={styles.formGroup}>
                         <CustomCheckbox name="newConditions"
                                         title="Carga de nieve nueva (más de 30cm en 48h)" 
