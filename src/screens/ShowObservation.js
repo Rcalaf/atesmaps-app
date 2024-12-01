@@ -734,9 +734,9 @@ export default function ShowObservation({ route, navigation }) {
       <View style={styles.obsHeader}>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={{fontSize: 12}}>{moment(item.date).format('Do MMMM YY - HH:mm')}</Text>
-        { item.status === 0 && (<Text style={{fontSize: 12}}>Tomada: Durante la salida (sobre el terreno)</Text>)}
+         {/*{ item.status === 0 && (<Text style={{fontSize: 12}}>Tomada: Durante la salida (sobre el terreno)</Text>)}
         { item.status === 1 && (<Text style={{fontSize: 12}}>Tomada: Immediatamente después de la salida (parquing)</Text>)}
-        { item.status === 2 && (<Text style={{fontSize: 12}}>Tomada: Posteriormente (casa/refugio)</Text>)}
+        { item.status === 2 && (<Text style={{fontSize: 12}}>Tomada: Posteriormente (casa/refugio)</Text>)} */}
         <Text style={{fontSize: 12}}>Usuario: {userName}</Text> 
       </View>
       )

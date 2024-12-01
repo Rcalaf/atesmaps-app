@@ -472,7 +472,7 @@ export default function ObservationDetail({ route, navigation }) {
             }} 
           />
 
-          <CustomRadioButton 
+         {/* <CustomRadioButton 
                 name="whenObsTaken"
                 title="Publicación de la OBS:"
                 control={control}
@@ -482,7 +482,7 @@ export default function ObservationDetail({ route, navigation }) {
                 textColor={'black'}
                 containerStyle={styles.radioButtonCointainer}
                 circleSize={14}
-            />
+            />*/}
 
           {/* <CustomButton 
               text={`Meteorología`}
@@ -497,7 +497,7 @@ export default function ObservationDetail({ route, navigation }) {
 
           <View style={{marginTop: 10}}>
               
-            <Text style={{marginBottom: 10, fontWeight:'bold'}}>Tipo de observaciones:</Text>
+            <Text style={{marginBottom: 5}}>Tipo de observaciones:</Text>
             <CustomButton 
                 text="Rápida" 
                 type="custom" 
